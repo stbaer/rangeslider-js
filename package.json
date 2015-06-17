@@ -1,0 +1,47 @@
+{
+  "name": "rangeslider-js",
+  "version": "1.0.0",
+  "main": "./src/index.js",
+  "description": "lightweight rangeslider for browserify and the browser",
+  "author": "Steffen Bär <>",
+  "license": "ISC",
+  "homepage": "https://github.com/stbaer/rangeslider-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stbaer/rangeslider-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stbaer/rangeslider-js/issues"
+  },
+  "keywords": [],
+  "scripts": {
+    "test": "gulp test",
+    "build": "gulp build",
+    "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "chai": "^3.0.0",
+    "clamp": "^1.0.1",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-cached": "^1.1.0",
+    "gulp-jshint": "^1.11.0",
+    "gulp-mocha": "^2.1.1",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.5",
+    "ink-docstrap": "^0.5.2",
+    "is-object": "^1.0.1",
+    "jsdoc": "^3.3.2",
+    "jshint-summary": "^0.4.0",
+    "lodash": "^3.9.3",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.2"
+  }
+}
