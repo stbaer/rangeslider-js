@@ -240,11 +240,11 @@ function removeAllListenersFromEl(el) {
 
 
 /**
- * Plugin
+ * RangeSlider
  * @param {HTMLElement} element
  * @param {this} options
  */
-function Plugin(el, options) {
+function RangeSlider(el, options) {
 
     this.element = el;
     this.options = Object.assign(defaults, options);
@@ -257,7 +257,7 @@ function Plugin(el, options) {
     this.isInteractsNow = false;
     this.needTriggerEvents = false;
 
-    // Plugin should only be used as a polyfill
+    // RangeSlider should only be used as a polyfill
     if (!this.polyfill) {
         // Input range support?
         if (inputrange) {
@@ -323,21 +323,21 @@ function Plugin(el, options) {
     el.addEventListener('change', this._changeEventListener, false);
 }
 
-Plugin.prototype.constructor = Plugin;
+RangeSlider.prototype.constructor = RangeSlider;
 
-Plugin.prototype._toFixed = function (step) {
+RangeSlider.prototype._toFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
 
 
-Plugin.prototype._init = function () {
+RangeSlider.prototype._init = function () {
     if (this.onInit && typeof this.onInit === 'function') {
         this.onInit();
     }
     this._update();
 };
 
-Plugin.prototype._updatePercentFromValue = function () {
+RangeSlider.prototype._updatePercentFromValue = function () {
     this.percent = (this.value - this.min) / (this.max - this.min);
 };
 
@@ -346,7 +346,7 @@ Plugin.prototype._updatePercentFromValue = function () {
  * @param ev
  * @param data
  */
-Plugin.prototype._startEventListener = function (ev, data) {
+RangeSlider.prototype._startEventListener = function (ev, data) {
     var _this = this;
     var el = ev.target;
     var isEventOnSlider = false;
@@ -354,12 +354,13 @@ Plugin.prototype._startEventListener = function (ev, data) {
     forEachAncestors(el, function (el) {
         return (isEventOnSlider = el.id === _this.identifier && !el.classList.contains(DISABLED_CLASS));
     }, true);
+
     if (isEventOnSlider) {
         this._handleDown(ev, data);
     }
 };
 
-Plugin.prototype._changeEventListener = function (ev, data) {
+RangeSlider.prototype._changeEventListener = function (ev, data) {
     if (data && data.origin === this.identifier) {
         return;
     }
@@ -367,7 +368,7 @@ Plugin.prototype._changeEventListener = function (ev, data) {
     this._setPosition(this._getPositionFromValue(value));
 };
 
-Plugin.prototype._update = function () {
+RangeSlider.prototype._update = function () {
 
     this.handleWidth = getDimension(this.handle, 'offsetWidth');
     this.rangeWidth = getDimension(this.range, 'offsetWidth');
@@ -383,11 +384,11 @@ Plugin.prototype._update = function () {
 };
 
 
-Plugin.prototype._handleResize = debounce(function () {
+RangeSlider.prototype._handleResize = debounce(function () {
     this._update();
 }, HANDLE_RESIZE_DEBOUNCE);
 
-Plugin.prototype._handleDown = function (e) {
+RangeSlider.prototype._handleDown = function (e) {
 
     this.isInteractsNow = true;
     e.preventDefault();
@@ -412,14 +413,14 @@ Plugin.prototype._handleDown = function (e) {
 
 };
 
-Plugin.prototype._handleMove = function (e) {
+RangeSlider.prototype._handleMove = function (e) {
     this.isInteractsNow = true;
     e.preventDefault();
     var posX = this._getRelativePosition(e);
     this._setPosition(posX - this.grabX);
 };
 
-Plugin.prototype._handleEnd = function (e) {
+RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
     removeEventListeners(document, this.options.moveEvent, this._handleMove);
     removeEventListeners(document, this.options.endEvent, this._handleEnd);
@@ -436,7 +437,7 @@ Plugin.prototype._handleEnd = function (e) {
     this.isInteractsNow = false;
 };
 
-Plugin.prototype._setPosition = function (pos) {
+RangeSlider.prototype._setPosition = function (pos) {
     var value, left;
 
     // Snapping steps
@@ -467,7 +468,7 @@ Plugin.prototype._setPosition = function (pos) {
 };
 
 // Returns element position relative to the parent
-Plugin.prototype._getPositionFromNode = function (node) {
+RangeSlider.prototype._getPositionFromNode = function (node) {
     var i = 0;
     while (node !== null) {
         i += node.offsetLeft;
@@ -481,7 +482,7 @@ Plugin.prototype._getPositionFromNode = function (node) {
  * @param {(MouseEvent|TouchEvent)}e
  * @returns {number}
  */
-Plugin.prototype._getRelativePosition = function (e) {
+RangeSlider.prototype._getRelativePosition = function (e) {
     // Get the offset left relative to the viewport
     var rangeX = this.range.getBoundingClientRect().left,
         orgEv = e.originalEvent,
@@ -506,7 +507,7 @@ Plugin.prototype._getRelativePosition = function (e) {
  * @returns {number|*}
  * @private
  */
-Plugin.prototype._getPositionFromValue = function (value) {
+RangeSlider.prototype._getPositionFromValue = function (value) {
     var percentage, pos;
     percentage = (value - this.min) / (this.max - this.min);
     pos = percentage * this.maxHandleX;
@@ -519,7 +520,7 @@ Plugin.prototype._getPositionFromValue = function (value) {
  * @returns {number}
  * @private
  */
-Plugin.prototype._getValueFromPosition = function (pos) {
+RangeSlider.prototype._getValueFromPosition = function (pos) {
     var percentage, value;
     percentage = ((pos) / (this.maxHandleX || 1));
     value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
@@ -532,7 +533,7 @@ Plugin.prototype._getValueFromPosition = function (pos) {
  * @param force
  * @private
  */
-Plugin.prototype._setValue = function (value, force) {
+RangeSlider.prototype._setValue = function (value, force) {
 
     if (value === this.value && !force) {
         return;
@@ -550,9 +551,9 @@ Plugin.prototype._setValue = function (value, force) {
  *
  * @param {Object} obj like {min : Number, max : Number, value : Number, step : Number}
  * @param {Boolean} triggerEvents
- * @returns {Plugin}
+ * @returns {RangeSlider}
  */
-Plugin.prototype.update = function (obj, triggerEvents) {
+RangeSlider.prototype.update = function (obj, triggerEvents) {
     if (triggerEvents) {
         this.needTriggerEvents = true;
     }
@@ -587,7 +588,7 @@ Plugin.prototype.update = function (obj, triggerEvents) {
 /**
  *
  */
-Plugin.prototype.destroy = function () {
+RangeSlider.prototype.destroy = function () {
 
     removeAllListenersFromEl.call(this, document);
     window.removeEventListener('resize', this._handleResize, false);
@@ -607,13 +608,13 @@ Plugin.prototype.destroy = function () {
  * @param el
  * @param options
  */
-Plugin.create = function (el, options) {
+RangeSlider.create = function (el, options) {
     function createInstance(el) {
         var data = el[pluginName];
 
         // Create a new instance.
         if (!data) {
-            data = new Plugin(el, options);
+            data = new RangeSlider(el, options);
             el[pluginName] = data;
         }
     }
@@ -627,4 +628,4 @@ Plugin.create = function (el, options) {
     }
 };
 
-module.exports = Plugin;
+module.exports = RangeSlider;
