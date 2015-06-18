@@ -11,7 +11,6 @@ with browserify usage in mind;
 
 - use external modules where possible, split the source into modules
 - reduce the size
-- include less build in dist/, include autoprefixer in the build
 - (eventually) base styles and optional theme(s)
 - use css transform for moving the drag handle
 - add tests
