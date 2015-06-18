@@ -30,7 +30,7 @@ with browserify usage in mind;
  ```js
  var rangeslider = require('rangeslider-js')
  ```
- 
+  
  TODO
  
 ### Use the standalone version

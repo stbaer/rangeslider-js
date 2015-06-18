@@ -19,18 +19,28 @@
     "build": "gulp build",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "object-assign": "^3.0.0"
+  },
   "devDependencies": {
+    "browser-sync": "^2.7.12",
     "browserify": "^10.2.4",
     "chai": "^3.0.0",
     "clamp": "^1.0.1",
     "del": "^1.2.0",
     "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
     "gulp-cached": "^1.1.0",
+    "gulp-csso": "^1.0.0",
+    "gulp-filter": "^2.0.2",
     "gulp-jshint": "^1.11.0",
+    "gulp-less": "^3.0.3",
+    "gulp-load-plugins": "^1.0.0-rc",
     "gulp-mocha": "^2.1.1",
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",
+    "gulp-size": "^1.2.1",
+    "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.5",
     "ink-docstrap": "^0.5.2",
@@ -39,7 +49,7 @@
     "jshint-summary": "^0.4.0",
     "lodash": "^3.9.3",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.0",
+    "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.2"

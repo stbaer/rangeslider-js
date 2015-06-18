@@ -15,6 +15,14 @@ var HANDLE_CLASS = 'rangeslider__handle';
 var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
 
+var START_EVENTS = ['mousedown', 'touchstart', 'pointerdown'];
+var MOVE_EVENTS = ['mousemove', 'touchmove', 'pointermove'];
+var END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
+
+if (!Object.assign) {
+    Object.assign = require('object-assign');
+}
+
 /**
  * Range feature detection
  * @return {Boolean}
@@ -30,14 +38,10 @@ var pluginName = 'rangeslider-js',
     inputrange = supportsRange(),
     defaults = {
         polyfill: true,
-        startEvent: ['mousedown', 'touchstart', 'pointerdown'],
-        moveEvent: ['mousemove', 'touchmove', 'pointermove'],
-        endEvent: ['mouseup', 'touchend', 'pointerup'],
         min: null,
         max: null,
         step: null,
-        value: null,
-        borderRadius: 10
+        value: null
     };
 
 /**
@@ -75,6 +79,7 @@ function getHiddenParentNodes(element) {
  * @return {Number}
  */
 function getDimension(element, key) {
+
     var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
         displayProperty = [],
@@ -88,27 +93,30 @@ function getDimension(element, key) {
     }
 
     if (hiddenParentNodesLength) {
+
+        var hiddenStyles;
+
         for (var i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
-            displayProperty[i] = hiddenParentNodes[i].style.display;
-
-            var hiddenStyles = hiddenParentNodes[i].style;
-
+            displayProperty[i] = hiddenStyles.display;
             hiddenStyles.display = 'block';
             hiddenStyles.height = '0';
             hiddenStyles.overflow = 'hidden';
             hiddenStyles.visibility = 'hidden';
+
             toggleOpenProperty(hiddenParentNodes[i]);
         }
 
         dimension = element[key];
 
         for (var j = 0; j < hiddenParentNodesLength; j++) {
+            hiddenStyles = hiddenParentNodes[j].style;
             toggleOpenProperty(hiddenParentNodes[j]);
-            hiddenParentNodes[j].style.display = displayProperty[j];
-            hiddenParentNodes[j].style.height = '';
-            hiddenParentNodes[j].style.overflow = '';
-            hiddenParentNodes[j].style.visibility = '';
+            hiddenStyles.style.display = displayProperty[j];
+            hiddenStyles.style.height = '';
+            hiddenStyles.style.overflow = '';
+            hiddenStyles.style.visibility = '';
         }
     }
     return dimension;
@@ -129,11 +137,9 @@ function forEachAncestors(el, callback, andForElement) {
     if (andForElement) {
         callback(el);
     }
-
     while (el.parentNode && !callback(el)) {
         el = el.parentNode;
     }
-
     return el;
 }
 
@@ -268,7 +274,7 @@ function RangeSlider(el, options) {
     this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
     this.min = this.options.min || parseFloat(el.getAttribute('min')) || 0;
     this.max = this.options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
-    this.value = this.options.value || el.value || this.min + (this.max - this.min) / 2;
+    this.value = this.options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
     this.step = this.options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
     this.percent = null;
     this._updatePercentFromValue();
@@ -288,8 +294,7 @@ function RangeSlider(el, options) {
     this.range.appendChild(this.handle);
     this.range.appendChild(this.fill);
 
-
-    this._setValue(this.options.value, true);
+    this._setValue(this.value, true);
     el.value = this.options.value;
     el.setAttribute('min', '' + this.min);
 
@@ -317,7 +322,7 @@ function RangeSlider(el, options) {
     //// Attach Events
     window.addEventListener('resize', this._handleResize, false);
 
-    addEventListeners(document, this.options.startEvent, this._startEventListener);
+    addEventListeners(document, START_EVENTS, this._startEventListener);
 
     // Listen to programmatic value changes
     el.addEventListener('change', this._changeEventListener, false);
@@ -328,7 +333,6 @@ RangeSlider.prototype.constructor = RangeSlider;
 RangeSlider.prototype._toFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
-
 
 RangeSlider.prototype._init = function () {
     if (this.onInit && typeof this.onInit === 'function') {
@@ -360,6 +364,12 @@ RangeSlider.prototype._startEventListener = function (ev, data) {
     }
 };
 
+/**
+ *
+ * @param ev
+ * @param data
+ * @private
+ */
 RangeSlider.prototype._changeEventListener = function (ev, data) {
     if (data && data.origin === this.identifier) {
         return;
@@ -368,6 +378,10 @@ RangeSlider.prototype._changeEventListener = function (ev, data) {
     this._setPosition(this._getPositionFromValue(value));
 };
 
+/**
+ *
+ * @private
+ */
 RangeSlider.prototype._update = function () {
 
     this.handleWidth = getDimension(this.handle, 'offsetWidth');
@@ -383,7 +397,9 @@ RangeSlider.prototype._update = function () {
     this.element.dispatchEvent(new Event('change'));
 };
 
-
+/**
+ *
+ */
 RangeSlider.prototype._handleResize = debounce(function () {
     this._update();
 }, HANDLE_RESIZE_DEBOUNCE);
@@ -392,8 +408,8 @@ RangeSlider.prototype._handleDown = function (e) {
 
     this.isInteractsNow = true;
     e.preventDefault();
-    addEventListeners(document, this.options.moveEvent, this._handleMove);
-    addEventListeners(document, this.options.endEvent, this._handleEnd);
+    addEventListeners(document, MOVE_EVENTS, this._handleMove);
+    addEventListeners(document, END_EVENTS, this._handleEnd);
 
     // If we click on the handle don't set the new position
     if (e.target.classList.contains(HANDLE_CLASS)) {
@@ -422,8 +438,8 @@ RangeSlider.prototype._handleMove = function (e) {
 
 RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
-    removeEventListeners(document, this.options.moveEvent, this._handleMove);
-    removeEventListeners(document, this.options.endEvent, this._handleEnd);
+    removeEventListeners(document, MOVE_EVENTS, this._handleMove);
+    removeEventListeners(document, END_EVENTS, this._handleEnd);
 
     // Ok we're done fire the change event
     triggerEvent(this.element, 'change', {origin: this.identifier});

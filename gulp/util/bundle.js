@@ -1,13 +1,10 @@
-var path        = require('path'),
-    gulp        = require('gulp'),
-    gutil       = require('gulp-util'),
-    uglify      = require('gulp-uglify'),
-    rename      = require('gulp-rename'),
-    source      = require('vinyl-source-stream'),
-    buffer      = require('vinyl-buffer'),
-    browserify  = require('browserify'),
-    watchify    = require('watchify'),
-    handleErrors = require('../util/handleErrors');
+var plugins = require("gulp-load-plugins")();
+var gulp        = require('gulp');
+var source      = require('vinyl-source-stream');
+var buffer      = require('vinyl-buffer');
+var browserify  = require('browserify');
+var watchify    = require('watchify');
+var handleErrors = require('../util/handleErrors');
 
 function rebundle() {
     return this.bundle()
@@ -16,15 +13,22 @@ function rebundle() {
         .pipe(source('rangeslider-js.js'))
         .pipe(gulp.dest(paths.out))
         .pipe(buffer())
-        .pipe(uglify())
-        .pipe(rename({ suffix: '.min' }))
+        .pipe(plugins.uglify())
+        .pipe(plugins.rename({ suffix: '.min' }))
+        .pipe(plugins.size({
+            varwFiles: true
+        }))
+        .pipe(plugins.size({
+            gzip: true,
+            showFiles: true
+        }))
         .pipe(gulp.dest(paths.out));
 }
 
 function createBundler(args) {
     args = args || {};
     args.debug = true;
-    // args.standalone = 'rangeslider-js';
+    args.standalone = 'rangesliderJs';
 
     return browserify(paths.jsEntry, args);
 }

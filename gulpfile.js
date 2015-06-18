@@ -23,6 +23,7 @@ global.paths = {
     src: './src',
     out: './dist',
     test: './test',
+    root: './',
 
     get scripts() { return this.src + '/**/*.js'; },
     get tests  () { return this.test + '/**/*.test.js'; },
