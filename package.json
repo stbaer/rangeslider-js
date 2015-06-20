@@ -1,10 +1,10 @@
 {
   "name": "rangeslider-js",
-  "version": "1.0.1",
+  "version": "1.1.0-1",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/stbaer/rangeslider-js",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
     "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
     "lodash": "^3.9.3",
-    "object-assign": "^3.0.0",
+    "object-assign": "^2.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
