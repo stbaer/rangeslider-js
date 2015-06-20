@@ -3,7 +3,6 @@
 var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('is-object');
-//@TODO - get rid of this -- jquery!!
 var debounce = require('lodash/function/debounce');
 if (!Object.assign) {
     Object.assign = require('object-assign');
@@ -84,20 +83,19 @@ function getDimension(element, key) {
     var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
         displayProperty = [],
-        dimension = element[key];
+        dimension = element[key],
+        hiddenStyles, i;
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
         if (typeof element.open !== 'undefined') {
-            element.open = (element.open) ? false : true;
+            element.open = !element.open;
         }
     }
 
     if (hiddenParentNodesLength) {
 
-        var hiddenStyles;
-
-        for (var i = 0; i < hiddenParentNodesLength; i++) {
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
@@ -111,10 +109,10 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for (var j = 0; j < hiddenParentNodesLength; j++) {
-            hiddenStyles = hiddenParentNodes[j].style;
-            toggleOpenProperty(hiddenParentNodes[j]);
-            hiddenStyles.display = displayProperty[j];
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
+            toggleOpenProperty(hiddenParentNodes[i]);
+            hiddenStyles.display = displayProperty[i];
             hiddenStyles.height = '';
             hiddenStyles.overflow = '';
             hiddenStyles.visibility = '';
