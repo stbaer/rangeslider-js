@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/stbaer/rangeslider-js",
   "repository": {
     "type": "git",
