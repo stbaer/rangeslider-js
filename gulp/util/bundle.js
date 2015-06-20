@@ -16,7 +16,7 @@ function rebundle() {
         .pipe(plugins.uglify())
         .pipe(plugins.rename({ suffix: '.min' }))
         .pipe(plugins.size({
-            varwFiles: true
+            showFiles: true
         }))
         .pipe(plugins.size({
             gzip: true,
