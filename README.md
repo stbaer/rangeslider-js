@@ -10,9 +10,8 @@ with browserify usage in mind;
 ## TODO
 
 - use external modules where possible, split the source into modules
-- reduce the size
-- (eventually) base styles and optional theme(s)
 - use css transform for moving the drag handle
+- npm register 
 - add tests
 - more...
 
@@ -73,3 +72,7 @@ Once that is ready, you can make your changes and submit a Pull Request.
 [11]: http://jsfiddle.net
 [12]: http://jsbin.com/
 [20]: http://nodejs.org
+
+## Licence
+
+MIT, see [LICENSE.md](http://github.com/stbaer/rangeslider-js/blob/master/LICENSE.md) for details.
