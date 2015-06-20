@@ -1,4 +1,5 @@
 .idea/
 docs/
 node_modules/*
+node_modules/gulp/*
 !node_modules/rangeslider-js/
