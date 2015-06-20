@@ -5,6 +5,10 @@ var isNumber = require('lodash/lang/isNumber');
 var isObject = require('is-object');
 //@TODO - get rid of this -- jquery!!
 var debounce = require('lodash/function/debounce');
+if (!Object.assign) {
+    Object.assign = require('object-assign');
+}
+
 
 var EVENT_LISTENER_LIST = 'eventListenerList';
 var MAX_SET_BY_DEFAULT = 100;
@@ -19,9 +23,6 @@ var START_EVENTS = ['mousedown', 'touchstart', 'pointerdown'];
 var MOVE_EVENTS = ['mousemove', 'touchmove', 'pointermove'];
 var END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
-if (!Object.assign) {
-    Object.assign = require('object-assign');
-}
 
 /**
  * Range feature detection
@@ -113,10 +114,10 @@ function getDimension(element, key) {
         for (var j = 0; j < hiddenParentNodesLength; j++) {
             hiddenStyles = hiddenParentNodes[j].style;
             toggleOpenProperty(hiddenParentNodes[j]);
-            hiddenStyles.style.display = displayProperty[j];
-            hiddenStyles.style.height = '';
-            hiddenStyles.style.overflow = '';
-            hiddenStyles.style.visibility = '';
+            hiddenStyles.display = displayProperty[j];
+            hiddenStyles.height = '';
+            hiddenStyles.overflow = '';
+            hiddenStyles.visibility = '';
         }
     }
     return dimension;
@@ -330,10 +331,20 @@ function RangeSlider(el, options) {
 
 RangeSlider.prototype.constructor = RangeSlider;
 
+/**
+ *
+ * @param step
+ * @returns {number}
+ * @private
+ */
 RangeSlider.prototype._toFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
 
+/**
+ *
+ * @private
+ */
 RangeSlider.prototype._init = function () {
     if (this.onInit && typeof this.onInit === 'function') {
         this.onInit();
@@ -341,6 +352,10 @@ RangeSlider.prototype._init = function () {
     this._update();
 };
 
+/**
+ *
+ * @private
+ */
 RangeSlider.prototype._updatePercentFromValue = function () {
     this.percent = (this.value - this.min) / (this.max - this.min);
 };
