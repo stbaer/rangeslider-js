@@ -16,6 +16,8 @@ with browserify usage in mind;
 - add tests
 - more...
 
+[![browser support](https://ci.testling.com/stbaer/rangeslider-js.png)](https://ci.testling.com/stbaer/rangeslider-js)
+
 ## How to use
 
 [![npm](https://nodei.co/npm/rangeslider-js.svg?downloads=true)](https://nodei.co/npm/rangeslider-js/)
