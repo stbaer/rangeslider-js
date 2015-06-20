@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "1.1.0-1",
+  "version": "1.1.0-2",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
@@ -13,7 +13,9 @@
   "bugs": {
     "url": "https://github.com/stbaer/rangeslider-js/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "browserify", "rangeslider", "plugin", "ui", "range", "slider"
+  ],
   "scripts": {
     "test": "gulp test",
     "build": "gulp build",
