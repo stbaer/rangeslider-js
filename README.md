@@ -1,11 +1,12 @@
 # rangeslider-js
 
 
-Lightweight rangeslider intended to use with browserify, but a standalone version is also included.
+Lightweight rangeslider intended to use with browserify, but a standalone version is also included. [Examples][1]
 
 Based on [Sergei Stryzhevskyi's rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
 with browserify usage in mind;
 
+[1]: http://stbaer.github.io/rangeslider-js/
 [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
 ## TODO
@@ -14,6 +15,8 @@ with browserify usage in mind;
 - use css transform for moving the drag handle
 - add tests
 - more...
+
+[![browser support](https://ci.testling.com/stbaer/rangeslider-js.png)](https://ci.testling.com/stbaer/rangeslider-js)
 
 ## How to use
 

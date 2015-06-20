@@ -16,7 +16,7 @@ function rebundle() {
         .pipe(plugins.uglify())
         .pipe(plugins.rename({ suffix: '.min' }))
         .pipe(plugins.size({
-            varwFiles: true
+            showFiles: true
         }))
         .pipe(plugins.size({
             gzip: true,
@@ -27,7 +27,7 @@ function rebundle() {
 
 function createBundler(args) {
     args = args || {};
-    args.debug = true;
+    args.debug = false;
     args.standalone = 'rangesliderJs';
 
     return browserify(paths.jsEntry, args);
