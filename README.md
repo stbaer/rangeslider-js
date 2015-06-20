@@ -1,29 +1,25 @@
 # rangeslider-js
 
+
 Lightweight rangeslider intended to use with browserify, but a standalone version is also included.
 
 Based on [Sergei Stryzhevskyi's rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
 with browserify usage in mind;
 
-*This is in work in progress and not ready for production use*
+[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
 ## TODO
 
 - use external modules where possible, split the source into modules
 - use css transform for moving the drag handle
-- npm register 
 - add tests
 - more...
 
 ## How to use
 
-### Install
- 
- ```
- npm i stbaer/rangeslider-js --save-dev
- ```
- 
-### Use with browserify
+[![npm](https://nodei.co/npm/rangeslider-js.svg?downloads=true)](https://nodei.co/npm/rangeslider-js/)
+
+### browserify
  
  ```js
  var rangeslider = require('rangeslider-js')
@@ -31,7 +27,7 @@ with browserify usage in mind;
   
  TODO
  
-### Use the standalone version
+### standalone
 
  TODO
  

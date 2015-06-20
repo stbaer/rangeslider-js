@@ -13,7 +13,9 @@
   "bugs": {
     "url": "https://github.com/stbaer/rangeslider-js/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "browserify", "rangeslider", "plugin", "ui", "range", "slider"
+  ],
   "scripts": {
     "test": "gulp test",
     "build": "gulp build",
