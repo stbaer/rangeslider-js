@@ -40,7 +40,7 @@ with browserify usage in mind;
  
  TODO
  
-## Building
+## Build
 
 You will need to have [node][node] and [gulp][gulp] setup on your machine.
 
@@ -54,3 +54,22 @@ That will output the built distributables to `./dist`.
 
 [node]:       http://nodejs.org/
 [gulp]:       http://gulpjs.com/
+
+
+## Contribute
+
+To report a bug, request a feature, or even ask a question, make use of the [GitHub Issues][10] in this repo.
+
+To build the library you will need to download node.js from [nodejs.org][20]. After it has been installed open a
+console and run `npm install -g gulp` to install the global `gulp` executable.
+
+After that you can clone the repository and run `npm install` inside the cloned folder. This will install
+dependencies necessary for building the project. You can rebuild the project by running `gulp` in the cloned
+folder.
+
+Once that is ready, you can make your changes and submit a Pull Request.
+
+[10]: https://github.com/stbaer/rangeslider-js/issues
+[11]: http://jsfiddle.net
+[12]: http://jsbin.com/
+[20]: http://nodejs.org

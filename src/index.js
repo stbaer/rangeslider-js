@@ -37,7 +37,6 @@ var pluginName = 'rangeslider-js',
     pluginIdentifier = 0,
     inputrange = supportsRange(),
     defaults = {
-        polyfill: true,
         min: null,
         max: null,
         step: null,
@@ -95,7 +94,7 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
@@ -109,7 +108,7 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             toggleOpenProperty(hiddenParentNodes[i]);
             hiddenStyles.display = displayProperty[i];
@@ -155,8 +154,7 @@ function triggerEvent(el, name, data) {
     if (!(el instanceof HTMLElement)) {
         throw new TypeError('element must be HTMLElement');
     }
-    name = name.trim();
-    var event = new CustomEvent(name, data);
+    var event = new CustomEvent(name.trim(), data);
     el.dispatchEvent(event);
 }
 
@@ -176,18 +174,11 @@ function insertAfter(referenceNode, newNode) {
  */
 function addEventListeners(el, events, listener) {
     events.forEach(function (eventName) {
-        if (!el[EVENT_LISTENER_LIST]) {
-            el[EVENT_LISTENER_LIST] = {};
-        }
-        if (!el[EVENT_LISTENER_LIST][eventName]) {
-            el[EVENT_LISTENER_LIST][eventName] = [];
-        }
+        el[EVENT_LISTENER_LIST] = el[EVENT_LISTENER_LIST] || {};
+        el[EVENT_LISTENER_LIST][eventName] = el[EVENT_LISTENER_LIST][eventName] || [];
 
-        el.addEventListener(
-            eventName,
-            listener,
-            false
-        );
+        el.addEventListener(eventName, listener, false);
+
         if (el[EVENT_LISTENER_LIST][eventName].indexOf(listener) < 0) {
             el[EVENT_LISTENER_LIST][eventName].push(listener);
         }
@@ -204,11 +195,11 @@ function removeEventListeners(el, events, listener) {
     events.forEach(function (eventName) {
         el.removeEventListener(eventName, listener, false);
 
-        var index;
-        if (el[EVENT_LISTENER_LIST] && el[EVENT_LISTENER_LIST][eventName] &&
-            (index = el[EVENT_LISTENER_LIST][eventName].indexOf(listener)) > -1
-        ) {
-            el[EVENT_LISTENER_LIST][eventName].splice(index, 1);
+        var list = el[EVENT_LISTENER_LIST],
+            index = list && list[eventName] && list[eventName].indexOf(listener);
+
+        if (isNumber(index) && index > -1) {
+            list[eventName].splice(index, 1);
         }
     });
 }
@@ -253,7 +244,7 @@ function RangeSlider(el, options) {
 
     this.element = el;
     this.options = Object.assign(defaults, options);
-    this.polyfill = this.options.polyfill;
+
     this.onInit = this.options.onInit;
     this.onSlide = this.options.onSlide;
     this.onSlideStart = this.options.onSlideStart;
@@ -262,14 +253,6 @@ function RangeSlider(el, options) {
     this.isInteractsNow = false;
     this.needTriggerEvents = false;
 
-    // RangeSlider should only be used as a polyfill
-    if (!this.polyfill) {
-        // Input range support?
-        if (inputrange) {
-            return false;
-        }
-    }
-
     this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
     this.min = this.options.min || parseFloat(el.getAttribute('min')) || 0;
     this.max = this.options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
@@ -277,9 +260,7 @@ function RangeSlider(el, options) {
     this.step = this.options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
     this.percent = null;
     this._updatePercentFromValue();
-
     this.toFixed = this._toFixed(this.step);
-
 
     this.fill = document.createElement('div');
     this.fill.className = FILL_CLASS;
@@ -295,8 +276,8 @@ function RangeSlider(el, options) {
 
     this._setValue(this.value, true);
     el.value = this.options.value;
-    el.setAttribute('min', '' + this.min);
 
+    el.setAttribute('min', '' + this.min);
     el.setAttribute('max', '' + this.max);
     el.setAttribute('step', '' + this.step);
 
@@ -639,12 +620,9 @@ RangeSlider.prototype.destroy = function () {
  */
 RangeSlider.create = function (el, options) {
     function createInstance(el) {
-        var data = el[pluginName];
-
         // Create a new instance.
-        if (!data) {
-            data = new RangeSlider(el, options);
-            el[pluginName] = data;
+        if (!el[pluginName]) {
+            el[pluginName] = new RangeSlider(el, options);
         }
     }
 
