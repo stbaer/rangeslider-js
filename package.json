@@ -19,9 +19,7 @@
     "build": "gulp build",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json"
   },
-  "dependencies": {
-    "object-assign": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "attach-dom-events": "^1.0.0",
     "browser-sync": "^2.7.12",
@@ -49,6 +47,7 @@
     "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
     "lodash": "^3.9.3",
+    "object-assign": "^3.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",

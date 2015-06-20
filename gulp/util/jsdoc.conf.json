@@ -4,8 +4,7 @@
     },
     "source": {
         "include": [
-            "./src/index.js",
-            "./src/display/DisplayObject.js"
+            "./src/index.js"
         ],
         "exclude": [
         ],
@@ -21,9 +20,9 @@
         "default"       : {
             "outputSourceFiles" : true
         },
-        "systemName"    : "PIXI",
+        "systemName"    : "rangeslider-js",
         "footer"        : "",
-        "copyright"     : "PIXI Copyright © 2013-2015 Mat Groves.",
+        "copyright"     : "rangeslider-js Copyright © 2015 Steffen Bär.",
         "navType"       : "vertical",
         "theme"         : "cerulean",
         "linenums"      : true,

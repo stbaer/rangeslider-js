@@ -4,9 +4,9 @@ var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('lodash/lang/isObject');
 var debounce = require('lodash/function/debounce');
+var objectAssign = require('object-assign');
 var eve = require('dom-events');
 var attach = require('attach-dom-events');
-var objectAssign = require('object-assign');
 
 var MAX_SET_BY_DEFAULT = 100;
 var HANDLE_RESIZE_DEBOUNCE = 100;
@@ -39,7 +39,7 @@ function isHidden(element) {
  * Get hidden parentNodes of an `element`
  *
  * @param  {Element} element
- * @return {[type]}
+ * @return {Element[]}
  */
 function getHiddenParentNodes(element) {
 
