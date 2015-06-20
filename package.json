@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
@@ -19,15 +19,15 @@
     "build": "gulp build",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json"
   },
-  "dependencies": {
-    "object-assign": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "attach-dom-events": "^1.0.0",
     "browser-sync": "^2.7.12",
     "browserify": "^10.2.4",
     "chai": "^3.0.0",
     "clamp": "^1.0.1",
     "del": "^1.2.0",
+    "dom-events": "^0.1.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-cached": "^1.1.0",
@@ -44,10 +44,10 @@
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.5",
     "ink-docstrap": "^0.5.2",
-    "is-object": "^1.0.1",
     "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
     "lodash": "^3.9.3",
+    "object-assign": "^3.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",

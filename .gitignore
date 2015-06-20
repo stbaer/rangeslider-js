@@ -16,6 +16,6 @@ npm-debug.log
 # project ignores
 !.gitkeep
 node_modules
-dist
 
 .idea/
+docs/
