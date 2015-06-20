@@ -1,0 +1,66 @@
+@import "variables";
+
+.rangeslider {
+    position: relative;
+    cursor: pointer;
+    height: @handle-width;
+}
+
+.rangeslider, .rangeslider__fill {
+    display: block;
+    width: 100% !important;
+}
+
+.rangeslider__fill,
+.rangeslider__handle {
+    position: absolute;
+}
+
+.rangeslider--disabled {
+    opacity: 0.4;
+}
+
+.rangeslider__fill {
+    top: calc(~"50%" - @fill-height/2);
+    height: @fill-height;
+    z-index: @fill-z-index;
+    background: @slider-color;
+    border-radius: 10px;
+}
+
+.rangeslider__handle {
+    display: inline-block;
+    background: @handle-color;
+    width: @handle-width;
+    height: @handle-width;
+    top: 0;
+    z-index: @fill-z-index + 1;
+    cursor: pointer;
+    border: solid 2px #ffffff;
+    border-radius: 50%;
+}
+.rangeslider__handle:active ,
+input[type="range"]:focus + .rangeslider .rangeslider__handle {
+    background: darken(@handle-color, 10%);
+}
+
+.rangeslider--slim{
+    .rangeslider{
+        height:  @handle-width - 10;
+    }
+    &.rangeslider, .rangeslider__fill {
+        border-radius: 10px;
+    }
+
+    .rangeslider__fill {
+        top: calc(~"50%" - 1px);
+        height: 2px;
+    }
+
+    .rangeslider__handle {
+        width: @handle-width - 10;
+        height: @handle-width - 10;
+        border-radius: 50%;
+        transition: width .3s ease!important;
+    }
+}
