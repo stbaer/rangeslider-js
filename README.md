@@ -49,6 +49,10 @@ rangesliderJs( elements, {/* optional, see options */ } );
 }
 ```
 
+*If no options for min, max, value or step are specified, the script will look for
+data-min, data-max,... attributes on the input element and fall back to the defaults
+above if they are not found.*
+
 ## Build
 
 You will need to have [node][node] and [gulp][gulp] setup on your machine.
