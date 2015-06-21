@@ -4,9 +4,7 @@ var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('lodash/lang/isObject');
 var debounce = require('lodash/function/debounce');
-var objectAssign = require('object-assign');
 var eve = require('dom-events');
-var attach = require('attach-dom-events');
 
 var MAX_SET_BY_DEFAULT = 100;
 var HANDLE_RESIZE_DEBOUNCE = 100;
@@ -17,13 +15,7 @@ var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
 
 var pluginName = 'rangeslider-js',
-    pluginIdentifier = 0,
-    defaults = {
-        min: null,
-        max: null,
-        step: null,
-        value: null
-    };
+    pluginIdentifier = 0;
 
 /**
  * Check if a `element` is visible in the DOM
@@ -100,18 +92,13 @@ function getDimension(element, key) {
             hiddenStyles.visibility = '';
         }
     }
-    console.log(dimension);
     return dimension;
-}
-
-function isString(obj) {
-    return obj === '' + obj;
 }
 
 /**
  *
  * @param {HTMLElement} el
- * @callback callback
+ * @param {function} callback
  * @param {boolean} andForElement - apply callback for el
  * @returns {HTMLElement}
  */
@@ -135,23 +122,34 @@ function insertAfter(referenceNode, newNode) {
 
 /**
  * RangeSlider
- * @param {HTMLElement} element
- * @param {this} options
+ * @param {HTMLElement} el
+ * @param {object} options
+ * @property {number} [options.min]
+ * @property {number} [options.max]
+ * @property {number} [options.value]
+ * @property {number} [options.step]
+ * @property {function} [options.onInit] - init callback
+ * @property {function} [options.onSlideStart] - slide start callback
+ * @property {function} [options.onSlide] - slide callback
+ * @property {function} [options.onSlideEnd] - slide end callback
  */
 function RangeSlider(el, options) {
 
+    options = options || {};
+
     this.element = el;
-    this.options = objectAssign(defaults, options);
+    this.options = options;
 
     this.onSlideEventsCount = -1;
-    this.isInteractsNow = false;
+    this.isInteracting = false;
     this.needTriggerEvents = false;
 
     this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
-    this.min = this.options.min || parseFloat(el.getAttribute('min')) || 0;
-    this.max = this.options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
-    this.value = this.options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
-    this.step = this.options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
+    this.min = options.min || parseFloat(el.getAttribute('min')) || 0;
+    this.max = options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
+    this.value = options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
+    this.step = options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
+
     this.percent = null;
     this._updatePercentFromValue();
     this.toFixed = this._toFixed(this.step);
@@ -164,13 +162,12 @@ function RangeSlider(el, options) {
 
     this.range = document.createElement('div');
     this.range.className = RANGE_CLASS;
+
     this.range.id = this.identifier;
     this.range.appendChild(this.handle);
     this.range.appendChild(this.fill);
 
     this._setValue(this.value, true);
-    el.value = this.options.value;
-
     el.setAttribute('min', '' + this.min);
     el.setAttribute('max', '' + this.max);
     el.setAttribute('step', '' + this.step);
@@ -196,16 +193,13 @@ function RangeSlider(el, options) {
     //// Attach Events
     window.addEventListener('resize', debounce(this._handleResize.bind(this), HANDLE_RESIZE_DEBOUNCE), false);
 
-    attach(document, {
-        mousedown: this._startEventListener,
-        touchstart: this._startEventListener,
-        pointerdown: this._startEventListener
-    });
+    this.range.addEventListener('mousedown', this._startEventListener);
+    this.range.addEventListener('touchstart', this._startEventListener);
+    this.range.addEventListener('pointerdown', this._startEventListener);
+
 
     // Listen to programmatic value changes
-    attach.on(el, {
-        change: this._changeEventListener
-    })
+    el.addEventListener('change', this._changeEventListener);
 }
 
 RangeSlider.prototype.constructor = RangeSlider;
@@ -288,7 +282,7 @@ RangeSlider.prototype._update = function () {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    this.element.dispatchEvent(new Event('change'));
+    eve.emit(this.element, 'change');
 };
 
 /**
@@ -298,19 +292,31 @@ RangeSlider.prototype._handleResize = function () {
     this._update();
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleDown = function (e) {
 
-    this.isInteractsNow = true;
+    this.isInteracting = true;
     e.preventDefault();
-    attach.on(document, {
-        mousemove: this._handleMove,
-        touchmove: this._handleMove,
-        pointermove: this._handleMove,
+    document.addEventListener('mousemove', this._handleMove);
+    document.addEventListener('touchmove', this._handleMove);
+    document.addEventListener('pointermove', this._handleMove);
 
-        mouseup: this._handleEnd,
-        touchend: this._handleEnd,
-        pointerup: this._handleEnd
-    });
+    document.addEventListener('mouseup', this._handleEnd);
+    document.addEventListener('touchend', this._handleEnd);
+    document.addEventListener('pointerup', this._handleEnd);
+    //attach.on(document, {
+    //    mousemove: this._handleMove,
+    //    touchmove: this._handleMove,
+    //    pointermove: this._handleMove,
+    //
+    //    mouseup: this._handleEnd,
+    //    touchend: this._handleEnd,
+    //    pointerup: this._handleEnd
+    //});
 
     // If we click on the handle don't set the new position
     if (e.target.classList.contains(HANDLE_CLASS)) {
@@ -330,35 +336,50 @@ RangeSlider.prototype._handleDown = function (e) {
 
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleMove = function (e) {
-    this.isInteractsNow = true;
+    this.isInteracting = true;
     e.preventDefault();
     var posX = this._getRelativePosition(e);
     this._setPosition(posX - this.grabX);
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
-    attach.off(document, {
-        mousemove: this._handleMove,
-        touchmove: this._handleMove,
-        pointermove: this._handleMove,
+    console.log(this.identifier);
 
-        mouseup: this._handleEnd,
-        touchend: this._handleEnd,
-        pointerup: this._handleEnd
-    });
+    document.removeEventListener('mousemove', this._handleMove);
+    document.removeEventListener('touchmove', this._handleMove);
+    document.removeEventListener('pointermove', this._handleMove);
 
-    eve.emit(this.element, 'change', {origin: this.identifier} );
+    document.removeEventListener('mouseup', this._handleEnd);
+    document.removeEventListener('touchend', this._handleEnd);
+    document.removeEventListener('pointerup', this._handleEnd);
 
-    if ((this.isInteractsNow || this.needTriggerEvents) && this.options.onSlideEnd) {
+    eve.emit(this.element, 'change', {origin: this.identifier});
+
+    if ((this.isInteracting || this.needTriggerEvents) && this.options.onSlideEnd) {
         this.options.onSlideEnd(this.value, this.percent, this.position);
     }
     this.onSlideEventsCount = 0;
-    this.isInteractsNow = false;
+    this.isInteracting = false;
 };
 
+/**
+ *
+ * @param pos
+ * @private
+ */
 RangeSlider.prototype._setPosition = function (pos) {
     var value= this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         left = this._getPositionFromValue(value);
@@ -373,7 +394,7 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.value = value;
     this._updatePercentFromValue();
 
-    if (this.isInteractsNow || this.needTriggerEventss) {
+    if (this.isInteracting || this.needTriggerEventss) {
         if (this.options.onSlideStart && this.onSlideEventsCount === 0) {
             this.options.onSlideStart(this.value, this.percent, this.position);
         }
@@ -398,7 +419,7 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
 
 /**
  *
- * @param {(MouseEvent|TouchEvent)}e
+ * @param {Event} e
  * @returns {number}
  */
 RangeSlider.prototype._getRelativePosition = function (e) {
@@ -461,7 +482,7 @@ RangeSlider.prototype._setValue = function (value, force) {
     // Set the new value and fire the `input` event
     this.element.value = value;
     this.value = value;
-    eve.emit(this.element, 'input', {origin: this.identifier});
+    eve.emit(this.element, 'change', {origin: this.identifier});
 
 };
 
@@ -511,14 +532,10 @@ RangeSlider.prototype.destroy = function () {
 
     window.removeEventListener('resize', this._handleResize, false);
 
-    attach.off(document, {
-        mousedown: this._startEventListener,
-        touchstart: this._startEventListener,
-        pointerdown: this._startEventListener,
-    });
-    attach.off(this.element, {
-        change: this._changeEventListener
-    });
+    this.range.removeEventListener('mousedown', this._startEventListener);
+    this.range.removeEventListener('touchstart', this._startEventListener);
+    this.range.removeEventListener('pointerdown', this._startEventListener);
+    this.element.removeEventListener('change', this._changeEventListener);
 
     this.element.style.cssText = '';
     delete this.element[pluginName];
