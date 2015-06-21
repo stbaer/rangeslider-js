@@ -6,7 +6,7 @@
   "directories": {},
   "dependencies": {},
   "devDependencies": {
-    "rangeslider-js": "^1.1.4"
+    "rangeslider-js": "^1.1.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
