@@ -1,5 +1,7 @@
 'use strict';
 
+/** @module RangeSlider */
+
 var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('lodash/lang/isObject');
@@ -14,8 +16,8 @@ var HANDLE_CLASS = 'rangeslider__handle';
 var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
 
-var pluginName = 'rangeslider-js',
-    pluginIdentifier = 0;
+var pluginName = 'rangeslider-js';
+var pluginIdentifier = 0;
 
 /**
  * Check if a `element` is visible in the DOM
@@ -308,15 +310,6 @@ RangeSlider.prototype._handleDown = function (e) {
     document.addEventListener('mouseup', this._handleEnd);
     document.addEventListener('touchend', this._handleEnd);
     document.addEventListener('pointerup', this._handleEnd);
-    //attach.on(document, {
-    //    mousemove: this._handleMove,
-    //    touchmove: this._handleMove,
-    //    pointermove: this._handleMove,
-    //
-    //    mouseup: this._handleEnd,
-    //    touchend: this._handleEnd,
-    //    pointerup: this._handleEnd
-    //});
 
     // If we click on the handle don't set the new position
     if (e.target.classList.contains(HANDLE_CLASS)) {
@@ -379,7 +372,7 @@ RangeSlider.prototype._handleEnd = function (e) {
  * @private
  */
 RangeSlider.prototype._setPosition = function (pos) {
-    var value= this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
+    var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         left = this._getPositionFromValue(value);
 
     // Update ui
@@ -480,7 +473,7 @@ RangeSlider.prototype._setValue = function (value, force) {
     // Set the new value and fire the `input` event
     this.element.value = value;
     this.value = value;
-    eve.emit(this.element, 'change', {origin: this.identifier});
+    eve.emit(this.element, 'input', {origin: this.identifier});
 
 };
 
@@ -533,26 +526,26 @@ RangeSlider.prototype.destroy = function () {
     this.range.removeEventListener('mousedown', this._startEventListener);
     this.range.removeEventListener('touchstart', this._startEventListener);
     this.range.removeEventListener('pointerdown', this._startEventListener);
+
     this.element.removeEventListener('change', this._changeEventListener);
 
     this.element.style.cssText = '';
     delete this.element[pluginName];
 
     // Remove the generated markup
-    if (this.range) {
-        this.range.parentNode.removeChild(this.range);
-    }
+    this.range.parentNode.removeChild(this.range);
 };
 
 /**
  * A lightweight plugin wrapper around the constructor, preventing multiple instantiations
- * @param el
- * @param options
+ * @param {Element|NodeList} el
+ * @param {object} options
  */
 RangeSlider.create = function (el, options) {
     function createInstance(el) {
-        el[pluginName] =el[pluginName] || new RangeSlider(el, options);
+        el[pluginName] = el[pluginName] || new RangeSlider(el, options);
     }
+
     if (el.length) {
         Array.prototype.slice.call(el).forEach(function (el) {
             createInstance(el);

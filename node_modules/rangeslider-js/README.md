@@ -23,7 +23,7 @@ with browserify usage in mind.
  
 ### Standalone
 
-- include node_modules/dist/rangeslider-js.min.css and node_modules/dist/rangeslider-js.min.js
+- include *rangeslider-js.min.css* and *rangeslider-js.min.js* (from node_modules/dist/ )
 
 ### Initialize
 
