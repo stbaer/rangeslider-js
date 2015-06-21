@@ -1,21 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.rangesliderJs = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var domEvents = require('dom-events')
-
-function helper(func, element, events) {
-	events = events||{}
-	for (var k in events) {
-		if (events.hasOwnProperty(k)) 
-			func(element, k, events[k])
-	}
-}
-
-var on = helper.bind(this, domEvents.on)
-
-module.exports = on
-module.exports.on = on
-module.exports.off = helper.bind(this, domEvents.off)
-module.exports.once = helper.bind(this, domEvents.once)
-},{"dom-events":3}],2:[function(require,module,exports){
 module.exports = clamp
 
 function clamp(value, min, max) {
@@ -24,7 +7,7 @@ function clamp(value, min, max) {
     : (value < max ? max : value > min ? min : value)
 }
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 
 var synth = require('synthetic-dom-events');
 
@@ -75,7 +58,7 @@ module.exports = {
     emit: emit
 };
 
-},{"synthetic-dom-events":4}],4:[function(require,module,exports){
+},{"synthetic-dom-events":3}],3:[function(require,module,exports){
 
 // for compression
 var win = window;
@@ -196,7 +179,7 @@ var typeOf = (function () {
     };
 })();
 
-},{"./init.json":5,"./types.json":6}],5:[function(require,module,exports){
+},{"./init.json":4,"./types.json":5}],4:[function(require,module,exports){
 module.exports={
   "initEvent" : [
     "type",
@@ -263,7 +246,7 @@ module.exports={
   ]
 }
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 module.exports={
   "MouseEvent" : [
     "click",
@@ -308,7 +291,7 @@ module.exports={
   ]
 }
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var getNative = require('../internal/getNative');
 
 /* Native method references for those with the same name as other `lodash` methods. */
@@ -334,7 +317,7 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"../internal/getNative":10}],8:[function(require,module,exports){
+},{"../internal/getNative":9}],7:[function(require,module,exports){
 var isObject = require('../lang/isObject'),
     now = require('../date/now');
 
@@ -523,7 +506,7 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"../date/now":7,"../lang/isObject":14}],9:[function(require,module,exports){
+},{"../date/now":6,"../lang/isObject":13}],8:[function(require,module,exports){
 /**
  * Converts `value` to a string if it's not one. An empty string is returned
  * for `null` or `undefined` values.
@@ -541,7 +524,7 @@ function baseToString(value) {
 
 module.exports = baseToString;
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var isNative = require('../lang/isNative');
 
 /**
@@ -559,7 +542,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"../lang/isNative":12}],11:[function(require,module,exports){
+},{"../lang/isNative":11}],10:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -573,7 +556,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var escapeRegExp = require('../string/escapeRegExp'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -632,7 +615,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isObjectLike":11,"../string/escapeRegExp":15}],13:[function(require,module,exports){
+},{"../internal/isObjectLike":10,"../string/escapeRegExp":14}],12:[function(require,module,exports){
 var isObjectLike = require('../internal/isObjectLike');
 
 /** `Object#toString` result references. */
@@ -675,7 +658,7 @@ function isNumber(value) {
 
 module.exports = isNumber;
 
-},{"../internal/isObjectLike":11}],14:[function(require,module,exports){
+},{"../internal/isObjectLike":10}],13:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -705,7 +688,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var baseToString = require('../internal/baseToString');
 
 /**
@@ -739,44 +722,14 @@ function escapeRegExp(string) {
 
 module.exports = escapeRegExp;
 
-},{"../internal/baseToString":9}],16:[function(require,module,exports){
-'use strict';
-
-function ToObject(val) {
-	if (val == null) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-module.exports = Object.assign || function (target, source) {
-	var from;
-	var keys;
-	var to = ToObject(target);
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = arguments[s];
-		keys = Object.keys(Object(from));
-
-		for (var i = 0; i < keys.length; i++) {
-			to[keys[i]] = from[keys[i]];
-		}
-	}
-
-	return to;
-};
-
-},{}],17:[function(require,module,exports){
+},{"../internal/baseToString":8}],15:[function(require,module,exports){
 'use strict';
 
 var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('lodash/lang/isObject');
 var debounce = require('lodash/function/debounce');
-var objectAssign = require('object-assign');
 var eve = require('dom-events');
-var attach = require('attach-dom-events');
 
 var MAX_SET_BY_DEFAULT = 100;
 var HANDLE_RESIZE_DEBOUNCE = 100;
@@ -787,13 +740,7 @@ var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
 
 var pluginName = 'rangeslider-js',
-    pluginIdentifier = 0,
-    defaults = {
-        min: null,
-        max: null,
-        step: null,
-        value: null
-    };
+    pluginIdentifier = 0;
 
 /**
  * Check if a `element` is visible in the DOM
@@ -870,18 +817,13 @@ function getDimension(element, key) {
             hiddenStyles.visibility = '';
         }
     }
-    console.log(dimension);
     return dimension;
-}
-
-function isString(obj) {
-    return obj === '' + obj;
 }
 
 /**
  *
  * @param {HTMLElement} el
- * @callback callback
+ * @param {function} callback
  * @param {boolean} andForElement - apply callback for el
  * @returns {HTMLElement}
  */
@@ -905,23 +847,34 @@ function insertAfter(referenceNode, newNode) {
 
 /**
  * RangeSlider
- * @param {HTMLElement} element
- * @param {this} options
+ * @param {HTMLElement} el
+ * @param {object} options
+ * @property {number} [options.min]
+ * @property {number} [options.max]
+ * @property {number} [options.value]
+ * @property {number} [options.step]
+ * @property {function} [options.onInit] - init callback
+ * @property {function} [options.onSlideStart] - slide start callback
+ * @property {function} [options.onSlide] - slide callback
+ * @property {function} [options.onSlideEnd] - slide end callback
  */
 function RangeSlider(el, options) {
 
+    options = options || {};
+
     this.element = el;
-    this.options = objectAssign(defaults, options);
+    this.options = options;
 
     this.onSlideEventsCount = -1;
-    this.isInteractsNow = false;
+    this.isInteracting = false;
     this.needTriggerEvents = false;
 
     this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
-    this.min = this.options.min || parseFloat(el.getAttribute('min')) || 0;
-    this.max = this.options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
-    this.value = this.options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
-    this.step = this.options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
+    this.min = options.min || parseFloat(el.getAttribute('min')) || 0;
+    this.max = options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
+    this.value = options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
+    this.step = options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
+
     this.percent = null;
     this._updatePercentFromValue();
     this.toFixed = this._toFixed(this.step);
@@ -934,13 +887,12 @@ function RangeSlider(el, options) {
 
     this.range = document.createElement('div');
     this.range.className = RANGE_CLASS;
+
     this.range.id = this.identifier;
     this.range.appendChild(this.handle);
     this.range.appendChild(this.fill);
 
     this._setValue(this.value, true);
-    el.value = this.options.value;
-
     el.setAttribute('min', '' + this.min);
     el.setAttribute('max', '' + this.max);
     el.setAttribute('step', '' + this.step);
@@ -966,16 +918,13 @@ function RangeSlider(el, options) {
     //// Attach Events
     window.addEventListener('resize', debounce(this._handleResize.bind(this), HANDLE_RESIZE_DEBOUNCE), false);
 
-    attach(document, {
-        mousedown: this._startEventListener,
-        touchstart: this._startEventListener,
-        pointerdown: this._startEventListener
-    });
+    this.range.addEventListener('mousedown', this._startEventListener);
+    this.range.addEventListener('touchstart', this._startEventListener);
+    this.range.addEventListener('pointerdown', this._startEventListener);
+
 
     // Listen to programmatic value changes
-    attach.on(el, {
-        change: this._changeEventListener
-    })
+    el.addEventListener('change', this._changeEventListener);
 }
 
 RangeSlider.prototype.constructor = RangeSlider;
@@ -1058,7 +1007,7 @@ RangeSlider.prototype._update = function () {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    this.element.dispatchEvent(new Event('change'));
+    eve.emit(this.element, 'change');
 };
 
 /**
@@ -1068,19 +1017,31 @@ RangeSlider.prototype._handleResize = function () {
     this._update();
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleDown = function (e) {
 
-    this.isInteractsNow = true;
+    this.isInteracting = true;
     e.preventDefault();
-    attach.on(document, {
-        mousemove: this._handleMove,
-        touchmove: this._handleMove,
-        pointermove: this._handleMove,
+    document.addEventListener('mousemove', this._handleMove);
+    document.addEventListener('touchmove', this._handleMove);
+    document.addEventListener('pointermove', this._handleMove);
 
-        mouseup: this._handleEnd,
-        touchend: this._handleEnd,
-        pointerup: this._handleEnd
-    });
+    document.addEventListener('mouseup', this._handleEnd);
+    document.addEventListener('touchend', this._handleEnd);
+    document.addEventListener('pointerup', this._handleEnd);
+    //attach.on(document, {
+    //    mousemove: this._handleMove,
+    //    touchmove: this._handleMove,
+    //    pointermove: this._handleMove,
+    //
+    //    mouseup: this._handleEnd,
+    //    touchend: this._handleEnd,
+    //    pointerup: this._handleEnd
+    //});
 
     // If we click on the handle don't set the new position
     if (e.target.classList.contains(HANDLE_CLASS)) {
@@ -1100,35 +1061,48 @@ RangeSlider.prototype._handleDown = function (e) {
 
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleMove = function (e) {
-    this.isInteractsNow = true;
+    this.isInteracting = true;
     e.preventDefault();
     var posX = this._getRelativePosition(e);
     this._setPosition(posX - this.grabX);
 };
 
+/**
+ *
+ * @param e
+ * @private
+ */
 RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
-    attach.off(document, {
-        mousemove: this._handleMove,
-        touchmove: this._handleMove,
-        pointermove: this._handleMove,
+    document.removeEventListener('mousemove', this._handleMove);
+    document.removeEventListener('touchmove', this._handleMove);
+    document.removeEventListener('pointermove', this._handleMove);
 
-        mouseup: this._handleEnd,
-        touchend: this._handleEnd,
-        pointerup: this._handleEnd
-    });
+    document.removeEventListener('mouseup', this._handleEnd);
+    document.removeEventListener('touchend', this._handleEnd);
+    document.removeEventListener('pointerup', this._handleEnd);
 
-    eve.emit(this.element, 'change', {origin: this.identifier} );
+    eve.emit(this.element, 'change', {origin: this.identifier});
 
-    if ((this.isInteractsNow || this.needTriggerEvents) && this.options.onSlideEnd) {
+    if ((this.isInteracting || this.needTriggerEvents) && this.options.onSlideEnd) {
         this.options.onSlideEnd(this.value, this.percent, this.position);
     }
     this.onSlideEventsCount = 0;
-    this.isInteractsNow = false;
+    this.isInteracting = false;
 };
 
+/**
+ *
+ * @param pos
+ * @private
+ */
 RangeSlider.prototype._setPosition = function (pos) {
     var value= this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         left = this._getPositionFromValue(value);
@@ -1143,7 +1117,7 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.value = value;
     this._updatePercentFromValue();
 
-    if (this.isInteractsNow || this.needTriggerEventss) {
+    if (this.isInteracting || this.needTriggerEventss) {
         if (this.options.onSlideStart && this.onSlideEventsCount === 0) {
             this.options.onSlideStart(this.value, this.percent, this.position);
         }
@@ -1168,7 +1142,7 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
 
 /**
  *
- * @param {(MouseEvent|TouchEvent)}e
+ * @param {Event} e
  * @returns {number}
  */
 RangeSlider.prototype._getRelativePosition = function (e) {
@@ -1231,7 +1205,7 @@ RangeSlider.prototype._setValue = function (value, force) {
     // Set the new value and fire the `input` event
     this.element.value = value;
     this.value = value;
-    eve.emit(this.element, 'input', {origin: this.identifier});
+    eve.emit(this.element, 'change', {origin: this.identifier});
 
 };
 
@@ -1281,14 +1255,10 @@ RangeSlider.prototype.destroy = function () {
 
     window.removeEventListener('resize', this._handleResize, false);
 
-    attach.off(document, {
-        mousedown: this._startEventListener,
-        touchstart: this._startEventListener,
-        pointerdown: this._startEventListener,
-    });
-    attach.off(this.element, {
-        change: this._changeEventListener
-    });
+    this.range.removeEventListener('mousedown', this._startEventListener);
+    this.range.removeEventListener('touchstart', this._startEventListener);
+    this.range.removeEventListener('pointerdown', this._startEventListener);
+    this.element.removeEventListener('change', this._changeEventListener);
 
     this.element.style.cssText = '';
     delete this.element[pluginName];
@@ -1319,5 +1289,5 @@ RangeSlider.create = function (el, options) {
 
 module.exports = RangeSlider;
 
-},{"attach-dom-events":1,"clamp":2,"dom-events":3,"lodash/function/debounce":8,"lodash/lang/isNumber":13,"lodash/lang/isObject":14,"object-assign":16}]},{},[17])(17)
+},{"clamp":1,"dom-events":2,"lodash/function/debounce":7,"lodash/lang/isNumber":12,"lodash/lang/isObject":13}]},{},[15])(15)
 });
