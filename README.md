@@ -1,43 +1,53 @@
 # rangeslider-js
 
+[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
-Lightweight rangeslider intended to use with browserify, but a standalone version is also included. [Examples][1]
+Lightweight rangeslider intended to use with [browserify][2], but a standalone version is also included. [Examples][1]
 
 Based on [Sergei Stryzhevskyi's rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
 with browserify usage in mind;
 
 [1]: http://stbaer.github.io/rangeslider-js/
-[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
-
-## TODO
-
-- use external modules where possible, split the source into modules
-- use css transform for moving the drag handle
-- add tests
-- more...
-
-[![browser support](https://ci.testling.com/stbaer/rangeslider-js.png)](https://ci.testling.com/stbaer/rangeslider-js)
+[2]: http://browserify.org/
 
 ## How to use
 
 [![npm](https://nodei.co/npm/rangeslider-js.svg?downloads=true)](https://nodei.co/npm/rangeslider-js/)
 
-### browserify
- 
- ```js
- var rangeslider = require('rangeslider-js')
- ```
-  
- TODO
- 
-### standalone
+### Browserify
 
- TODO
+- include node_modules/dist/rangeslider-js.min.css
+- ``var rangesliderJs = require('rangeslider-js')``
+
+ 
+### Btandalone
+
+- include node_modules/dist/rangeslider-js.min.css and node_modules/dist/rangeslider-js.min.js
+
+### Initialize
+
+```js
+var elements = document.querySelectorAll('input[type="range"]');
+rangesliderJs( elements, {/* optional, see options */ } );
+```
  
 ### Options
  
- TODO
- 
+```js 
+{
+    // default options:
+    min: 0,
+    max: 100,
+    value: 50, //defaults to min + (max-min)/2
+    step: 1,
+    // callbacks
+    onInit: function () {},
+    onSlideStart: function (value, percent, position) {},
+    onSlide: function (value, percent, position) {},
+    onSlideEnd: function (value, percent, position) {}
+}
+```
+
 ## Build
 
 You will need to have [node][node] and [gulp][gulp] setup on your machine.
@@ -53,6 +63,12 @@ That will output the built distributables to `./dist`.
 [node]:       http://nodejs.org/
 [gulp]:       http://gulpjs.com/
 
+## TODO
+
+- use external modules where possible, split the source into modules
+- use css transform for moving the drag handle
+- add tests
+- more...
 
 ## Contribute
 
