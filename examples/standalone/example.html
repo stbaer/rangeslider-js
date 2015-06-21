@@ -26,6 +26,7 @@
 </div>
 
 <br><br>
+
 <div>
     <h2>Floating point boundaries</h2>
 
@@ -34,7 +35,7 @@
         <output></output>
     </div>
     <div>
-        <input type="range " min="0.1" max="3" step="0.1" value="0.5" data-rangeslider>
+        <input type="range" min="0.1" max="3" step="0.1" value="0.5" data-rangeslider>
         <output></output>
     </div>
     <div>
@@ -44,9 +45,10 @@
 </div>
 
 <br><br>
+
 <div>
     <h2><code>value="0"</code></h2>
-    <input class="rangeslider--slim" type="range" value="0" data-rangeslider>
+    <input type="range" value="0" data-rangeslider>
     <output></output>
 </div>
 
@@ -60,6 +62,7 @@
 </div>
 
 <br><br>
+
 <div>
     <h2><code>max="0"</code> disables slider</h2>
     <input type="range" max="0" data-rangeslider>
@@ -67,6 +70,7 @@
 </div>
 
 <br><br>
+
 <div id="js-example-change-value">
     <h2>Programmatic value changes</h2>
     <input type="range" min="10" max="100" data-rangeslider>
@@ -76,6 +80,7 @@
 </div>
 
 <br><br>
+
 <div id="js-example-update-range">
     <h2>Update range</h2>
     <input type="range" min="10" max="100" step="10" data-rangeslider>
@@ -84,6 +89,7 @@
 </div>
 
 <br><br>
+
 <div id="js-example-destroy">
     <h2>Destroy a plugin instance</h2>
     <input type="range" min="10" max="1000" step="10" value="500" data-rangeslider>
@@ -93,6 +99,7 @@
 </div>
 
 <br><br>
+
 <div id="js-example-hidden">
     <h2>Consider initialization and update of hidden elements</h2>
 
@@ -119,12 +126,12 @@
             elements = document.querySelectorAll(selector),
             styleSelect = document.body.querySelector('.toggle-style');
 
-        styleSelect.addEventListener('change', function(){
+        styleSelect.addEventListener('change', function () {
             Array.prototype.slice.call(document.querySelectorAll('.rangeslider')).forEach(function (el) {
                 el.parentNode.classList[styleSelect.value === 'slim' ? 'add' : 'remove']('rangeslider--slim');
                 var range = getTargetRange(el);
-                if(range && range['rangeslider-js']){
-                    setTimeout(function(){
+                if (range && range['rangeslider-js']) {
+                    setTimeout(function () {
                         range['rangeslider-js'].update();
                     }, 300);
                 }
@@ -152,7 +159,7 @@
         // Example functionality to demonstrate programmatic value changes
         var changeValBtn = document.querySelector('#js-example-change-value button');
         changeValBtn.addEventListener('click', function (e) {
-            var inputRange = getTargetRange(changeValBtn)
+            var inputRange = getTargetRange(changeValBtn);
             inputRange.value = changeValBtn.parentNode.querySelector('input[type="number"]').value;
             inputRange.dispatchEvent(new Event('change'));
         }, false);
@@ -161,7 +168,6 @@
         var destroyBtn = document.querySelector('#js-example-destroy button[data-behaviour="destroy"]');
         destroyBtn.addEventListener('click', function (e) {
             var inputRange = getTargetRange(destroyBtn);
-            console.log(inputRange);
             inputRange['rangeslider-js'].destroy();
         }, false);
 
