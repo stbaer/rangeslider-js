@@ -356,8 +356,6 @@ RangeSlider.prototype._handleMove = function (e) {
 RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
-    console.log(this.identifier);
-
     document.removeEventListener('mousemove', this._handleMove);
     document.removeEventListener('touchmove', this._handleMove);
     document.removeEventListener('pointermove', this._handleMove);
