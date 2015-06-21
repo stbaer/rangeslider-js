@@ -152,7 +152,7 @@
         // Example functionality to demonstrate programmatic value changes
         var changeValBtn = document.querySelector('#js-example-change-value button');
         changeValBtn.addEventListener('click', function (e) {
-            var inputRange = getTargetRange(changeValBtn)
+            var inputRange = getTargetRange(changeValBtn);
             inputRange.value = changeValBtn.parentNode.querySelector('input[type="number"]').value;
             inputRange.dispatchEvent(new Event('change'));
         }, false);
@@ -161,7 +161,6 @@
         var destroyBtn = document.querySelector('#js-example-destroy button[data-behaviour="destroy"]');
         destroyBtn.addEventListener('click', function (e) {
             var inputRange = getTargetRange(destroyBtn);
-            console.log(inputRange);
             inputRange['rangeslider-js'].destroy();
         }, false);
 
