@@ -3,8 +3,11 @@ var gulp    = require('gulp'),
     gutil   = require('gulp-util'),
     bundle  = require('../util/bundle');
 
-gulp.task('watch', function () {
-    gulp.watch(paths.scripts, ['jshint'])
+gulp.task('watch', ['serve'], function () {
+    gulp.watch(paths.scripts, ['jshint', 'build'])
+        .on('change', logChanges);
+
+    gulp.watch(paths.styles, ['styles'])
         .on('change', logChanges);
 
     return bundle.watch();
