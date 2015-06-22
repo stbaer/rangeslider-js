@@ -26,6 +26,7 @@ global.paths = {
     root: './',
 
     get scripts() { return this.src + '/**/*.js'; },
+    get styles() { return this.src + '/styles/**/*.less'; },
     get tests  () { return this.test + '/**/*.test.js'; },
     get jsEntry() { return this.src + '/index'; }
 };

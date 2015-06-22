@@ -2,10 +2,10 @@
 
 [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
-Lightweight rangeslider intended to use with [browserify][2], but a standalone version is also included. 
+Lightweight (minified and gzipped below 5kb js and 0.5kb css) rangeslider intended to use with [browserify][2], but a standalone version is also included.
 Check out the [Examples][1].
 
-Based on [Sergei Stryzhevskyi's rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
+Based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
 with browserify usage in mind.
 
 [1]: http://stbaer.github.io/rangeslider-js/
@@ -20,7 +20,7 @@ with browserify usage in mind.
 - include node_modules/dist/rangeslider-js.min.css
 - ``var rangesliderJs = require('rangeslider-js')``
 
- 
+
 ### Standalone
 
 - include *rangeslider-js.min.css* and *rangeslider-js.min.js* (from node_modules/dist/ )
@@ -31,10 +31,10 @@ with browserify usage in mind.
 var elements = document.querySelectorAll('input[type="range"]');
 rangesliderJs( elements, {/* optional, see options */ } );
 ```
- 
+
 ### Options
- 
-```js 
+
+```js
 {
     // default options:
     min: 0,

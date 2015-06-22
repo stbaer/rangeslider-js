@@ -12,6 +12,7 @@ var MAX_SET_BY_DEFAULT = 100;
 var HANDLE_RESIZE_DEBOUNCE = 100;
 var RANGE_CLASS = 'rangeslider';
 var FILL_CLASS = 'rangeslider__fill';
+var FILL_BG_CLASS = 'rangeslider__fill__bg';
 var HANDLE_CLASS = 'rangeslider__handle';
 var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
@@ -156,6 +157,9 @@ function RangeSlider(el, options) {
     this._updatePercentFromValue();
     this.toFixed = this._toFixed(this.step);
 
+    this.fillBg = document.createElement('div');
+    this.fillBg.className = FILL_BG_CLASS;
+
     this.fill = document.createElement('div');
     this.fill.className = FILL_CLASS;
 
@@ -164,9 +168,10 @@ function RangeSlider(el, options) {
 
     this.range = document.createElement('div');
     this.range.className = RANGE_CLASS;
-
     this.range.id = this.identifier;
+
     this.range.appendChild(this.handle);
+    this.range.appendChild(this.fillBg);
     this.range.appendChild(this.fill);
 
     this._setValue(this.value, true);
