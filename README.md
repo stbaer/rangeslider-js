@@ -2,34 +2,31 @@
 
 [![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
-Lightweight (minified and gzipped below 5kb js and 0.5kb css) rangeslider intended to use with [browserify][2], but a standalone version is also included.
-Check out the [Examples][1].
-
-Based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider), simplified and rewritten
-with browserify usage in mind.
+Lightweight rangeslider with touch support based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider). Check out the [Examples][1].
 
 [1]: http://stbaer.github.io/rangeslider-js/
-[2]: http://browserify.org/
 
-## How to use
+## Install
 
-[![npm](https://nodei.co/npm/rangeslider-js.svg?downloads=true)](https://nodei.co/npm/rangeslider-js/)
+`npm install rangeslider-js --save`
 
-### Browserify
+[![NPM](https://nodei.co/npm/rangeslider-js.png?downloads=true)](https://nodei.co/npm/rangeslider-js/)
+
+## Use with browserify
 
 - include node_modules/dist/rangeslider-js.min.css
 - ``var rangesliderJs = require('rangeslider-js')``
 
 
-### Standalone
+## Use the standalone version (in /dist)
 
-- include *rangeslider-js.min.css* and *rangeslider-js.min.js* (from node_modules/dist/ )
+- include *rangeslider-js.min.css* and *rangeslider-js.min.js*
 
-### Initialize
+## Initialize
 
 ```js
 var elements = document.querySelectorAll('input[type="range"]');
-rangesliderJs( elements, {/* optional, see options */ } );
+rangesliderJs( elements, {/* optional */ } );
 ```
 
 ### Options
@@ -67,13 +64,6 @@ That will output the built distributables to `./dist`.
 
 [node]:       http://nodejs.org/
 [gulp]:       http://gulpjs.com/
-
-## Todo
-
-- use external modules where possible, split the source into modules
-- use css transform for moving the drag handle
-- add tests
-- more...
 
 ## Contribute
 

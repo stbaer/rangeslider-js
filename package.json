@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "1.2.0",
+  "version": "1.2.1-0",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
@@ -52,7 +52,7 @@
     "gulp-size": "^1.2.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
-    "gulp-util": "^3.0.5",
+    "gulp-util": "^3.0.6",
     "ink-docstrap": "^0.5.2",
     "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
@@ -60,6 +60,6 @@
     "run-sequence": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.2"
+    "watchify": "^3.2.3"
   }
 }
