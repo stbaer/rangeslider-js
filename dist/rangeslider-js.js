@@ -755,6 +755,24 @@ function isHidden(element) {
     return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
 }
 
+function isString(obj) {
+     return obj === '' + obj;
+ }
+
+ function isNumberLike(obj) {
+     return (obj !== null && obj !== undefined && (isString(obj) && isFinite(parseFloat(obj)) || (isFinite(obj))));
+ }
+
+ function getFirsNumberLike() {
+     if (!arguments.length) {
+         return null;
+     }
+     for (var i = 0, len = arguments.length; i < len; i++) {
+         if (isNumberLike(arguments[i])) {
+             return arguments[i];
+         }
+     }
+ }
 /**
  * Get hidden parentNodes of an `element`
  *
@@ -873,10 +891,11 @@ function RangeSlider(el, options) {
     this.needTriggerEvents = false;
 
     this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
-    this.min = options.min || parseFloat(el.getAttribute('min')) || 0;
-    this.max = options.max || parseFloat(el.getAttribute('max')) || MAX_SET_BY_DEFAULT;
-    this.value = options.value || parseFloat(el.value) || this.min + (this.max - this.min) / 2;
-    this.step = options.step || el.getAttribute('step') || STEP_SET_BY_DEFAULT;
+
+    this.min = getFirsNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
+    this.max = getFirsNumberLike(options.max, parseFloat(el.getAttribute('max')), MAX_SET_BY_DEFAULT);
+    this.value = getFirsNumberLike(options.value, parseFloat(el.value), this.min + (this.max - this.min) / 2);
+    this.step = getFirsNumberLike(options.step, el.getAttribute('step'), STEP_SET_BY_DEFAULT);
 
     this.percent = null;
     this._updatePercentFromValue();
