@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "dom-events": "^0.1.1",
-    "lodash": "^3.9.3",
+    "lodash": "^3.10.0",
     "clamp": "^1.0.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.7.12",
+    "browser-sync": "^2.7.13",
     "browserify": "^10.2.4",
     "chai": "^3.0.0",
     "del": "^1.2.0",
@@ -43,7 +43,7 @@
     "gulp-cached": "^1.1.0",
     "gulp-csso": "^1.0.0",
     "gulp-filter": "^2.0.2",
-    "gulp-jshint": "^1.11.0",
+    "gulp-jshint": "^1.11.1",
     "gulp-less": "^3.0.3",
     "gulp-load-plugins": "^1.0.0-rc",
     "gulp-mocha": "^2.1.2",
