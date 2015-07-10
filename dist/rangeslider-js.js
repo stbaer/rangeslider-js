@@ -891,10 +891,10 @@ function RangeSlider(el, options) {
     this.range.appendChild(this.fillBg);
     this.range.appendChild(this.fill);
 
-    this._setValue(this.value, true);
     el.setAttribute('min', '' + this.min);
     el.setAttribute('max', '' + this.max);
     el.setAttribute('step', '' + this.step);
+    this._setValue(this.value);
 
     insertAfter(el, this.range);
 
@@ -1182,21 +1182,17 @@ RangeSlider.prototype._getValueFromPosition = function (pos) {
 
 /**
  *
- * @param value
- * @param force
+ * @param {number} value
  * @private
  */
-RangeSlider.prototype._setValue = function (value, force) {
+RangeSlider.prototype._setValue = function (value) {
 
-    if (value === this.value && !force) {
+    if (value === this.value && value === this.element.value) {
         return;
     }
 
-    // Set the new value and fire the `input` event
-    this.element.value = value;
-    this.value = value;
+    this.value =this.element.value = value;
     eve.emit(this.element, 'input', {origin: this.identifier});
-
 };
 
 
