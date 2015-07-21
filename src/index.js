@@ -16,19 +16,13 @@ var FILL_BG_CLASS = 'rangeslider__fill__bg';
 var HANDLE_CLASS = 'rangeslider__handle';
 var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
-var STARTEVENTS = ['mousedown', 'touchstart', 'pointerdown'];
-var MOVEEVENTS = ['mousemove', 'touchmove', 'pointermove'];
-var ENDEVENTS = ['mouseup', 'touchend', 'pointerup'];
+var START_EVENTS = ['mousedown', 'touchstart', 'pointerdown'];
+var MOVE_EVENTS = ['mousemove', 'touchmove', 'pointermove'];
+var END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
 
-/**
- * Check if a `element` is visible in the DOM
- *
- * @param  {Element}  element
- * @return {Boolean}
- */
 function isHidden(element) {
     return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
 }
@@ -51,12 +45,7 @@ function getFirsNumberLike() {
         }
     }
 }
-/**
- * Get hidden parentNodes of an `element`
- *
- * @param  {Element} element
- * @return {Element[]}
- */
+
 function getHiddenParentNodes(element) {
 
     var parents = [],
@@ -210,7 +199,7 @@ function RangeSlider(el, options) {
     el.style.opacity = '0';
 
     // Store context
-    //this._handleResize = this._handleResize.bind(this);
+    this._handleResize = this._handleResize.bind(this);
     this._handleDown = this._handleDown.bind(this);
     this._handleMove = this._handleMove.bind(this);
     this._handleEnd = this._handleEnd.bind(this);
@@ -219,13 +208,12 @@ function RangeSlider(el, options) {
 
     this._init();
 
-    //// Attach Events
-    window.addEventListener('resize', debounce(this._handleResize.bind(this), HANDLE_RESIZE_DEBOUNCE), false);
-    STARTEVENTS.forEach(function (evName) {
+    window.addEventListener('resize', debounce(this._handleResize, HANDLE_RESIZE_DEBOUNCE));
+
+    START_EVENTS.forEach(function(evName) {
         this.range.addEventListener(evName, this._startEventListener);
     }, this);
 
-    // Listen to programmatic value changes
     el.addEventListener('change', this._changeEventListener);
 }
 
@@ -237,7 +225,7 @@ RangeSlider.prototype.constructor = RangeSlider;
  * @returns {number}
  * @private
  */
-RangeSlider.prototype._toFixed = function (step) {
+RangeSlider.prototype._toFixed = function(step) {
     return (step + '').replace('.', '').length - 1;
 };
 
@@ -245,7 +233,7 @@ RangeSlider.prototype._toFixed = function (step) {
  *
  * @private
  */
-RangeSlider.prototype._init = function () {
+RangeSlider.prototype._init = function() {
     if (this.options.onInit) {
         this.options.onInit();
     }
@@ -256,7 +244,7 @@ RangeSlider.prototype._init = function () {
  *
  * @private
  */
-RangeSlider.prototype._updatePercentFromValue = function () {
+RangeSlider.prototype._updatePercentFromValue = function() {
     this.percent = (this.value - this.min) / (this.max - this.min);
 };
 
@@ -265,12 +253,12 @@ RangeSlider.prototype._updatePercentFromValue = function () {
  * @param ev
  * @param data
  */
-RangeSlider.prototype._startEventListener = function (ev, data) {
+RangeSlider.prototype._startEventListener = function(ev, data) {
     var _this = this;
     var el = ev.target;
     var isEventOnSlider = false;
 
-    forEachAncestors(el, function (el) {
+    forEachAncestors(el, function(el) {
         return (isEventOnSlider = el.id === _this.identifier && !el.classList.contains(DISABLED_CLASS));
     }, true);
 
@@ -285,7 +273,7 @@ RangeSlider.prototype._startEventListener = function (ev, data) {
  * @param data
  * @private
  */
-RangeSlider.prototype._changeEventListener = function (ev, data) {
+RangeSlider.prototype._changeEventListener = function(ev, data) {
     if (data && data.origin === this.identifier) {
         return;
     }
@@ -297,7 +285,7 @@ RangeSlider.prototype._changeEventListener = function (ev, data) {
  *
  * @private
  */
-RangeSlider.prototype._update = function () {
+RangeSlider.prototype._update = function() {
 
     this.handleWidth = getDimension(this.handle, 'offsetWidth');
     this.rangeWidth = getDimension(this.range, 'offsetWidth');
@@ -315,7 +303,7 @@ RangeSlider.prototype._update = function () {
 /**
  *
  */
-RangeSlider.prototype._handleResize = function () {
+RangeSlider.prototype._handleResize = function() {
     this._update();
 };
 
@@ -324,16 +312,18 @@ RangeSlider.prototype._handleResize = function () {
  * @param e
  * @private
  */
-RangeSlider.prototype._handleDown = function (e) {
+RangeSlider.prototype._handleDown = function(e) {
 
     this.isInteracting = true;
     e.preventDefault();
-
-    MOVEEVENTS.forEach(function (evName) {
+    MOVE_EVENTS.forEach(function(evName) {
         document.addEventListener(evName, this._handleMove);
     }, this);
-    ENDEVENTS.forEach(function (evName) {
+    END_EVENTS.forEach(function(evName) {
         document.addEventListener(evName, this._handleEnd);
+    }, this);
+    END_EVENTS.forEach(function(evName) {
+        this.range.addEventListener(evName, this._handleEnd);
     }, this);
 
     // If we click on the handle don't set the new position
@@ -359,7 +349,7 @@ RangeSlider.prototype._handleDown = function (e) {
  * @param e
  * @private
  */
-RangeSlider.prototype._handleMove = function (e) {
+RangeSlider.prototype._handleMove = function(e) {
     this.isInteracting = true;
     e.preventDefault();
     var posX = this._getRelativePosition(e);
@@ -371,17 +361,22 @@ RangeSlider.prototype._handleMove = function (e) {
  * @param e
  * @private
  */
-RangeSlider.prototype._handleEnd = function (e) {
+RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
-    MOVEEVENTS.forEach(function (evName) {
+    MOVE_EVENTS.forEach(function(evName) {
         document.removeEventListener(evName, this._handleMove);
     }, this);
-    ENDEVENTS.forEach(function (evName) {
+    END_EVENTS.forEach(function(evName) {
         document.removeEventListener(evName, this._handleEnd);
     }, this);
+    END_EVENTS.forEach(function(evName) {
+        this.range.removeEventListener(evName, this._handleEnd);
+    }, this);
 
-    eve.emit(this.element, 'change', {origin: this.identifier});
+    eve.emit(this.element, 'change', {
+        origin: this.identifier
+    });
 
     if ((this.isInteracting || this.needTriggerEvents) && this.options.onSlideEnd) {
         this.options.onSlideEnd(this.value, this.percent, this.position);
@@ -392,10 +387,10 @@ RangeSlider.prototype._handleEnd = function (e) {
 
 /**
  *
- * @param {number} pos
+ * @param pos
  * @private
  */
-RangeSlider.prototype._setPosition = function (pos) {
+RangeSlider.prototype._setPosition = function(pos) {
     var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         left = this._getPositionFromValue(value);
 
@@ -409,7 +404,7 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.value = value;
     this._updatePercentFromValue();
 
-    if (this.isInteracting || this.needTriggerEventss) {
+    if (this.isInteracting || this.needTriggerEvents) {
         if (this.options.onSlideStart && this.onSlideEventsCount === 0) {
             this.options.onSlideStart(this.value, this.percent, this.position);
         }
@@ -422,13 +417,8 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.onSlideEventsCount++;
 };
 
-/**
- * Returns element position relative to the parent
- * @param node
- * @returns {number}
- * @private
- */
-RangeSlider.prototype._getPositionFromNode = function (node) {
+// Returns element position relative to the parent
+RangeSlider.prototype._getPositionFromNode = function(node) {
     var i = 0;
     while (node !== null) {
         i += node.offsetLeft;
@@ -442,7 +432,7 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
  * @param {Event} e
  * @returns {number}
  */
-RangeSlider.prototype._getRelativePosition = function (e) {
+RangeSlider.prototype._getRelativePosition = function(e) {
     // Get the offset left relative to the viewport
     var rangeX = this.range.getBoundingClientRect().left,
         orgEv = e.originalEvent,
@@ -467,7 +457,7 @@ RangeSlider.prototype._getRelativePosition = function (e) {
  * @returns {number|*}
  * @private
  */
-RangeSlider.prototype._getPositionFromValue = function (value) {
+RangeSlider.prototype._getPositionFromValue = function(value) {
     var percentage, pos;
     percentage = (value - this.min) / (this.max - this.min);
     pos = percentage * this.maxHandleX;
@@ -480,7 +470,7 @@ RangeSlider.prototype._getPositionFromValue = function (value) {
  * @returns {number}
  * @private
  */
-RangeSlider.prototype._getValueFromPosition = function (pos) {
+RangeSlider.prototype._getValueFromPosition = function(pos) {
     var percentage, value;
     percentage = ((pos) / (this.maxHandleX || 1));
     value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
@@ -492,14 +482,16 @@ RangeSlider.prototype._getValueFromPosition = function (pos) {
  * @param {number} value
  * @private
  */
-RangeSlider.prototype._setValue = function (value) {
+RangeSlider.prototype._setValue = function(value) {
 
     if (value === this.value && value === this.element.value) {
         return;
     }
 
     this.value = this.element.value = value;
-    eve.emit(this.element, 'input', {origin: this.identifier});
+    eve.emit(this.element, 'input', {
+        origin: this.identifier
+    });
 };
 
 
@@ -509,7 +501,7 @@ RangeSlider.prototype._setValue = function (value) {
  * @param {Boolean} triggerEvents
  * @returns {RangeSlider}
  */
-RangeSlider.prototype.update = function (obj, triggerEvents) {
+RangeSlider.prototype.update = function(obj, triggerEvents) {
     if (triggerEvents) {
         this.needTriggerEvents = true;
     }
@@ -544,11 +536,11 @@ RangeSlider.prototype.update = function (obj, triggerEvents) {
 /**
  *
  */
-RangeSlider.prototype.destroy = function () {
+RangeSlider.prototype.destroy = function() {
 
     window.removeEventListener('resize', this._handleResize, false);
 
-    STARTEVENTS.forEach(function (evName) {
+    START_EVENTS.forEach(function(evName) {
         this.range.removeEventListener(evName, this._startEventListener);
     }, this);
 
@@ -566,13 +558,13 @@ RangeSlider.prototype.destroy = function () {
  * @param {Element|NodeList} el
  * @param {object} options
  */
-RangeSlider.create = function (el, options) {
+RangeSlider.create = function(el, options) {
     function createInstance(el) {
         el[pluginName] = el[pluginName] || new RangeSlider(el, options);
     }
 
     if (el.length) {
-        Array.prototype.slice.call(el).forEach(function (el) {
+        Array.prototype.slice.call(el).forEach(function(el) {
             createInstance(el);
         });
     } else {

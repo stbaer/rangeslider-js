@@ -22,8 +22,8 @@
     "slider"
   ],
   "scripts": {
-    "test": "gulp test",
     "build": "gulp build",
+    "example": "beefy --index=examples/standalone/example.html",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json",
     "disc": "./node_modules/.bin/browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js"
   },
@@ -33,9 +33,8 @@
     "clamp": "^1.0.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.7.13",
+    "browser-sync": "^2.8.0",
     "browserify": "^11.0.0",
-    "chai": "^3.0.0",
     "del": "^1.2.0",
     "disc": "^1.3.2",
     "gulp": "^3.9.0",
@@ -46,7 +45,6 @@
     "gulp-jshint": "^1.11.2",
     "gulp-less": "^3.0.3",
     "gulp-load-plugins": "latest",
-    "gulp-mocha": "^2.1.2",
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-size": "^1.2.3",
@@ -57,7 +55,7 @@
     "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.1",
+    "run-sequence": "^1.1.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.3.0"
