@@ -714,50 +714,42 @@ var FILL_BG_CLASS = 'rangeslider__fill__bg';
 var HANDLE_CLASS = 'rangeslider__handle';
 var DISABLED_CLASS = 'rangeslider--disabled';
 var STEP_SET_BY_DEFAULT = 1;
+var START_EVENTS = ['mousedown', 'touchstart', 'pointerdown'];
+var MOVE_EVENTS = ['mousemove', 'touchmove', 'pointermove'];
+var END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
 
-/**
- * Check if a `element` is visible in the DOM
- *
- * @param  {Element}  element
- * @return {Boolean}
- */
 function isHidden(element) {
     return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
 }
 
 function isString(obj) {
-     return obj === '' + obj;
- }
+    return obj === '' + obj;
+}
 
- function isNumberLike(obj) {
-     return (obj !== null && obj !== undefined && (isString(obj) && isFinite(parseFloat(obj)) || (isFinite(obj))));
- }
+function isNumberLike(obj) {
+    return (obj !== null && obj !== undefined && (isString(obj) && isFinite(parseFloat(obj)) || (isFinite(obj))));
+}
 
- function getFirsNumberLike() {
-     if (!arguments.length) {
-         return null;
-     }
-     for (var i = 0, len = arguments.length; i < len; i++) {
-         if (isNumberLike(arguments[i])) {
-             return arguments[i];
-         }
-     }
- }
-/**
- * Get hidden parentNodes of an `element`
- *
- * @param  {Element} element
- * @return {Element[]}
- */
+function getFirsNumberLike() {
+    if (!arguments.length) {
+        return null;
+    }
+    for (var i = 0, len = arguments.length; i < len; i++) {
+        if (isNumberLike(arguments[i])) {
+            return arguments[i];
+        }
+    }
+}
+
 function getHiddenParentNodes(element) {
 
     var parents = [],
         node = element.parentNode;
 
-    while (isHidden(node)) {
+    while (node && isHidden(node)) {
         parents.push(node);
         node = node.parentNode;
     }
@@ -905,7 +897,7 @@ function RangeSlider(el, options) {
     el.style.opacity = '0';
 
     // Store context
-    //this._handleResize = this._handleResize.bind(this);
+    this._handleResize = this._handleResize.bind(this);
     this._handleDown = this._handleDown.bind(this);
     this._handleMove = this._handleMove.bind(this);
     this._handleEnd = this._handleEnd.bind(this);
@@ -914,15 +906,12 @@ function RangeSlider(el, options) {
 
     this._init();
 
-    //// Attach Events
-    window.addEventListener('resize', debounce(this._handleResize.bind(this), HANDLE_RESIZE_DEBOUNCE), false);
+    window.addEventListener('resize', debounce(this._handleResize, HANDLE_RESIZE_DEBOUNCE));
 
-    this.range.addEventListener('mousedown', this._startEventListener);
-    this.range.addEventListener('touchstart', this._startEventListener);
-    this.range.addEventListener('pointerdown', this._startEventListener);
+    START_EVENTS.forEach(function (evName) {
+        this.range.addEventListener(evName, this._startEventListener);
+    }, this);
 
-
-    // Listen to programmatic value changes
     el.addEventListener('change', this._changeEventListener);
 }
 
@@ -1025,13 +1014,15 @@ RangeSlider.prototype._handleDown = function (e) {
 
     this.isInteracting = true;
     e.preventDefault();
-    document.addEventListener('mousemove', this._handleMove);
-    document.addEventListener('touchmove', this._handleMove);
-    document.addEventListener('pointermove', this._handleMove);
-
-    document.addEventListener('mouseup', this._handleEnd);
-    document.addEventListener('touchend', this._handleEnd);
-    document.addEventListener('pointerup', this._handleEnd);
+    MOVE_EVENTS.forEach(function (evName) {
+        document.addEventListener(evName, this._handleMove);
+    }, this);
+    END_EVENTS.forEach(function (evName) {
+        document.addEventListener(evName, this._handleEnd);
+    }, this);
+    END_EVENTS.forEach(function (evName) {
+        this.range.addEventListener(evName, this._handleEnd);
+    }, this);
 
     // If we click on the handle don't set the new position
     if (e.target.classList.contains(HANDLE_CLASS)) {
@@ -1071,15 +1062,19 @@ RangeSlider.prototype._handleMove = function (e) {
 RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
-    document.removeEventListener('mousemove', this._handleMove);
-    document.removeEventListener('touchmove', this._handleMove);
-    document.removeEventListener('pointermove', this._handleMove);
+    MOVE_EVENTS.forEach(function (evName) {
+        document.removeEventListener(evName, this._handleMove);
+    }, this);
+    END_EVENTS.forEach(function (evName) {
+        document.removeEventListener(evName, this._handleEnd);
+    }, this);
+    END_EVENTS.forEach(function (evName) {
+        this.range.removeEventListener(evName, this._handleEnd);
+    }, this);
 
-    document.removeEventListener('mouseup', this._handleEnd);
-    document.removeEventListener('touchend', this._handleEnd);
-    document.removeEventListener('pointerup', this._handleEnd);
-
-    eve.emit(this.element, 'change', {origin: this.identifier});
+    eve.emit(this.element, 'change', {
+        origin: this.identifier
+    });
 
     if ((this.isInteracting || this.needTriggerEvents) && this.options.onSlideEnd) {
         this.options.onSlideEnd(this.value, this.percent, this.position);
@@ -1107,7 +1102,7 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.value = value;
     this._updatePercentFromValue();
 
-    if (this.isInteracting || this.needTriggerEventss) {
+    if (this.isInteracting || this.needTriggerEvents) {
         if (this.options.onSlideStart && this.onSlideEventsCount === 0) {
             this.options.onSlideStart(this.value, this.percent, this.position);
         }
@@ -1191,8 +1186,10 @@ RangeSlider.prototype._setValue = function (value) {
         return;
     }
 
-    this.value =this.element.value = value;
-    eve.emit(this.element, 'input', {origin: this.identifier});
+    this.value = this.element.value = value;
+    eve.emit(this.element, 'input', {
+        origin: this.identifier
+    });
 };
 
 
@@ -1241,9 +1238,9 @@ RangeSlider.prototype.destroy = function () {
 
     window.removeEventListener('resize', this._handleResize, false);
 
-    this.range.removeEventListener('mousedown', this._startEventListener);
-    this.range.removeEventListener('touchstart', this._startEventListener);
-    this.range.removeEventListener('pointerdown', this._startEventListener);
+    START_EVENTS.forEach(function (evName) {
+        this.range.removeEventListener(evName, this._startEventListener);
+    }, this);
 
     this.element.removeEventListener('change', this._changeEventListener);
 
