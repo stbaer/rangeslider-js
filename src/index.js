@@ -417,7 +417,12 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.onSlideEventsCount++;
 };
 
-// Returns element position relative to the parent
+//
+/**
+ * Returns element position relative to the parent
+ * @param  {Element} node
+ * @return {number}
+ */
 RangeSlider.prototype._getPositionFromNode = function (node) {
     var i = 0;
     while (node !== null) {

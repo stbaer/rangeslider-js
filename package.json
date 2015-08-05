@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "dom-events": "^0.1.1",
-    "lodash": "^3.10.0",
+    "lodash": "^3.10.1",
     "clamp": "^1.0.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.8.1",
+    "browser-sync": "^2.8.2",
     "browserify": "^11.0.1",
     "del": "^1.2.0",
     "disc": "^1.3.2",
