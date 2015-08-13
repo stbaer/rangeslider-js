@@ -445,9 +445,9 @@ RangeSlider.prototype._getRelativePosition = function (e) {
 
     if (typeof e.pageX !== 'undefined') {
         pageX = (e.touches && e.touches.length) ? e.touches[0].pageX : e.pageX;
-    } else if (typeof orgEv.clientX !== 'undefined') {
+    } else if (orgEv && typeof orgEv.clientX !== 'undefined') {
         pageX = orgEv.clientX;
-    } else if (orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
+    } else if (orgEv && orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
         pageX = orgEv.touches[0].clientX;
     } else if (e.currentPoint && typeof e.currentPoint.x !== 'undefined') {
         pageX = e.currentPoint.x;
