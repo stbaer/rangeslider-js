@@ -352,7 +352,7 @@ var nativeMax = Math.max;
  * @param {boolean} [options.leading=false] Specify invoking on the leading
  *  edge of the timeout.
  * @param {number} [options.maxWait] The maximum time `func` is allowed to be
- *  delayed before it is invoked.
+ *  delayed before it's invoked.
  * @param {boolean} [options.trailing=true] Specify invoking on the trailing
  *  edge of the timeout.
  * @returns {Function} Returns the new debounced function.
@@ -566,7 +566,7 @@ var objToString = objectProto.toString;
 function isFunction(value) {
   // The use of `Object#toString` avoids issues with the `typeof` operator
   // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  // and Safari 8 which returns 'object' for typed array constructors.
   return isObject(value) && objToString.call(value) == funcTag;
 }
 
@@ -1115,7 +1115,12 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.onSlideEventsCount++;
 };
 
-// Returns element position relative to the parent
+//
+/**
+ * Returns element position relative to the parent
+ * @param  {Element} node
+ * @return {number}
+ */
 RangeSlider.prototype._getPositionFromNode = function (node) {
     var i = 0;
     while (node !== null) {
@@ -1133,14 +1138,14 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
 RangeSlider.prototype._getRelativePosition = function (e) {
     // Get the offset left relative to the viewport
     var rangeX = this.range.getBoundingClientRect().left,
-        orgEv = e.originalEvent,
+        orgEv = e.originalEvent || e,
         pageX = 0;
 
     if (typeof e.pageX !== 'undefined') {
         pageX = (e.touches && e.touches.length) ? e.touches[0].pageX : e.pageX;
-    } else if (typeof orgEv.clientX !== 'undefined') {
+    } else if (orgEv && typeof orgEv.clientX !== 'undefined') {
         pageX = orgEv.clientX;
-    } else if (orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
+    } else if (orgEv && orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
         pageX = orgEv.touches[0].clientX;
     } else if (e.currentPoint && typeof e.currentPoint.x !== 'undefined') {
         pageX = e.currentPoint.x;

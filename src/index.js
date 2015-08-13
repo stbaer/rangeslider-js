@@ -417,7 +417,12 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.onSlideEventsCount++;
 };
 
-// Returns element position relative to the parent
+//
+/**
+ * Returns element position relative to the parent
+ * @param  {Element} node
+ * @return {number}
+ */
 RangeSlider.prototype._getPositionFromNode = function (node) {
     var i = 0;
     while (node !== null) {
@@ -435,14 +440,14 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
 RangeSlider.prototype._getRelativePosition = function (e) {
     // Get the offset left relative to the viewport
     var rangeX = this.range.getBoundingClientRect().left,
-        orgEv = e.originalEvent,
+        orgEv = e.originalEvent || e,
         pageX = 0;
 
     if (typeof e.pageX !== 'undefined') {
         pageX = (e.touches && e.touches.length) ? e.touches[0].pageX : e.pageX;
-    } else if (typeof orgEv.clientX !== 'undefined') {
+    } else if (orgEv && typeof orgEv.clientX !== 'undefined') {
         pageX = orgEv.clientX;
-    } else if (orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
+    } else if (orgEv && orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
         pageX = orgEv.touches[0].clientX;
     } else if (e.currentPoint && typeof e.currentPoint.x !== 'undefined') {
         pageX = e.currentPoint.x;
