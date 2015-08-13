@@ -26,7 +26,7 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 
 ```js
 var elements = document.querySelectorAll('input[type="range"]');
-rangesliderJs( elements, {/* optional */ } );
+rangesliderJs.create( elements, {/* optional */ } );
 ```
 
 ### Options
