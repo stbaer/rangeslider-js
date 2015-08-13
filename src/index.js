@@ -440,7 +440,7 @@ RangeSlider.prototype._getPositionFromNode = function (node) {
 RangeSlider.prototype._getRelativePosition = function (e) {
     // Get the offset left relative to the viewport
     var rangeX = this.range.getBoundingClientRect().left,
-        orgEv = e.originalEvent,
+        orgEv = e.originalEvent || e,
         pageX = 0;
 
     if (typeof e.pageX !== 'undefined') {
