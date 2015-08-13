@@ -1,0 +1,43 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1">
+    <link rel="stylesheet" href="/dist/rangeslider-js.css"/>
+    <style>
+        *, *:before, *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html {
+            color: #404040;
+        }
+
+        body {
+            padding: 50px 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        output {
+            display: block;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <input type="range" min="0" max="5" value="1" data-rangeslider>
+        <output></output>
+    </div>
+
+<script src="{{entry}}"></script>
+</body>
