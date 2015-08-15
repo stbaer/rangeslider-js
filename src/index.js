@@ -339,12 +339,13 @@ RangeSlider.prototype._setValue = function(value) {
 /**
  * Update
  *
- * @param {Object} obj like {min : Number, max : Number, value : Number, step : Number}
- * @param {Boolean} triggerEvents
+ * @param {Object} [obj={}] like {min : Number, max : Number, value : Number, step : Number}
+ * @param {Boolean} [triggerEvents]
  * @returns {RangeSlider}
  */
 RangeSlider.prototype.update = function(obj, triggerEvents) {
 
+    obj = obj || {};
     this.needTriggerEvents = !!triggerEvents;
 
     if (utils.isFiniteNumber(obj.min)) {
