@@ -5,7 +5,7 @@ function isHidden(element) {
 }
 
 function isNumberLike(obj) {
-    return isFiniteNumber(parseFloat(obj)) || (isFinite(obj));
+    return isFiniteNumber(parseFloat(obj)) || (isFiniteNumber(obj));
 }
 
 function getFirstNumberLike() {
