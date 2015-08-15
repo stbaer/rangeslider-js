@@ -120,7 +120,7 @@
         return btn.parentNode.querySelector('input[type="range"]');
     }
 
-    (function () {
+    function init () {
 
         var selector = '[data-rangeslider]',
             elements = document.querySelectorAll(selector),
@@ -209,7 +209,8 @@
                 console.info('onSlideEnd', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
             }
         });
-    })();
+    };
+    window.onload = init();
 </script>
 </body>
 </html>
