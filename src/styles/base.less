@@ -7,10 +7,6 @@
     width: 100%;
 }
 
-.rangeslider--disabled {
-    opacity: 0.4;
-}
-
 .rangeslider,
 .rangeslider__fill,
 .rangeslider__fill__bg {
@@ -30,11 +26,12 @@
     z-index: @fill-z-index;
     background: @slider-color;
     border-radius: 10px;
+    will-change: width;
 }
 
 .rangeslider__handle {
-    top: 0;
     display: inline-block;
+    top: calc(~"50%" - @handle-width/2);
     background: @handle-color;
     width: @handle-width;
     height: @handle-width;
@@ -42,7 +39,6 @@
     cursor: pointer;
     border: solid 2px #ffffff;
     border-radius: 50%;
-    transition: background .3s ease !important;
     &:active {
         background: darken(@handle-color, 10%);
     }
@@ -53,17 +49,32 @@
     width: 100%;
 }
 
+.rangeslider--disabled {
+    opacity: 0.4;
+}
+
 .rangeslider--slim {
     .rangeslider {
         height: @handle-width - 5;
+        &:active{
+            .rangeslider__handle {
+                width: @handle-width-slim*1.5;
+                height: @handle-width-slim*1.5;
+                top: calc(~"50%" - @handle-width-slim*1.5/2);
+                background: @handle-color;
+            }
+        }
     }
-    .rangeslider__fill, .rangeslider__fill__bg {
-        top: calc(~"50%" - 1px);
-        height: 2px;
+    .rangeslider__fill,
+    .rangeslider__fill__bg {
+        top: calc(~"50%" - @fill-height-slim/2);
+        height: @fill-height-slim;
     }
-
     .rangeslider__handle {
-        width: @handle-width - 5;
-        height: @handle-width - 5;
+        will-change: width, height, top;
+        transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;
+        width: @handle-width-slim;
+        height: @handle-width-slim;
+        top: calc(~"50%" - @handle-width-slim/2);
     }
 }
