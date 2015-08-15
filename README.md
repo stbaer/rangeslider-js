@@ -8,14 +8,14 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 
 ## Install
 
-`npm install rangeslider-js --save`
+`npm i rangeslider-js`
 
 [![NPM](https://nodei.co/npm/rangeslider-js.png?downloads=true)](https://nodei.co/npm/rangeslider-js/)
 
 ## Use with browserify
 
 - include node_modules/dist/rangeslider-js.min.css
-- ``var rangesliderJs = require('rangeslider-js')``
+- var rangesliderJs = require('rangeslider-js')`
 
 
 ## Use the standalone version (in /dist)

@@ -25,12 +25,14 @@
     "build": "gulp build",
     "example": "beefy --index=examples/standalone/example.html",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json",
-    "disc": "./node_modules/.bin/browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js"
+    "disc": "./node_modules/.bin/browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js",
+    "test-visual": "beefy test/visual/test.js --index=test/visual/beefy.html"
   },
   "dependencies": {
+    "clamp": "^1.0.1",
     "dom-events": "^0.1.1",
-    "lodash": "^3.10.1",
-    "clamp": "^1.0.1"
+    "ev-pos": "0.0.4",
+    "lodash": "^3.10.1"
   },
   "devDependencies": {
     "browser-sync": "^2.8.2",

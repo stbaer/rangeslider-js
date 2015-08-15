@@ -6,7 +6,11 @@ var clamp = require('clamp');
 var isNumber = require('lodash/lang/isNumber');
 var isObject = require('lodash/lang/isObject');
 var debounce = require('lodash/function/debounce');
+
 var eve = require('dom-events');
+var evPos = require('ev-pos');
+
+//var utils = require('./utils');
 
 var MAX_SET_BY_DEFAULT = 100;
 var HANDLE_RESIZE_DEBOUNCE = 100;
@@ -331,9 +335,9 @@ RangeSlider.prototype._handleDown = function (e) {
         return;
     }
 
-    var posX = this._getRelativePosition(e),
+    var posX = evPos(e, this.range ).x,
         rangeX = this.range.getBoundingClientRect().left,
-        handleX = this._getPositionFromNode(this.handle) - rangeX;
+        handleX = this.handle.getBoundingClientRect().left - rangeX;
 
     this._setPosition(posX - this.grabX);
 
@@ -352,7 +356,7 @@ RangeSlider.prototype._handleDown = function (e) {
 RangeSlider.prototype._handleMove = function (e) {
     this.isInteracting = true;
     e.preventDefault();
-    var posX = this._getRelativePosition(e);
+    var posX = evPos(e, this.range).x;
     this._setPosition(posX - this.grabX);
 };
 
@@ -417,45 +421,6 @@ RangeSlider.prototype._setPosition = function (pos) {
     this.onSlideEventsCount++;
 };
 
-//
-/**
- * Returns element position relative to the parent
- * @param  {Element} node
- * @return {number}
- */
-RangeSlider.prototype._getPositionFromNode = function (node) {
-    var i = 0;
-    while (node !== null) {
-        i += node.offsetLeft;
-        node = node.offsetParent;
-    }
-    return i;
-};
-
-/**
- *
- * @param {Event} e
- * @returns {number}
- */
-RangeSlider.prototype._getRelativePosition = function (e) {
-    // Get the offset left relative to the viewport
-    var rangeX = this.range.getBoundingClientRect().left,
-        orgEv = e.originalEvent || e,
-        pageX = 0;
-
-    if (typeof e.pageX !== 'undefined') {
-        pageX = (e.touches && e.touches.length) ? e.touches[0].pageX : e.pageX;
-    } else if (orgEv && typeof orgEv.clientX !== 'undefined') {
-        pageX = orgEv.clientX;
-    } else if (orgEv && orgEv.touches && orgEv.touches[0] && typeof orgEv.touches[0].clientX !== 'undefined') {
-        pageX = orgEv.touches[0].clientX;
-    } else if (e.currentPoint && typeof e.currentPoint.x !== 'undefined') {
-        pageX = e.currentPoint.x;
-    }
-
-    return pageX - rangeX;
-};
-
 /**
  *
  * @param value
@@ -501,6 +466,7 @@ RangeSlider.prototype._setValue = function (value) {
 
 
 /**
+ * Update
  *
  * @param {Object} obj like {min : Number, max : Number, value : Number, step : Number}
  * @param {Boolean} triggerEvents
