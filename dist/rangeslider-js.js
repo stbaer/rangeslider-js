@@ -825,7 +825,7 @@ function RangeSlider(el, options) {
     this.min = utils.getFirstNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
     this.max = utils.getFirstNumberLike(options.max, parseFloat(el.getAttribute('max')), CONST.MAX_SET_BY_DEFAULT);
     this.value = utils.getFirstNumberLike(options.value, parseFloat(el.value), this.min + (this.max - this.min) / 2);
-    this.step = utils.getFirstNumberLike(options.step, el.getAttribute('step'), CONST.STEP_SET_BY_DEFAULT);
+    this.step = utils.getFirstNumberLike(options.step, parseFloat(el.getAttribute('step')), CONST.STEP_SET_BY_DEFAULT);
 
     this.percent = null;
     this._updatePercentFromValue();
