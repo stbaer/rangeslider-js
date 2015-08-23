@@ -12,31 +12,53 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 
 [![NPM](https://nodei.co/npm/rangeslider-js.png?downloads=true)](https://nodei.co/npm/rangeslider-js/)
 
-## Use with browserify
 
-- include node_modules/dist/rangeslider-js.min.css
-- var rangesliderJs = require('rangeslider-js')`
+## Usage
 
+**CSS**
 
-## Use the standalone version (in /dist)
+Include *rangeslider-js.min.css*
 
-- include *rangeslider-js.min.css* and *rangeslider-js.min.js*
+**HTML**
 
-## Initialize
+```html
+<!--  -->
+<div class="slider1">
+    <input type="range">
+</div>
+
+<!-- Options via attributes -->
+<div class="slider2">
+    <input type="range" min="0" max="5" value="1" step="1">
+</div>
+
+<!-- Slim style -->
+<div class="slider3 rangeslider--slim">
+    <input type="range">
+</div>
+```
+
+**JS**
 
 ```js
+var rangesliderJs = require('rangeslider-js')  // Or use the standalone version from the dist folder
+
+// initialize single slider
+var slider = document.querySelector('.some-el input');
+rangesliderJs.create(slider,{ /* options -see below */ });
+
+// initialize multiple
 var elements = document.querySelectorAll('input[type="range"]');
-rangesliderJs.create( elements, {/* optional */ } );
+rangesliderJs.create(elements,{ /* .. */ });
 ```
 
 ### Options
 
 ```js
 {
-    // default options:
     min: 0,
     max: 100,
-    value: 50, //defaults to min + (max-min)/2
+    value: 50,
     step: 1,
     // callbacks
     onInit: function () {},
@@ -45,16 +67,9 @@ rangesliderJs.create( elements, {/* optional */ } );
     onSlideEnd: function (value, percent, position) {}
 }
 ```
-
-*If no options for min, max, value or step are specified, the script will look for
-data-min, data-max,... attributes on the input element and fall back to the defaults
-above if they are not found.*
-
 ## Build
 
-You will need to have [node][node] and [gulp][gulp] setup on your machine.
-
-Then you can install dependencies and build:
+Install dependencies and build (requires gulp):
 
 ```js
 npm i && npm run build
@@ -64,19 +79,6 @@ That will output the built distributables to `./dist`.
 
 [node]:       http://nodejs.org/
 [gulp]:       http://gulpjs.com/
-
-## Contribute
-
-To report a bug, request a feature, or even ask a question, make use of the [GitHub Issues][10] in this repo.
-
-To build the library you will need to download node.js from [nodejs.org][20]. After it has been installed open a
-console and run `npm install -g gulp` to install the global `gulp` executable.
-
-After that you can clone the repository and run `npm install` inside the cloned folder. This will install
-dependencies necessary for building the project. You can rebuild the project by running `gulp` in the cloned
-folder.
-
-Once that is ready, you can make your changes and submit a Pull Request.
 
 [10]: https://github.com/stbaer/rangeslider-js/issues
 [11]: http://jsfiddle.net
