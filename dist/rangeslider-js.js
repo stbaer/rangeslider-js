@@ -9,289 +9,67 @@ function clamp(value, min, max) {
 
 },{}],2:[function(require,module,exports){
 
-var synth = require('synthetic-dom-events');
+/**
+ * Module dependencies.
+ */
 
-var on = function(element, name, fn, capture) {
-    return element.addEventListener(name, fn, capture || false);
+var now = require('date-now');
+
+/**
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds. If `immediate` is passed, trigger the function on the
+ * leading edge, instead of the trailing.
+ *
+ * @source underscore.js
+ * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+ * @param {Function} function to wrap
+ * @param {Number} timeout in ms (`100`)
+ * @param {Boolean} whether to execute at the beginning (`false`)
+ * @api public
+ */
+
+module.exports = function debounce(func, wait, immediate){
+  var timeout, args, context, timestamp, result;
+  if (null == wait) wait = 100;
+
+  function later() {
+    var last = now() - timestamp;
+
+    if (last < wait && last > 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      }
+    }
+  };
+
+  return function debounced() {
+    context = this;
+    args = arguments;
+    timestamp = now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
 };
 
-var off = function(element, name, fn, capture) {
-    return element.removeEventListener(name, fn, capture || false);
-};
+},{"date-now":3}],3:[function(require,module,exports){
+module.exports = Date.now || now
 
-var once = function (element, name, fn, capture) {
-    function tmp (ev) {
-        off(element, name, tmp, capture);
-        fn(ev);
-    }
-    on(element, name, tmp, capture);
-};
-
-var emit = function(element, name, opt) {
-    var ev = synth(name, opt);
-    element.dispatchEvent(ev);
-};
-
-if (!document.addEventListener) {
-    on = function(element, name, fn) {
-        return element.attachEvent('on' + name, fn);
-    };
+function now() {
+    return new Date().getTime()
 }
 
-if (!document.removeEventListener) {
-    off = function(element, name, fn) {
-        return element.detachEvent('on' + name, fn);
-    };
-}
-
-if (!document.dispatchEvent) {
-    emit = function(element, name, opt) {
-        var ev = synth(name, opt);
-        return element.fireEvent('on' + ev.type, ev);
-    };
-}
-
-module.exports = {
-    on: on,
-    off: off,
-    once: once,
-    emit: emit
-};
-
-},{"synthetic-dom-events":3}],3:[function(require,module,exports){
-
-// for compression
-var win = window;
-var doc = document || {};
-var root = doc.documentElement || {};
-
-// detect if we need to use firefox KeyEvents vs KeyboardEvents
-var use_key_event = true;
-try {
-    doc.createEvent('KeyEvents');
-}
-catch (err) {
-    use_key_event = false;
-}
-
-// Workaround for https://bugs.webkit.org/show_bug.cgi?id=16735
-function check_kb(ev, opts) {
-    if (ev.ctrlKey != (opts.ctrlKey || false) ||
-        ev.altKey != (opts.altKey || false) ||
-        ev.shiftKey != (opts.shiftKey || false) ||
-        ev.metaKey != (opts.metaKey || false) ||
-        ev.keyCode != (opts.keyCode || 0) ||
-        ev.charCode != (opts.charCode || 0)) {
-
-        ev = document.createEvent('Event');
-        ev.initEvent(opts.type, opts.bubbles, opts.cancelable);
-        ev.ctrlKey  = opts.ctrlKey || false;
-        ev.altKey   = opts.altKey || false;
-        ev.shiftKey = opts.shiftKey || false;
-        ev.metaKey  = opts.metaKey || false;
-        ev.keyCode  = opts.keyCode || 0;
-        ev.charCode = opts.charCode || 0;
-    }
-
-    return ev;
-}
-
-// modern browsers, do a proper dispatchEvent()
-var modern = function(type, opts) {
-    opts = opts || {};
-
-    // which init fn do we use
-    var family = typeOf(type);
-    var init_fam = family;
-    if (family === 'KeyboardEvent' && use_key_event) {
-        family = 'KeyEvents';
-        init_fam = 'KeyEvent';
-    }
-
-    var ev = doc.createEvent(family);
-    var init_fn = 'init' + init_fam;
-    var init = typeof ev[init_fn] === 'function' ? init_fn : 'initEvent';
-
-    var sig = initSignatures[init];
-    var args = [];
-    var used = {};
-
-    opts.type = type;
-    for (var i = 0; i < sig.length; ++i) {
-        var key = sig[i];
-        var val = opts[key];
-        // if no user specified value, then use event default
-        if (val === undefined) {
-            val = ev[key];
-        }
-        used[key] = true;
-        args.push(val);
-    }
-    ev[init].apply(ev, args);
-
-    // webkit key event issue workaround
-    if (family === 'KeyboardEvent') {
-        ev = check_kb(ev, opts);
-    }
-
-    // attach remaining unused options to the object
-    for (var key in opts) {
-        if (!used[key]) {
-            ev[key] = opts[key];
-        }
-    }
-
-    return ev;
-};
-
-var legacy = function (type, opts) {
-    opts = opts || {};
-    var ev = doc.createEventObject();
-
-    ev.type = type;
-    for (var key in opts) {
-        if (opts[key] !== undefined) {
-            ev[key] = opts[key];
-        }
-    }
-
-    return ev;
-};
-
-// expose either the modern version of event generation or legacy
-// depending on what we support
-// avoids if statements in the code later
-module.exports = doc.createEvent ? modern : legacy;
-
-var initSignatures = require('./init.json');
-var types = require('./types.json');
-var typeOf = (function () {
-    var typs = {};
-    for (var key in types) {
-        var ts = types[key];
-        for (var i = 0; i < ts.length; i++) {
-            typs[ts[i]] = key;
-        }
-    }
-
-    return function (name) {
-        return typs[name] || 'Event';
-    };
-})();
-
-},{"./init.json":4,"./types.json":5}],4:[function(require,module,exports){
-module.exports={
-  "initEvent" : [
-    "type",
-    "bubbles",
-    "cancelable"
-  ],
-  "initUIEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "detail"
-  ],
-  "initMouseEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "detail",
-    "screenX",
-    "screenY",
-    "clientX",
-    "clientY",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "button",
-    "relatedTarget"
-  ],
-  "initMutationEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "relatedNode",
-    "prevValue",
-    "newValue",
-    "attrName",
-    "attrChange"
-  ],
-  "initKeyboardEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "keyCode",
-    "charCode"
-  ],
-  "initKeyEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "keyCode",
-    "charCode"
-  ]
-}
-
-},{}],5:[function(require,module,exports){
-module.exports={
-  "MouseEvent" : [
-    "click",
-    "mousedown",
-    "mouseup",
-    "mouseover",
-    "mousemove",
-    "mouseout"
-  ],
-  "KeyboardEvent" : [
-    "keydown",
-    "keyup",
-    "keypress"
-  ],
-  "MutationEvent" : [
-    "DOMSubtreeModified",
-    "DOMNodeInserted",
-    "DOMNodeRemoved",
-    "DOMNodeRemovedFromDocument",
-    "DOMNodeInsertedIntoDocument",
-    "DOMAttrModified",
-    "DOMCharacterDataModified"
-  ],
-  "HTMLEvents" : [
-    "load",
-    "unload",
-    "abort",
-    "error",
-    "select",
-    "change",
-    "submit",
-    "reset",
-    "focus",
-    "blur",
-    "resize",
-    "scroll"
-  ],
-  "UIEvent" : [
-    "DOMFocusIn",
-    "DOMFocusOut",
-    "DOMActivate"
-  ]
-}
-
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 /**
@@ -348,407 +126,7 @@ var getRelativePosition = function(ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],7:[function(require,module,exports){
-var getNative = require('../internal/getNative');
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeNow = getNative(Date, 'now');
-
-/**
- * Gets the number of milliseconds that have elapsed since the Unix epoch
- * (1 January 1970 00:00:00 UTC).
- *
- * @static
- * @memberOf _
- * @category Date
- * @example
- *
- * _.defer(function(stamp) {
- *   console.log(_.now() - stamp);
- * }, _.now());
- * // => logs the number of milliseconds it took for the deferred function to be invoked
- */
-var now = nativeNow || function() {
-  return new Date().getTime();
-};
-
-module.exports = now;
-
-},{"../internal/getNative":9}],8:[function(require,module,exports){
-var isObject = require('../lang/isObject'),
-    now = require('../date/now');
-
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max;
-
-/**
- * Creates a debounced function that delays invoking `func` until after `wait`
- * milliseconds have elapsed since the last time the debounced function was
- * invoked. The debounced function comes with a `cancel` method to cancel
- * delayed invocations. Provide an options object to indicate that `func`
- * should be invoked on the leading and/or trailing edge of the `wait` timeout.
- * Subsequent calls to the debounced function return the result of the last
- * `func` invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
- * on the trailing edge of the timeout only if the the debounced function is
- * invoked more than once during the `wait` timeout.
- *
- * See [David Corbacho's article](http://drupalmotion.com/article/debounce-and-throttle-visual-explanation)
- * for details over the differences between `_.debounce` and `_.throttle`.
- *
- * @static
- * @memberOf _
- * @category Function
- * @param {Function} func The function to debounce.
- * @param {number} [wait=0] The number of milliseconds to delay.
- * @param {Object} [options] The options object.
- * @param {boolean} [options.leading=false] Specify invoking on the leading
- *  edge of the timeout.
- * @param {number} [options.maxWait] The maximum time `func` is allowed to be
- *  delayed before it's invoked.
- * @param {boolean} [options.trailing=true] Specify invoking on the trailing
- *  edge of the timeout.
- * @returns {Function} Returns the new debounced function.
- * @example
- *
- * // avoid costly calculations while the window size is in flux
- * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
- *
- * // invoke `sendMail` when the click event is fired, debouncing subsequent calls
- * jQuery('#postbox').on('click', _.debounce(sendMail, 300, {
- *   'leading': true,
- *   'trailing': false
- * }));
- *
- * // ensure `batchLog` is invoked once after 1 second of debounced calls
- * var source = new EventSource('/stream');
- * jQuery(source).on('message', _.debounce(batchLog, 250, {
- *   'maxWait': 1000
- * }));
- *
- * // cancel a debounced call
- * var todoChanges = _.debounce(batchLog, 1000);
- * Object.observe(models.todo, todoChanges);
- *
- * Object.observe(models, function(changes) {
- *   if (_.find(changes, { 'user': 'todo', 'type': 'delete'})) {
- *     todoChanges.cancel();
- *   }
- * }, ['delete']);
- *
- * // ...at some point `models.todo` is changed
- * models.todo.completed = true;
- *
- * // ...before 1 second has passed `models.todo` is deleted
- * // which cancels the debounced `todoChanges` call
- * delete models.todo;
- */
-function debounce(func, wait, options) {
-  var args,
-      maxTimeoutId,
-      result,
-      stamp,
-      thisArg,
-      timeoutId,
-      trailingCall,
-      lastCalled = 0,
-      maxWait = false,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  wait = wait < 0 ? 0 : (+wait || 0);
-  if (options === true) {
-    var leading = true;
-    trailing = false;
-  } else if (isObject(options)) {
-    leading = !!options.leading;
-    maxWait = 'maxWait' in options && nativeMax(+options.maxWait || 0, wait);
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-
-  function cancel() {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    if (maxTimeoutId) {
-      clearTimeout(maxTimeoutId);
-    }
-    lastCalled = 0;
-    maxTimeoutId = timeoutId = trailingCall = undefined;
-  }
-
-  function complete(isCalled, id) {
-    if (id) {
-      clearTimeout(id);
-    }
-    maxTimeoutId = timeoutId = trailingCall = undefined;
-    if (isCalled) {
-      lastCalled = now();
-      result = func.apply(thisArg, args);
-      if (!timeoutId && !maxTimeoutId) {
-        args = thisArg = undefined;
-      }
-    }
-  }
-
-  function delayed() {
-    var remaining = wait - (now() - stamp);
-    if (remaining <= 0 || remaining > wait) {
-      complete(trailingCall, maxTimeoutId);
-    } else {
-      timeoutId = setTimeout(delayed, remaining);
-    }
-  }
-
-  function maxDelayed() {
-    complete(trailing, timeoutId);
-  }
-
-  function debounced() {
-    args = arguments;
-    stamp = now();
-    thisArg = this;
-    trailingCall = trailing && (timeoutId || !leading);
-
-    if (maxWait === false) {
-      var leadingCall = leading && !timeoutId;
-    } else {
-      if (!maxTimeoutId && !leading) {
-        lastCalled = stamp;
-      }
-      var remaining = maxWait - (stamp - lastCalled),
-          isCalled = remaining <= 0 || remaining > maxWait;
-
-      if (isCalled) {
-        if (maxTimeoutId) {
-          maxTimeoutId = clearTimeout(maxTimeoutId);
-        }
-        lastCalled = stamp;
-        result = func.apply(thisArg, args);
-      }
-      else if (!maxTimeoutId) {
-        maxTimeoutId = setTimeout(maxDelayed, remaining);
-      }
-    }
-    if (isCalled && timeoutId) {
-      timeoutId = clearTimeout(timeoutId);
-    }
-    else if (!timeoutId && wait !== maxWait) {
-      timeoutId = setTimeout(delayed, wait);
-    }
-    if (leadingCall) {
-      isCalled = true;
-      result = func.apply(thisArg, args);
-    }
-    if (isCalled && !timeoutId && !maxTimeoutId) {
-      args = thisArg = undefined;
-    }
-    return result;
-  }
-  debounced.cancel = cancel;
-  return debounced;
-}
-
-module.exports = debounce;
-
-},{"../date/now":7,"../lang/isObject":14}],9:[function(require,module,exports){
-var isNative = require('../lang/isNative');
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object == null ? undefined : object[key];
-  return isNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-},{"../lang/isNative":13}],10:[function(require,module,exports){
-/**
- * Checks if `value` is object-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-},{}],11:[function(require,module,exports){
-(function (global){
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeIsFinite = global.isFinite;
-
-/**
- * Checks if `value` is a finite primitive number.
- *
- * **Note:** This method is based on [`Number.isFinite`](http://ecma-international.org/ecma-262/6.0/#sec-number.isfinite).
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a finite number, else `false`.
- * @example
- *
- * _.isFinite(10);
- * // => true
- *
- * _.isFinite('10');
- * // => false
- *
- * _.isFinite(true);
- * // => false
- *
- * _.isFinite(Object(10));
- * // => false
- *
- * _.isFinite(Infinity);
- * // => false
- */
-function isFinite(value) {
-  return typeof value == 'number' && nativeIsFinite(value);
-}
-
-module.exports = isFinite;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
-var isObject = require('./isObject');
-
-/** `Object#toString` result references. */
-var funcTag = '[object Function]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 which returns 'object' for typed array constructors.
-  return isObject(value) && objToString.call(value) == funcTag;
-}
-
-module.exports = isFunction;
-
-},{"./isObject":14}],13:[function(require,module,exports){
-var isFunction = require('./isFunction'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** Used to detect host constructors (Safari > 5). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var fnToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/**
- * Checks if `value` is a native function.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
- * @example
- *
- * _.isNative(Array.prototype.push);
- * // => true
- *
- * _.isNative(_);
- * // => false
- */
-function isNative(value) {
-  if (value == null) {
-    return false;
-  }
-  if (isFunction(value)) {
-    return reIsNative.test(fnToString.call(value));
-  }
-  return isObjectLike(value) && reIsHostCtor.test(value);
-}
-
-module.exports = isNative;
-
-},{"../internal/isObjectLike":10,"./isFunction":12}],14:[function(require,module,exports){
-/**
- * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(1);
- * // => false
- */
-function isObject(value) {
-  // Avoid a V8 JIT bug in Chrome 19-20.
-  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-},{}],15:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -765,14 +143,12 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],16:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /** @module RangeSlider */
-
 var clamp = require('clamp');
-var debounce = require('lodash/function/debounce');
-var eve = require('dom-events');
+var debounce = require('debounce');
 var evPos = require('ev-pos');
 
 var utils = require('./utils');
@@ -780,7 +156,13 @@ var CONST = require('./const');
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
+var emit = utils.emit;
 
+/**
+ *
+ * @param className
+ * @returns {Element}
+ */
 var createChild = function(className) {
     var child = document.createElement('div');
     child.classList.add(className);
@@ -941,14 +323,34 @@ RangeSlider.prototype._update = function() {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    eve.emit(this.element, 'change');
+    emit(this.element, 'change');
 };
 
 /**
  *
+ * @private
  */
 RangeSlider.prototype._handleResize = function() {
     this._update();
+};
+
+/**
+ *
+ * @param bool
+ * @private
+ */
+RangeSlider.prototype._listen = function(bool) {
+
+    CONST.MOVE_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleMove);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        this.range[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+
 };
 
 /**
@@ -960,16 +362,8 @@ RangeSlider.prototype._handleDown = function(e) {
     e.preventDefault();
 
     this.isInteracting = true;
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.addEventListener(evName, this._handleEnd);
-    }, this);
 
+    this._listen(true);
     if (e.target.classList.contains(CONST.HANDLE_CLASS)) {
         return;
     }
@@ -1007,17 +401,8 @@ RangeSlider.prototype._handleMove = function(e) {
 RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.removeEventListener(evName, this._handleEnd);
-    }, this);
-
-    eve.emit(this.element, 'change', {
+    this._listen(false);
+    emit(this.element, 'change', {
         origin: this.identifier
     });
 
@@ -1098,7 +483,7 @@ RangeSlider.prototype._setValue = function(value) {
     }
 
     this.value = this.element.value = value;
-    eve.emit(this.element, 'input', {
+    emit(this.element, 'input', {
         origin: this.identifier
     });
 };
@@ -1183,11 +568,17 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":15,"./utils":17,"clamp":1,"dom-events":2,"ev-pos":6,"lodash/function/debounce":8}],17:[function(require,module,exports){
-var isFiniteNumber = require('lodash/lang/isFinite');
+},{"./const":5,"./utils":7,"clamp":1,"debounce":2,"ev-pos":4}],7:[function(require,module,exports){
+(function (global){
+// see lodash/lang/isFinite
+var nativeIsFinite = global.isFinite;
+function isFinite(value) {
+    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
+}
+var isFiniteNumber = isFinite;
 
-function isHidden(element) {
-    return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
+function isHidden(el) {
+    return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
 }
 
 function isNumberLike(obj) {
@@ -1282,6 +673,25 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
+ *
+ * @param {Element} element
+ * @param {String} name
+ * @param {Object} opt
+ * @returns {boolean}
+ */
+function emit(element, name, opt) {
+    var ev;
+    if (window.CustomEvent) {
+        ev = new CustomEvent(name, opt);
+    } else {
+        ev = document.createEvent('CustomEvent');
+        ev.initCustomEvent(name, true, true, opt);
+    }
+
+    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
+}
+
+/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -1290,13 +700,14 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    isFiniteNumber: isFiniteNumber,
+    emit: emit,
+    isFiniteNumber: isFinite,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
-    forEachAncestorsAndSelf: forEachAncestorsAndSelf,
-
+    forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-},{"lodash/lang/isFinite":11}]},{},[16])(16)
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[6])(6)
 });

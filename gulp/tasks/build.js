@@ -1,6 +1,3 @@
-var gulp    = require('gulp'),
-    runSeq  = require('run-sequence');
+var gulp    = require('gulp');
 
-gulp.task('build', function (done) {
-    runSeq('clean', ['scripts', 'styles'], done);
-});
+gulp.task('build', ['scripts', 'styles']);

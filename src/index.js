@@ -1,10 +1,8 @@
 'use strict';
 
 /** @module RangeSlider */
-
 var clamp = require('clamp');
-var debounce = require('lodash/function/debounce');
-var eve = require('dom-events');
+var debounce = require('debounce');
 var evPos = require('ev-pos');
 
 var utils = require('./utils');
@@ -12,7 +10,13 @@ var CONST = require('./const');
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
+var emit = utils.emit;
 
+/**
+ *
+ * @param className
+ * @returns {Element}
+ */
 var createChild = function(className) {
     var child = document.createElement('div');
     child.classList.add(className);
@@ -173,14 +177,34 @@ RangeSlider.prototype._update = function() {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    eve.emit(this.element, 'change');
+    emit(this.element, 'change');
 };
 
 /**
  *
+ * @private
  */
 RangeSlider.prototype._handleResize = function() {
     this._update();
+};
+
+/**
+ *
+ * @param bool
+ * @private
+ */
+RangeSlider.prototype._listen = function(bool) {
+
+    CONST.MOVE_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleMove);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        this.range[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+
 };
 
 /**
@@ -192,16 +216,8 @@ RangeSlider.prototype._handleDown = function(e) {
     e.preventDefault();
 
     this.isInteracting = true;
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.addEventListener(evName, this._handleEnd);
-    }, this);
 
+    this._listen(true);
     if (e.target.classList.contains(CONST.HANDLE_CLASS)) {
         return;
     }
@@ -239,17 +255,8 @@ RangeSlider.prototype._handleMove = function(e) {
 RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.removeEventListener(evName, this._handleEnd);
-    }, this);
-
-    eve.emit(this.element, 'change', {
+    this._listen(false);
+    emit(this.element, 'change', {
         origin: this.identifier
     });
 
@@ -330,7 +337,7 @@ RangeSlider.prototype._setValue = function(value) {
     }
 
     this.value = this.element.value = value;
-    eve.emit(this.element, 'input', {
+    emit(this.element, 'input', {
         origin: this.identifier
     });
 };
