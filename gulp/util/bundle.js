@@ -1,7 +1,5 @@
-var plugins = require("gulp-load-plugins")();
 var gulp        = require('gulp');
 var source      = require('vinyl-source-stream');
-var buffer      = require('vinyl-buffer');
 var browserify  = require('browserify');
 var watchify    = require('watchify');
 var handleErrors = require('../util/handleErrors');
@@ -11,17 +9,6 @@ function rebundle() {
         .on('error', handleErrors.handler)
         .pipe(handleErrors())
         .pipe(source('rangeslider-js.js'))
-        .pipe(gulp.dest(paths.out))
-        .pipe(buffer())
-        .pipe(plugins.uglify())
-        .pipe(plugins.rename({ suffix: '.min' }))
-        .pipe(plugins.size({
-            showFiles: true
-        }))
-        .pipe(plugins.size({
-            gzip: true,
-            showFiles: true
-        }))
         .pipe(gulp.dest(paths.out));
 }
 

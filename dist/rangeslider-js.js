@@ -8,290 +8,6 @@ function clamp(value, min, max) {
 }
 
 },{}],2:[function(require,module,exports){
-
-var synth = require('synthetic-dom-events');
-
-var on = function(element, name, fn, capture) {
-    return element.addEventListener(name, fn, capture || false);
-};
-
-var off = function(element, name, fn, capture) {
-    return element.removeEventListener(name, fn, capture || false);
-};
-
-var once = function (element, name, fn, capture) {
-    function tmp (ev) {
-        off(element, name, tmp, capture);
-        fn(ev);
-    }
-    on(element, name, tmp, capture);
-};
-
-var emit = function(element, name, opt) {
-    var ev = synth(name, opt);
-    element.dispatchEvent(ev);
-};
-
-if (!document.addEventListener) {
-    on = function(element, name, fn) {
-        return element.attachEvent('on' + name, fn);
-    };
-}
-
-if (!document.removeEventListener) {
-    off = function(element, name, fn) {
-        return element.detachEvent('on' + name, fn);
-    };
-}
-
-if (!document.dispatchEvent) {
-    emit = function(element, name, opt) {
-        var ev = synth(name, opt);
-        return element.fireEvent('on' + ev.type, ev);
-    };
-}
-
-module.exports = {
-    on: on,
-    off: off,
-    once: once,
-    emit: emit
-};
-
-},{"synthetic-dom-events":3}],3:[function(require,module,exports){
-
-// for compression
-var win = window;
-var doc = document || {};
-var root = doc.documentElement || {};
-
-// detect if we need to use firefox KeyEvents vs KeyboardEvents
-var use_key_event = true;
-try {
-    doc.createEvent('KeyEvents');
-}
-catch (err) {
-    use_key_event = false;
-}
-
-// Workaround for https://bugs.webkit.org/show_bug.cgi?id=16735
-function check_kb(ev, opts) {
-    if (ev.ctrlKey != (opts.ctrlKey || false) ||
-        ev.altKey != (opts.altKey || false) ||
-        ev.shiftKey != (opts.shiftKey || false) ||
-        ev.metaKey != (opts.metaKey || false) ||
-        ev.keyCode != (opts.keyCode || 0) ||
-        ev.charCode != (opts.charCode || 0)) {
-
-        ev = document.createEvent('Event');
-        ev.initEvent(opts.type, opts.bubbles, opts.cancelable);
-        ev.ctrlKey  = opts.ctrlKey || false;
-        ev.altKey   = opts.altKey || false;
-        ev.shiftKey = opts.shiftKey || false;
-        ev.metaKey  = opts.metaKey || false;
-        ev.keyCode  = opts.keyCode || 0;
-        ev.charCode = opts.charCode || 0;
-    }
-
-    return ev;
-}
-
-// modern browsers, do a proper dispatchEvent()
-var modern = function(type, opts) {
-    opts = opts || {};
-
-    // which init fn do we use
-    var family = typeOf(type);
-    var init_fam = family;
-    if (family === 'KeyboardEvent' && use_key_event) {
-        family = 'KeyEvents';
-        init_fam = 'KeyEvent';
-    }
-
-    var ev = doc.createEvent(family);
-    var init_fn = 'init' + init_fam;
-    var init = typeof ev[init_fn] === 'function' ? init_fn : 'initEvent';
-
-    var sig = initSignatures[init];
-    var args = [];
-    var used = {};
-
-    opts.type = type;
-    for (var i = 0; i < sig.length; ++i) {
-        var key = sig[i];
-        var val = opts[key];
-        // if no user specified value, then use event default
-        if (val === undefined) {
-            val = ev[key];
-        }
-        used[key] = true;
-        args.push(val);
-    }
-    ev[init].apply(ev, args);
-
-    // webkit key event issue workaround
-    if (family === 'KeyboardEvent') {
-        ev = check_kb(ev, opts);
-    }
-
-    // attach remaining unused options to the object
-    for (var key in opts) {
-        if (!used[key]) {
-            ev[key] = opts[key];
-        }
-    }
-
-    return ev;
-};
-
-var legacy = function (type, opts) {
-    opts = opts || {};
-    var ev = doc.createEventObject();
-
-    ev.type = type;
-    for (var key in opts) {
-        if (opts[key] !== undefined) {
-            ev[key] = opts[key];
-        }
-    }
-
-    return ev;
-};
-
-// expose either the modern version of event generation or legacy
-// depending on what we support
-// avoids if statements in the code later
-module.exports = doc.createEvent ? modern : legacy;
-
-var initSignatures = require('./init.json');
-var types = require('./types.json');
-var typeOf = (function () {
-    var typs = {};
-    for (var key in types) {
-        var ts = types[key];
-        for (var i = 0; i < ts.length; i++) {
-            typs[ts[i]] = key;
-        }
-    }
-
-    return function (name) {
-        return typs[name] || 'Event';
-    };
-})();
-
-},{"./init.json":4,"./types.json":5}],4:[function(require,module,exports){
-module.exports={
-  "initEvent" : [
-    "type",
-    "bubbles",
-    "cancelable"
-  ],
-  "initUIEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "detail"
-  ],
-  "initMouseEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "detail",
-    "screenX",
-    "screenY",
-    "clientX",
-    "clientY",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "button",
-    "relatedTarget"
-  ],
-  "initMutationEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "relatedNode",
-    "prevValue",
-    "newValue",
-    "attrName",
-    "attrChange"
-  ],
-  "initKeyboardEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "keyCode",
-    "charCode"
-  ],
-  "initKeyEvent" : [
-    "type",
-    "bubbles",
-    "cancelable",
-    "view",
-    "ctrlKey",
-    "altKey",
-    "shiftKey",
-    "metaKey",
-    "keyCode",
-    "charCode"
-  ]
-}
-
-},{}],5:[function(require,module,exports){
-module.exports={
-  "MouseEvent" : [
-    "click",
-    "mousedown",
-    "mouseup",
-    "mouseover",
-    "mousemove",
-    "mouseout"
-  ],
-  "KeyboardEvent" : [
-    "keydown",
-    "keyup",
-    "keypress"
-  ],
-  "MutationEvent" : [
-    "DOMSubtreeModified",
-    "DOMNodeInserted",
-    "DOMNodeRemoved",
-    "DOMNodeRemovedFromDocument",
-    "DOMNodeInsertedIntoDocument",
-    "DOMAttrModified",
-    "DOMCharacterDataModified"
-  ],
-  "HTMLEvents" : [
-    "load",
-    "unload",
-    "abort",
-    "error",
-    "select",
-    "change",
-    "submit",
-    "reset",
-    "focus",
-    "blur",
-    "resize",
-    "scroll"
-  ],
-  "UIEvent" : [
-    "DOMFocusIn",
-    "DOMFocusOut",
-    "DOMActivate"
-  ]
-}
-
-},{}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -348,7 +64,7 @@ var getRelativePosition = function(ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],7:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var getNative = require('../internal/getNative');
 
 /* Native method references for those with the same name as other `lodash` methods. */
@@ -374,7 +90,7 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"../internal/getNative":9}],8:[function(require,module,exports){
+},{"../internal/getNative":5}],4:[function(require,module,exports){
 var isObject = require('../lang/isObject'),
     now = require('../date/now');
 
@@ -557,7 +273,7 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"../date/now":7,"../lang/isObject":14}],9:[function(require,module,exports){
+},{"../date/now":3,"../lang/isObject":9}],5:[function(require,module,exports){
 var isNative = require('../lang/isNative');
 
 /**
@@ -575,7 +291,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"../lang/isNative":13}],10:[function(require,module,exports){
+},{"../lang/isNative":8}],6:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -589,46 +305,7 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],11:[function(require,module,exports){
-(function (global){
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeIsFinite = global.isFinite;
-
-/**
- * Checks if `value` is a finite primitive number.
- *
- * **Note:** This method is based on [`Number.isFinite`](http://ecma-international.org/ecma-262/6.0/#sec-number.isfinite).
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a finite number, else `false`.
- * @example
- *
- * _.isFinite(10);
- * // => true
- *
- * _.isFinite('10');
- * // => false
- *
- * _.isFinite(true);
- * // => false
- *
- * _.isFinite(Object(10));
- * // => false
- *
- * _.isFinite(Infinity);
- * // => false
- */
-function isFinite(value) {
-  return typeof value == 'number' && nativeIsFinite(value);
-}
-
-module.exports = isFinite;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var isObject = require('./isObject');
 
 /** `Object#toString` result references. */
@@ -668,7 +345,7 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"./isObject":14}],13:[function(require,module,exports){
+},{"./isObject":9}],8:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isObjectLike = require('../internal/isObjectLike');
 
@@ -718,7 +395,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"../internal/isObjectLike":10,"./isFunction":12}],14:[function(require,module,exports){
+},{"../internal/isObjectLike":6,"./isFunction":7}],9:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -748,7 +425,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],15:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -765,14 +442,12 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],16:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 /** @module RangeSlider */
-
 var clamp = require('clamp');
 var debounce = require('lodash/function/debounce');
-var eve = require('dom-events');
 var evPos = require('ev-pos');
 
 var utils = require('./utils');
@@ -780,7 +455,13 @@ var CONST = require('./const');
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
+var emit = utils.emit;
 
+/**
+ *
+ * @param className
+ * @returns {Element}
+ */
 var createChild = function(className) {
     var child = document.createElement('div');
     child.classList.add(className);
@@ -941,14 +622,34 @@ RangeSlider.prototype._update = function() {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    eve.emit(this.element, 'change');
+    emit(this.element, 'change');
 };
 
 /**
  *
+ * @private
  */
 RangeSlider.prototype._handleResize = function() {
     this._update();
+};
+
+/**
+ *
+ * @param bool
+ * @private
+ */
+RangeSlider.prototype._listen = function(bool) {
+
+    CONST.MOVE_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleMove);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+    CONST.END_EVENTS.forEach(function(evName) {
+        this.range[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+    }, this);
+
 };
 
 /**
@@ -960,16 +661,8 @@ RangeSlider.prototype._handleDown = function(e) {
     e.preventDefault();
 
     this.isInteracting = true;
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.addEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.addEventListener(evName, this._handleEnd);
-    }, this);
 
+    this._listen(true);
     if (e.target.classList.contains(CONST.HANDLE_CLASS)) {
         return;
     }
@@ -1007,17 +700,8 @@ RangeSlider.prototype._handleMove = function(e) {
 RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document.removeEventListener(evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range.removeEventListener(evName, this._handleEnd);
-    }, this);
-
-    eve.emit(this.element, 'change', {
+    this._listen(false);
+    emit(this.element, 'change', {
         origin: this.identifier
     });
 
@@ -1098,7 +782,7 @@ RangeSlider.prototype._setValue = function(value) {
     }
 
     this.value = this.element.value = value;
-    eve.emit(this.element, 'input', {
+    emit(this.element, 'input', {
         origin: this.identifier
     });
 };
@@ -1183,11 +867,17 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":15,"./utils":17,"clamp":1,"dom-events":2,"ev-pos":6,"lodash/function/debounce":8}],17:[function(require,module,exports){
-var isFiniteNumber = require('lodash/lang/isFinite');
+},{"./const":10,"./utils":12,"clamp":1,"ev-pos":2,"lodash/function/debounce":4}],12:[function(require,module,exports){
+(function (global){
+// see lodash/lang/isFinite
+var nativeIsFinite = global.isFinite;
+function isFinite(value) {
+    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
+}
+var isFiniteNumber = isFinite;
 
-function isHidden(element) {
-    return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
+function isHidden(el) {
+    return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
 }
 
 function isNumberLike(obj) {
@@ -1282,6 +972,25 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
+ *
+ * @param {Element} element
+ * @param {String} name
+ * @param {Object} opt
+ * @returns {boolean}
+ */
+function emit(element, name, opt) {
+    var ev;
+    if (window.CustomEvent) {
+        ev = new CustomEvent(name, opt);
+    } else {
+        ev = document.createEvent('CustomEvent');
+        ev.initCustomEvent(name, true, true, opt);
+    }
+
+    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
+}
+
+/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -1290,13 +999,14 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    isFiniteNumber: isFiniteNumber,
+    emit: emit,
+    isFiniteNumber: isFinite,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
-    forEachAncestorsAndSelf: forEachAncestorsAndSelf,
-
+    forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-},{"lodash/lang/isFinite":11}]},{},[16])(16)
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}]},{},[11])(11)
 });

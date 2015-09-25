@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <>",
@@ -22,7 +22,11 @@
     "slider"
   ],
   "scripts": {
-    "build": "gulp build",
+    "uglify:dist": "uglifyjs --screw-ie8 ./dist/rangeslider-js.js -mc > ./dist/rangeslider-js.min.js",
+    "uglify": "npm run uglify:dist && npm run show-gzipped-minjs-size",
+    "clean": "rm -r dist/*",
+    "build": "npm run clean && gulp build && npm run uglify",
+    "show-gzipped-minjs-size": "echo \"js minified and gzipped: \" && gzip -c dist/rangeslider-js.min.js | wc -c",
     "example": "beefy --index=examples/standalone/example.html",
     "docs": "./node_modules/.bin/jsdoc -c ./gulp/util/jsdoc.conf.json",
     "disc": "./node_modules/.bin/browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js",
@@ -30,17 +34,14 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
-    "dom-events": "^0.1.1",
-    "ev-pos": "0.0.4",
-    "lodash": "^3.10.1"
+    "ev-pos": "0.0.4"
   },
   "devDependencies": {
-    "browser-sync": "^2.9.3",
-    "browserify": "^11.1.0",
-    "del": "^2.0.2",
+    "browser-sync": "^2.9.6",
+    "browserify": "^11.2.0",
     "disc": "^1.3.2",
     "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.0.1",
+    "gulp-autoprefixer": "^3.0.2",
     "gulp-cached": "^1.1.0",
     "gulp-csso": "^1.0.0",
     "gulp-filter": "^3.0.1",
@@ -51,13 +52,13 @@
     "gulp-rename": "^1.2.2",
     "gulp-size": "^2.0.0",
     "gulp-sourcemaps": "^1.5.2",
-    "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
     "ink-docstrap": "^0.5.2",
-    "jsdoc": "^3.3.2",
     "jshint-summary": "^0.4.0",
+    "lodash": "^3.10.1",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.2",
+    "run-sequence": "^1.1.4",
+    "uglify-js": "latest",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.4.0"

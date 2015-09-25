@@ -1,7 +1,12 @@
-var isFiniteNumber = require('lodash/lang/isFinite');
+// see lodash/lang/isFinite
+var nativeIsFinite = global.isFinite;
+function isFinite(value) {
+    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
+}
+var isFiniteNumber = isFinite;
 
-function isHidden(element) {
-    return !!(element.offsetWidth === 0 || element.offsetHeight === 0 || element.open === false);
+function isHidden(el) {
+    return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
 }
 
 function isNumberLike(obj) {
@@ -96,6 +101,25 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
+ *
+ * @param {Element} element
+ * @param {String} name
+ * @param {Object} opt
+ * @returns {boolean}
+ */
+function emit(element, name, opt) {
+    var ev;
+    if (window.CustomEvent) {
+        ev = new CustomEvent(name, opt);
+    } else {
+        ev = document.createEvent('CustomEvent');
+        ev.initCustomEvent(name, true, true, opt);
+    }
+
+    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
+}
+
+/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -104,10 +128,10 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    isFiniteNumber: isFiniteNumber,
+    emit: emit,
+    isFiniteNumber: isFinite,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
-    forEachAncestorsAndSelf: forEachAncestorsAndSelf,
-
+    forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
