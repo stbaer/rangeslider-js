@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
-    "debounce": "^1.0.0",
     "ev-pos": "0.0.4"
   },
   "devDependencies": {
@@ -55,7 +54,6 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.6",
     "ink-docstrap": "^0.5.2",
-    "jsdoc": "^3.3.3",
     "jshint-summary": "^0.4.0",
     "lodash": "^3.10.1",
     "require-dir": "^0.3.0",

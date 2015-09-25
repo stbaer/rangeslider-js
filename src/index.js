@@ -2,7 +2,7 @@
 
 /** @module RangeSlider */
 var clamp = require('clamp');
-var debounce = require('debounce');
+var debounce = require('lodash/function/debounce');
 var evPos = require('ev-pos');
 
 var utils = require('./utils');
