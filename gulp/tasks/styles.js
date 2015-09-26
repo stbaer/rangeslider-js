@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var plugins = require("gulp-load-plugins")();
 var sourcemaps = require('gulp-sourcemaps');
 var filter = require('gulp-filter');
-var browserSync = require('browser-sync');
 
 gulp.task('styles', function () {
 
@@ -29,8 +28,7 @@ gulp.task('styles', function () {
             showFiles: true
         }))
         .pipe(gulp.dest(paths.out))
-        .pipe(filter('**/*.css'))
-        .pipe(browserSync.reload({stream: true}));
+        .pipe(filter('**/*.css'));
 });
 
 gulp.task('styles', function () {
@@ -58,6 +56,5 @@ gulp.task('styles', function () {
             showFiles: true
         }))
         .pipe(gulp.dest(paths.out))
-        .pipe(filter('**/*.css'))
-        .pipe(browserSync.reload({stream: true}));
+        .pipe(filter('**/*.css'));
 });
