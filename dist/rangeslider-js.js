@@ -8,6 +8,58 @@ function clamp(value, min, max) {
 }
 
 },{}],2:[function(require,module,exports){
+(function (global){
+
+var NativeCustomEvent = global.CustomEvent;
+
+function useNative () {
+  try {
+    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+    return  'cat' === p.type && 'bar' === p.detail.foo;
+  } catch (e) {
+  }
+  return false;
+}
+
+/**
+ * Cross-browser `CustomEvent` constructor.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+ *
+ * @public
+ */
+
+module.exports = useNative() ? NativeCustomEvent :
+
+// IE >= 9
+'function' === typeof document.createEvent ? function CustomEvent (type, params) {
+  var e = document.createEvent('CustomEvent');
+  if (params) {
+    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+  } else {
+    e.initCustomEvent(type, false, false, void 0);
+  }
+  return e;
+} :
+
+// IE <= 8
+function CustomEvent (type, params) {
+  var e = document.createEventObject();
+  e.type = type;
+  if (params) {
+    e.bubbles = Boolean(params.bubbles);
+    e.cancelable = Boolean(params.cancelable);
+    e.detail = params.detail;
+  } else {
+    e.bubbles = false;
+    e.cancelable = false;
+    e.detail = void 0;
+  }
+  return e;
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -62,14 +114,14 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":3}],3:[function(require,module,exports){
+},{"date-now":4}],4:[function(require,module,exports){
 module.exports = Date.now || now
 
 function now() {
     return new Date().getTime()
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -126,7 +178,21 @@ var getRelativePosition = function(ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+'use strict';
+var numberIsNan = require('number-is-nan');
+
+module.exports = Number.isFinite || function (val) {
+	return !(typeof val !== 'number' || numberIsNan(val) || val === Infinity || val === -Infinity);
+};
+
+},{"number-is-nan":7}],7:[function(require,module,exports){
+'use strict';
+module.exports = Number.isNaN || function (x) {
+	return x !== x;
+};
+
+},{}],8:[function(require,module,exports){
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -143,7 +209,7 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 /** @module RangeSlider */
@@ -156,7 +222,6 @@ var CONST = require('./const');
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
-var emit = utils.emit;
 
 /**
  *
@@ -237,14 +302,14 @@ function RangeSlider(el, options) {
     el.style.overflow = 'hidden';
     el.style.opacity = '0';
 
-    ['_handleResize', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
+    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
     .forEach(function(fnName) {
         this[fnName] = this[fnName].bind(this);
     }, this);
 
     this._init();
 
-    window.addEventListener('resize', debounce(this._handleResize, CONST.HANDLE_RESIZE_DEBOUNCE));
+    window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
     CONST.START_EVENTS.forEach(function(evName) {
         this.range.addEventListener(evName, this._startEventListener);
@@ -323,15 +388,7 @@ RangeSlider.prototype._update = function() {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    emit(this.element, 'change');
-};
-
-/**
- *
- * @private
- */
-RangeSlider.prototype._handleResize = function() {
-    this._update();
+    utils.emit(this.element, 'change');
 };
 
 /**
@@ -341,14 +398,14 @@ RangeSlider.prototype._handleResize = function() {
  */
 RangeSlider.prototype._listen = function(bool) {
 
+    var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
+
     CONST.MOVE_EVENTS.forEach(function(evName) {
-        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleMove);
+        document[addOrRemoveListener](evName, this._handleMove);
     }, this);
     CONST.END_EVENTS.forEach(function(evName) {
-        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+        document[addOrRemoveListener](evName, this._handleEnd);
+        this.range[addOrRemoveListener](evName, this._handleEnd);
     }, this);
 
 };
@@ -402,7 +459,7 @@ RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
     this._listen(false);
-    emit(this.element, 'change', {
+    utils.emit(this.element, 'change', {
         origin: this.identifier
     });
 
@@ -483,7 +540,7 @@ RangeSlider.prototype._setValue = function(value) {
     }
 
     this.value = this.element.value = value;
-    emit(this.element, 'input', {
+    utils.emit(this.element, 'input', {
         origin: this.identifier
     });
 };
@@ -532,7 +589,7 @@ RangeSlider.prototype.update = function(obj, triggerEvents) {
  */
 RangeSlider.prototype.destroy = function() {
 
-    window.removeEventListener('resize', this._handleResize, false);
+    window.removeEventListener('resize', this._update, false);
 
     CONST.START_EVENTS.forEach(function(evName) {
         this.range.removeEventListener(evName, this._startEventListener);
@@ -568,14 +625,11 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":5,"./utils":7,"clamp":1,"debounce":2,"ev-pos":4}],7:[function(require,module,exports){
-(function (global){
-// see lodash/lang/isFinite
-var nativeIsFinite = global.isFinite;
-function isFinite(value) {
-    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
-}
-var isFiniteNumber = isFinite;
+},{"./const":8,"./utils":10,"clamp":1,"debounce":3,"ev-pos":5}],10:[function(require,module,exports){
+'use strict';
+
+var CE = require('custom-event');
+var isFiniteNumber = require('is-finite');
 
 function isHidden(el) {
     return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
@@ -673,25 +727,6 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
- *
- * @param {Element} element
- * @param {String} name
- * @param {Object} opt
- * @returns {boolean}
- */
-function emit(element, name, opt) {
-    var ev;
-    if (window.CustomEvent) {
-        ev = new CustomEvent(name, opt);
-    } else {
-        ev = document.createEvent('CustomEvent');
-        ev.initCustomEvent(name, true, true, opt);
-    }
-
-    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
-}
-
-/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -700,14 +735,15 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: emit,
-    isFiniteNumber: isFinite,
+    emit: function(el, name, opt){
+        el.dispatchEvent(new CE(name, opt));
+    },
+    isFiniteNumber: isFiniteNumber,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
     forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[6])(6)
+},{"custom-event":2,"is-finite":6}]},{},[9])(9)
 });
