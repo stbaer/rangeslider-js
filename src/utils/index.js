@@ -1,11 +1,7 @@
-var CE = require('custom-event');
+'use strict';
 
-// see lodash/lang/isFinite
-var nativeIsFinite = global.isFinite;
-function isFinite(value) {
-    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
-}
-var isFiniteNumber = isFinite;
+var CE = require('custom-event');
+var isFiniteNumber = require('is-finite');
 
 function isHidden(el) {
     return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
@@ -114,7 +110,7 @@ module.exports = {
     emit: function(el, name, opt){
         el.dispatchEvent(new CE(name, opt));
     },
-    isFiniteNumber: isFinite,
+    isFiniteNumber: isFiniteNumber,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,

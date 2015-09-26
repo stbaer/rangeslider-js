@@ -179,6 +179,20 @@ var getRelativePosition = function(ev, toElement) {
 module.exports = getRelativePosition;
 
 },{}],6:[function(require,module,exports){
+'use strict';
+var numberIsNan = require('number-is-nan');
+
+module.exports = Number.isFinite || function (val) {
+	return !(typeof val !== 'number' || numberIsNan(val) || val === Infinity || val === -Infinity);
+};
+
+},{"number-is-nan":7}],7:[function(require,module,exports){
+'use strict';
+module.exports = Number.isNaN || function (x) {
+	return x !== x;
+};
+
+},{}],8:[function(require,module,exports){
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -195,7 +209,7 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 /** @module RangeSlider */
@@ -620,16 +634,11 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":6,"./utils":8,"clamp":1,"debounce":3,"ev-pos":5}],8:[function(require,module,exports){
-(function (global){
-var CE = require('custom-event');
+},{"./const":8,"./utils":10,"clamp":1,"debounce":3,"ev-pos":5}],10:[function(require,module,exports){
+'use strict';
 
-// see lodash/lang/isFinite
-var nativeIsFinite = global.isFinite;
-function isFinite(value) {
-    return typeof value == 'number' && nativeIsFinite(value); //jshint ignore:line
-}
-var isFiniteNumber = isFinite;
+var CE = require('custom-event');
+var isFiniteNumber = require('is-finite');
 
 function isHidden(el) {
     return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
@@ -738,13 +747,12 @@ module.exports = {
     emit: function(el, name, opt){
         el.dispatchEvent(new CE(name, opt));
     },
-    isFiniteNumber: isFinite,
+    isFiniteNumber: isFiniteNumber,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
     forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"custom-event":2}]},{},[7])(7)
+},{"custom-event":2,"is-finite":6}]},{},[9])(9)
 });

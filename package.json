@@ -35,7 +35,8 @@
     "clamp": "^1.0.1",
     "custom-event": "^1.0.0",
     "debounce": "^1.0.0",
-    "ev-pos": "0.0.4"
+    "ev-pos": "0.0.4",
+    "is-finite": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "^11.2.0",
