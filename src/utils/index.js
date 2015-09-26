@@ -1,3 +1,5 @@
+var CE = require('custom-event');
+
 // see lodash/lang/isFinite
 var nativeIsFinite = global.isFinite;
 function isFinite(value) {
@@ -101,25 +103,6 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
- *
- * @param {Element} element
- * @param {String} name
- * @param {Object} opt
- * @returns {boolean}
- */
-function emit(element, name, opt) {
-    var ev;
-    if (window.CustomEvent) {
-        ev = new CustomEvent(name, opt);
-    } else {
-        ev = document.createEvent('CustomEvent');
-        ev.initCustomEvent(name, true, true, opt);
-    }
-
-    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
-}
-
-/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -128,7 +111,9 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: emit,
+    emit: function(el, name, opt){
+        el.dispatchEvent(new CE(name, opt));
+    },
     isFiniteNumber: isFinite,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,

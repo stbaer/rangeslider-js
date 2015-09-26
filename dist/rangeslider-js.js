@@ -8,6 +8,58 @@ function clamp(value, min, max) {
 }
 
 },{}],2:[function(require,module,exports){
+(function (global){
+
+var NativeCustomEvent = global.CustomEvent;
+
+function useNative () {
+  try {
+    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+    return  'cat' === p.type && 'bar' === p.detail.foo;
+  } catch (e) {
+  }
+  return false;
+}
+
+/**
+ * Cross-browser `CustomEvent` constructor.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+ *
+ * @public
+ */
+
+module.exports = useNative() ? NativeCustomEvent :
+
+// IE >= 9
+'function' === typeof document.createEvent ? function CustomEvent (type, params) {
+  var e = document.createEvent('CustomEvent');
+  if (params) {
+    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+  } else {
+    e.initCustomEvent(type, false, false, void 0);
+  }
+  return e;
+} :
+
+// IE <= 8
+function CustomEvent (type, params) {
+  var e = document.createEventObject();
+  e.type = type;
+  if (params) {
+    e.bubbles = Boolean(params.bubbles);
+    e.cancelable = Boolean(params.cancelable);
+    e.detail = params.detail;
+  } else {
+    e.bubbles = false;
+    e.cancelable = false;
+    e.detail = void 0;
+  }
+  return e;
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -62,14 +114,14 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":3}],3:[function(require,module,exports){
+},{"date-now":4}],4:[function(require,module,exports){
 module.exports = Date.now || now
 
 function now() {
     return new Date().getTime()
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -126,7 +178,7 @@ var getRelativePosition = function(ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -143,7 +195,7 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 /** @module RangeSlider */
@@ -568,8 +620,10 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":5,"./utils":7,"clamp":1,"debounce":2,"ev-pos":4}],7:[function(require,module,exports){
+},{"./const":6,"./utils":8,"clamp":1,"debounce":3,"ev-pos":5}],8:[function(require,module,exports){
 (function (global){
+var CE = require('custom-event');
+
 // see lodash/lang/isFinite
 var nativeIsFinite = global.isFinite;
 function isFinite(value) {
@@ -673,25 +727,6 @@ function forEachAncestorsAndSelf(el, callback) {
 }
 
 /**
- *
- * @param {Element} element
- * @param {String} name
- * @param {Object} opt
- * @returns {boolean}
- */
-function emit(element, name, opt) {
-    var ev;
-    if (window.CustomEvent) {
-        ev = new CustomEvent(name, opt);
-    } else {
-        ev = document.createEvent('CustomEvent');
-        ev.initCustomEvent(name, true, true, opt);
-    }
-
-    return document.dispatchEvent ? element.dispatchEvent(ev) : element.fireEvent('on' + ev.type, ev);
-}
-
-/**
  * @param {Element} referenceNode after this
  * @param {Element} newNode insert this
  */
@@ -700,7 +735,9 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: emit,
+    emit: function(el, name, opt){
+        el.dispatchEvent(new CE(name, opt));
+    },
     isFiniteNumber: isFinite,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
@@ -709,5 +746,5 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[6])(6)
+},{"custom-event":2}]},{},[7])(7)
 });
