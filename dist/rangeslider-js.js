@@ -222,7 +222,6 @@ var CONST = require('./const');
 
 var pluginName = 'rangeslider-js';
 var pluginIdentifier = 0;
-var emit = utils.emit;
 
 /**
  *
@@ -303,14 +302,14 @@ function RangeSlider(el, options) {
     el.style.overflow = 'hidden';
     el.style.opacity = '0';
 
-    ['_handleResize', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
+    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
     .forEach(function(fnName) {
         this[fnName] = this[fnName].bind(this);
     }, this);
 
     this._init();
 
-    window.addEventListener('resize', debounce(this._handleResize, CONST.HANDLE_RESIZE_DEBOUNCE));
+    window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
     CONST.START_EVENTS.forEach(function(evName) {
         this.range.addEventListener(evName, this._startEventListener);
@@ -389,15 +388,7 @@ RangeSlider.prototype._update = function() {
 
     this._setPosition(this.position);
     this._updatePercentFromValue();
-    emit(this.element, 'change');
-};
-
-/**
- *
- * @private
- */
-RangeSlider.prototype._handleResize = function() {
-    this._update();
+    utils.emit(this.element, 'change');
 };
 
 /**
@@ -407,14 +398,14 @@ RangeSlider.prototype._handleResize = function() {
  */
 RangeSlider.prototype._listen = function(bool) {
 
+    var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
+
     CONST.MOVE_EVENTS.forEach(function(evName) {
-        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleMove);
+        document[addOrRemoveListener](evName, this._handleMove);
     }, this);
     CONST.END_EVENTS.forEach(function(evName) {
-        document[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        this.range[(bool ? 'add' : 'remove') + 'EventListener'](evName, this._handleEnd);
+        document[addOrRemoveListener](evName, this._handleEnd);
+        this.range[addOrRemoveListener](evName, this._handleEnd);
     }, this);
 
 };
@@ -468,7 +459,7 @@ RangeSlider.prototype._handleEnd = function(e) {
     e.preventDefault();
 
     this._listen(false);
-    emit(this.element, 'change', {
+    utils.emit(this.element, 'change', {
         origin: this.identifier
     });
 
@@ -549,7 +540,7 @@ RangeSlider.prototype._setValue = function(value) {
     }
 
     this.value = this.element.value = value;
-    emit(this.element, 'input', {
+    utils.emit(this.element, 'input', {
         origin: this.identifier
     });
 };
@@ -598,7 +589,7 @@ RangeSlider.prototype.update = function(obj, triggerEvents) {
  */
 RangeSlider.prototype.destroy = function() {
 
-    window.removeEventListener('resize', this._handleResize, false);
+    window.removeEventListener('resize', this._update, false);
 
     CONST.START_EVENTS.forEach(function(evName) {
         this.range.removeEventListener(evName, this._startEventListener);
