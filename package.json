@@ -22,7 +22,7 @@
     "slider"
   ],
   "scripts": {
-    "uglify:dist": "uglifyjs --screw-ie8 ./dist/rangeslider-js.js -mc > ./dist/rangeslider-js.min.js",
+    "uglify:dist": "uglifyjs ./dist/rangeslider-js.js --screw-ie8 -mc > ./dist/rangeslider-js.min.js",
     "uglify": "npm run uglify:dist && npm run show-gzipped-minjs-size",
     "clean": "rm -rf ./dist",
     "build": "npm run clean && gulp build && npm run uglify",
