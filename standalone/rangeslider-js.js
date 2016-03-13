@@ -8,6 +8,45 @@ function clamp(value, min, max) {
 }
 
 },{}],2:[function(require,module,exports){
+module.exports = function (css, customDocument) {
+  var doc = customDocument || document;
+  if (doc.createStyleSheet) {
+    var sheet = doc.createStyleSheet()
+    sheet.cssText = css;
+    return sheet.ownerNode;
+  } else {
+    var head = doc.getElementsByTagName('head')[0],
+        style = doc.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(doc.createTextNode(css));
+    }
+
+    head.appendChild(style);
+    return style;
+  }
+};
+
+module.exports.byUrl = function(url) {
+  if (document.createStyleSheet) {
+    return document.createStyleSheet(url).ownerNode;
+  } else {
+    var head = document.getElementsByTagName('head')[0],
+        link = document.createElement('link');
+
+    link.rel = 'stylesheet';
+    link.href = url;
+
+    head.appendChild(link);
+    return link;
+  }
+};
+
+},{}],3:[function(require,module,exports){
 (function (global){
 
 var NativeCustomEvent = global.CustomEvent;
@@ -59,7 +98,7 @@ function CustomEvent (type, params) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -114,14 +153,14 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":4}],4:[function(require,module,exports){
+},{"date-now":5}],5:[function(require,module,exports){
 module.exports = Date.now || now
 
 function now() {
     return new Date().getTime()
 }
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -178,7 +217,7 @@ var getRelativePosition = function(ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 var numberIsNan = require('number-is-nan');
 
@@ -186,13 +225,18 @@ module.exports = Number.isFinite || function (val) {
 	return !(typeof val !== 'number' || numberIsNan(val) || val === Infinity || val === -Infinity);
 };
 
-},{"number-is-nan":7}],7:[function(require,module,exports){
+},{"number-is-nan":8}],8:[function(require,module,exports){
 'use strict';
 module.exports = Number.isNaN || function (x) {
 	return x !== x;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+module.exports = require('cssify');
+
+},{"cssify":2}],10:[function(require,module,exports){
+'use strict';
+
 var CONST = {};
 
 CONST.MAX_SET_BY_DEFAULT = 100;
@@ -209,8 +253,10 @@ CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
 
 module.exports = CONST;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
+
+require('./styles/base.less');
 
 /** @module RangeSlider */
 var clamp = require('clamp');
@@ -228,7 +274,7 @@ var pluginIdentifier = 0;
  * @param className
  * @returns {Element}
  */
-var createChild = function(className) {
+var createChild = function createChild(className) {
     var child = document.createElement('div');
     child.classList.add(className);
     return child;
@@ -239,7 +285,7 @@ var createChild = function(className) {
  * @param step
  * @returns {number}
  */
-var stepToFixed = function(step) {
+var stepToFixed = function stepToFixed(step) {
     return (step + '').replace('.', '').length - 1;
 };
 
@@ -257,6 +303,7 @@ var stepToFixed = function(step) {
  * @property {function} [options.onSlideEnd] - slide end callback
  */
 function RangeSlider(el, options) {
+    var _this2 = this;
 
     options = options || {};
 
@@ -267,7 +314,7 @@ function RangeSlider(el, options) {
     this.isInteracting = false;
     this.needTriggerEvents = false;
 
-    this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
+    this.identifier = 'js-' + pluginName + '-' + pluginIdentifier++;
 
     this.min = utils.getFirstNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
     this.max = utils.getFirstNumberLike(options.max, parseFloat(el.getAttribute('max')), CONST.MAX_SET_BY_DEFAULT);
@@ -302,8 +349,7 @@ function RangeSlider(el, options) {
     el.style.overflow = 'hidden';
     el.style.opacity = '0';
 
-    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
-    .forEach(function(fnName) {
+    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener'].forEach(function (fnName) {
         this[fnName] = this[fnName].bind(this);
     }, this);
 
@@ -311,9 +357,9 @@ function RangeSlider(el, options) {
 
     window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
-    CONST.START_EVENTS.forEach(function(evName) {
-        this.range.addEventListener(evName, this._startEventListener);
-    }, this);
+    CONST.START_EVENTS.forEach(function (evName) {
+        return _this2.range.addEventListener(evName, _this2._startEventListener);
+    });
 
     el.addEventListener('change', this._changeEventListener);
 }
@@ -324,7 +370,7 @@ RangeSlider.prototype.constructor = RangeSlider;
  *
  * @private
  */
-RangeSlider.prototype._init = function() {
+RangeSlider.prototype._init = function () {
     if (this.options.onInit) {
         this.options.onInit();
     }
@@ -335,7 +381,7 @@ RangeSlider.prototype._init = function() {
  *
  * @private
  */
-RangeSlider.prototype._updatePercentFromValue = function() {
+RangeSlider.prototype._updatePercentFromValue = function () {
     this.percent = (this.value - this.min) / (this.max - this.min);
 };
 
@@ -344,13 +390,15 @@ RangeSlider.prototype._updatePercentFromValue = function() {
  * @param ev
  * @param data
  */
-RangeSlider.prototype._startEventListener = function(ev, data) {
+RangeSlider.prototype._startEventListener = function (ev, data) {
+    var _this3 = this;
+
     var _this = this;
     var el = ev.target;
     var isEventOnSlider = false;
 
-    utils.forEachAncestorsAndSelf(el, function(el) {
-        return (isEventOnSlider = el.id === _this.identifier && !el.classList.contains(CONST.DISABLED_CLASS));
+    utils.forEachAncestorsAndSelf(el, function (el) {
+        return isEventOnSlider = el.id === _this3.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
     });
 
     if (isEventOnSlider) {
@@ -364,7 +412,7 @@ RangeSlider.prototype._startEventListener = function(ev, data) {
  * @param data
  * @private
  */
-RangeSlider.prototype._changeEventListener = function(ev, data) {
+RangeSlider.prototype._changeEventListener = function (ev, data) {
     if (data && data.origin === this.identifier) {
         return;
     }
@@ -376,7 +424,7 @@ RangeSlider.prototype._changeEventListener = function(ev, data) {
  *
  * @private
  */
-RangeSlider.prototype._update = function() {
+RangeSlider.prototype._update = function () {
 
     this.handleWidth = utils.getDimension(this.handle, 'offsetWidth');
     this.rangeWidth = utils.getDimension(this.range, 'offsetWidth');
@@ -396,18 +444,18 @@ RangeSlider.prototype._update = function() {
  * @param bool
  * @private
  */
-RangeSlider.prototype._listen = function(bool) {
+RangeSlider.prototype._listen = function (bool) {
+    var _this4 = this;
 
     var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document[addOrRemoveListener](evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
-        document[addOrRemoveListener](evName, this._handleEnd);
-        this.range[addOrRemoveListener](evName, this._handleEnd);
-    }, this);
-
+    CONST.MOVE_EVENTS.forEach(function (evName) {
+        return document[addOrRemoveListener](evName, _this4._handleMove);
+    });
+    CONST.END_EVENTS.forEach(function (evName) {
+        document[addOrRemoveListener](evName, _this4._handleEnd);
+        _this4.range[addOrRemoveListener](evName, _this4._handleEnd);
+    });
 };
 
 /**
@@ -415,7 +463,7 @@ RangeSlider.prototype._listen = function(bool) {
  * @param {Event} e
  * @private
  */
-RangeSlider.prototype._handleDown = function(e) {
+RangeSlider.prototype._handleDown = function (e) {
     e.preventDefault();
 
     this.isInteracting = true;
@@ -435,7 +483,6 @@ RangeSlider.prototype._handleDown = function(e) {
         this.grabX = posX - handleX;
     }
     this._updatePercentFromValue();
-
 };
 
 /**
@@ -443,7 +490,7 @@ RangeSlider.prototype._handleDown = function(e) {
  * @param e
  * @private
  */
-RangeSlider.prototype._handleMove = function(e) {
+RangeSlider.prototype._handleMove = function (e) {
     this.isInteracting = true;
     e.preventDefault();
     var posX = evPos(e, this.range).x;
@@ -455,7 +502,7 @@ RangeSlider.prototype._handleMove = function(e) {
  * @param e
  * @private
  */
-RangeSlider.prototype._handleEnd = function(e) {
+RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
     this._listen(false);
@@ -475,12 +522,12 @@ RangeSlider.prototype._handleEnd = function(e) {
  * @param pos
  * @private
  */
-RangeSlider.prototype._setPosition = function(pos) {
+RangeSlider.prototype._setPosition = function (pos) {
     var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
     // Update ui
-    this.fill.style.width = (x + this.grabX) + 'px';
+    this.fill.style.width = x + this.grabX + 'px';
     this.handle.style.webkitTransform = this.handle.style.transform = 'translate(' + x + 'px, 0px)';
     this._setValue(value);
 
@@ -508,7 +555,7 @@ RangeSlider.prototype._setPosition = function(pos) {
  * @returns {number|*}
  * @private
  */
-RangeSlider.prototype._getPositionFromValue = function(value) {
+RangeSlider.prototype._getPositionFromValue = function (value) {
     var percentage, pos;
     percentage = (value - this.min) / (this.max - this.min);
     pos = percentage * this.maxHandleX;
@@ -521,11 +568,11 @@ RangeSlider.prototype._getPositionFromValue = function(value) {
  * @returns {number}
  * @private
  */
-RangeSlider.prototype._getValueFromPosition = function(pos) {
+RangeSlider.prototype._getValueFromPosition = function (pos) {
     var percentage, value;
-    percentage = ((pos) / (this.maxHandleX || 1));
+    percentage = pos / (this.maxHandleX || 1);
     value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
-    return Number((value).toFixed(this.toFixed));
+    return Number(value.toFixed(this.toFixed));
 };
 
 /**
@@ -533,7 +580,7 @@ RangeSlider.prototype._getValueFromPosition = function(pos) {
  * @param {number} value
  * @private
  */
-RangeSlider.prototype._setValue = function(value) {
+RangeSlider.prototype._setValue = function (value) {
 
     if (value === this.value && value === this.element.value) {
         return;
@@ -545,7 +592,6 @@ RangeSlider.prototype._setValue = function(value) {
     });
 };
 
-
 /**
  * Update
  *
@@ -553,7 +599,7 @@ RangeSlider.prototype._setValue = function(value) {
  * @param {Boolean} [triggerEvents]
  * @returns {RangeSlider}
  */
-RangeSlider.prototype.update = function(obj, triggerEvents) {
+RangeSlider.prototype.update = function (obj, triggerEvents) {
 
     obj = obj || {};
     this.needTriggerEvents = !!triggerEvents;
@@ -587,11 +633,11 @@ RangeSlider.prototype.update = function(obj, triggerEvents) {
 /**
  *
  */
-RangeSlider.prototype.destroy = function() {
+RangeSlider.prototype.destroy = function () {
 
     window.removeEventListener('resize', this._update, false);
 
-    CONST.START_EVENTS.forEach(function(evName) {
+    CONST.START_EVENTS.forEach(function (evName) {
         this.range.removeEventListener(evName, this._startEventListener);
     }, this);
 
@@ -609,13 +655,13 @@ RangeSlider.prototype.destroy = function() {
  * @param {Element|NodeList} el
  * @param {object} options
  */
-RangeSlider.create = function(el, options) {
+RangeSlider.create = function (el, options) {
     function createInstance(el) {
         el[pluginName] = el[pluginName] || new RangeSlider(el, options);
     }
 
     if (el.length) {
-        Array.prototype.slice.call(el).forEach(function(el) {
+        Array.prototype.slice.call(el).forEach(function (el) {
             createInstance(el);
         });
     } else {
@@ -625,7 +671,9 @@ RangeSlider.create = function(el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":8,"./utils":10,"clamp":1,"debounce":3,"ev-pos":5}],10:[function(require,module,exports){
+},{"./const":10,"./styles/base.less":12,"./utils":13,"clamp":1,"debounce":4,"ev-pos":6}],12:[function(require,module,exports){
+var css = ".rangeslider {\n  position: relative;\n  cursor: pointer;\n  height: 30px;\n  width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n  position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  top: calc(50% - 6px);\n  height: 12px;\n  z-index: 2;\n  background: #29e;\n  border-radius: 10px;\n  will-change: width;\n}\n.rangeslider__handle {\n  display: inline-block;\n  top: calc(50% - 15px);\n  background: #29e;\n  width: 30px;\n  height: 30px;\n  z-index: 3;\n  cursor: pointer;\n  border: solid 2px #ffffff;\n  border-radius: 50%;\n}\n.rangeslider__handle:active {\n  background: #107ecd;\n}\n.rangeslider__fill__bg {\n  background: #ccc;\n  width: 100%;\n}\n.rangeslider--disabled {\n  opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n  height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n  width: 21px;\n  height: 21px;\n  top: calc(50% - 10.5px);\n  background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n  top: calc(50% - 1px);\n  height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n  will-change: width, height, top;\n  -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  width: 14px;\n  height: 14px;\n  top: calc(50% - 7px);\n}\n";(require('lessify'))(css); module.exports = css;
+},{"lessify":9}],13:[function(require,module,exports){
 'use strict';
 
 var CE = require('custom-event');
@@ -636,7 +684,7 @@ function isHidden(el) {
 }
 
 function isNumberLike(obj) {
-    return isFiniteNumber(parseFloat(obj)) || (isFiniteNumber(obj));
+    return isFiniteNumber(parseFloat(obj)) || isFiniteNumber(obj);
 }
 
 function getFirstNumberLike() {
@@ -673,9 +721,8 @@ function getDimension(element, key) {
 
     var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
-        displayProperty = [],
-        dimension = element[key],
-        hiddenStyles, i;
+        displayProperty = [];
+    var dimension = element[key];
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
@@ -686,8 +733,8 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for (i = 0; i < hiddenParentNodesLength; i++) {
-            hiddenStyles = hiddenParentNodes[i].style;
+        for (var i = 0; i < hiddenParentNodesLength; i++) {
+            var hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
             hiddenStyles.display = 'block';
@@ -700,13 +747,13 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for (i = 0; i < hiddenParentNodesLength; i++) {
-            hiddenStyles = hiddenParentNodes[i].style;
-            toggleOpenProperty(hiddenParentNodes[i]);
-            hiddenStyles.display = displayProperty[i];
-            hiddenStyles.height = '';
-            hiddenStyles.overflow = '';
-            hiddenStyles.visibility = '';
+        for (var _i = 0; _i < hiddenParentNodesLength; _i++) {
+            var _hiddenStyles = hiddenParentNodes[_i].style;
+            toggleOpenProperty(hiddenParentNodes[_i]);
+            _hiddenStyles.display = displayProperty[_i];
+            _hiddenStyles.height = '';
+            _hiddenStyles.overflow = '';
+            _hiddenStyles.visibility = '';
         }
     }
     return dimension;
@@ -735,7 +782,7 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: function(el, name, opt){
+    emit: function emit(el, name, opt) {
         el.dispatchEvent(new CE(name, opt));
     },
     isFiniteNumber: isFiniteNumber,
@@ -745,5 +792,5 @@ module.exports = {
     forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-},{"custom-event":2,"is-finite":6}]},{},[9])(9)
+},{"custom-event":3,"is-finite":7}]},{},[11])(11)
 });

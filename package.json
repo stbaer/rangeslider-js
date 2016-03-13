@@ -22,44 +22,82 @@
     "slider"
   ],
   "scripts": {
-    "uglify:dist": "uglifyjs ./dist/rangeslider-js.js --screw-ie8 -mc > ./dist/rangeslider-js.min.js",
-    "uglify": "npm run uglify:dist && npm run show-gzipped-minjs-size",
-    "clean": "rm -rf ./dist",
-    "build": "npm run clean && gulp build && npm run uglify",
-    "show-gzipped-minjs-size": "echo \"js minified and gzipped: \" && gzip -c dist/rangeslider-js.min.js | wc -c",
+    "jshint": "jshint --reporter=node_modules/jshint-summary src/**/*.js",
+    "uglify:standalone": "uglifyjs ./standalone/rangeslider-js.js --screw-ie8 -mc > ./standalone/rangeslider-js.min.js",
+    "uglify": "npm run uglify:standalone && npm run show-gzipped-minjs-size",
+    "clean": "rm -rf ./standalone",
+    "build": "npm run jshint && npm run clean && mkdirp standalone && browserify src/index.js --standalone rangesliderJs > standalone/rangeslider-js.js && npm run uglify",
+    "show-gzipped-minjs-size": "echo \"js minified and gzipped: \" && gzip -c standalone/rangeslider-js.min.js | wc -c",
     "example": "beefy --index=examples/standalone/example.html",
-    "disc": "./node_modules/.bin/browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js",
-    "test-visual": "beefy test/visual/test.js --index=test/visual/beefy.html"
+    "disc": "browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js",
+    "test-visual": "beefy test/visual/test.js --index=test/visual/beefy.html",
+    "start": "npm run build && npm run test-visual"
   },
   "dependencies": {
     "clamp": "^1.0.1",
     "custom-event": "^1.0.0",
     "debounce": "^1.0.0",
     "ev-pos": "0.0.4",
-    "is-finite": "^1.0.1"
+    "is-finite": "^1.0.1",
+    "lessify": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "^12.0.1",
+    "autoprefixer": "^6.3.3",
+    "babel-plugin-transform-es3-property-literals": "^6.0.14",
+    "babel-plugin-transform-node-env-inline": "^6.0.14",
+    "babel-plugin-undeclared-variables-check": "^6.0.14",
+    "babel-preset-es2015": "^6.0.14",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
     "disc": "^1.3.2",
-    "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-cached": "^1.1.0",
-    "gulp-csso": "^1.0.1",
-    "gulp-filter": "^3.0.1",
-    "gulp-jshint": "^2.0.0",
-    "gulp-less": "^3.0.5",
-    "gulp-load-plugins": "latest",
-    "gulp-plumber": "^1.0.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-size": "^2.0.0",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-util": "^3.0.7",
     "jshint-summary": "^0.4.0",
-    "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.5",
-    "uglify-js": "latest",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
+    "uglify-js": "^2.6.2",
     "watchify": "^3.6.1"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ],
+          "ignore": [
+            "node_modules/"
+          ]
+        }
+      ],
+      "lessify"
+    ]
+  },
+  "jshintConfig": {
+    "node": true,
+    "bitwise": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "freeze": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "sub": true,
+    "eqnull": true,
+    "browser": true,
+    "laxcomma": true,
+    "trailing": true,
+    "smarttabs": true,
+    "nonew": true,
+    "quotmark": false,
+    "nonbsp": true,
+    "undef": true,
+    "jquery": true,
+    "unused": "vars",
+    "esnext": false,
+    "esversion": 6,
+    "globals": {
+      "console": false
+    }
   }
 }

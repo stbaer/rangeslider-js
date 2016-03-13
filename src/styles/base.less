@@ -1,4 +1,13 @@
-@import "variables";
+@slider-color: #29e;
+@handle-color: #29e;
+@handle-width: 30px;
+@fill-height: 12px;
+@fill-bg-color: #ccc;
+@height: 12px;
+@fill-z-index: 2;
+
+@fill-height-slim: 2px;
+@handle-width-slim: 14px;
 
 .rangeslider {
     position: relative;
@@ -72,6 +81,7 @@
     }
     .rangeslider__handle {
         will-change: width, height, top;
+        -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;
         transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;
         width: @handle-width-slim;
         height: @handle-width-slim;

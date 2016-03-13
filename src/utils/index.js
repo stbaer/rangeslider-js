@@ -1,7 +1,5 @@
-'use strict';
-
-var CE = require('custom-event');
-var isFiniteNumber = require('is-finite');
+const CE = require('custom-event');
+const isFiniteNumber = require('is-finite');
 
 function isHidden(el) {
     return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
@@ -15,7 +13,7 @@ function getFirstNumberLike() {
     if (!arguments.length) {
         return null;
     }
-    for (var i = 0, len = arguments.length; i < len; i++) {
+    for (let i = 0, len = arguments.length; i < len; i++) {
         if (isNumberLike(arguments[i])) {
             return arguments[i];
         }
@@ -43,11 +41,10 @@ function getHiddenParentNodes(element) {
  */
 function getDimension(element, key) {
 
-    var hiddenParentNodes = getHiddenParentNodes(element),
+    const hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
-        displayProperty = [],
-        dimension = element[key],
-        hiddenStyles, i;
+        displayProperty = [];
+    let dimension = element[key];
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
@@ -58,8 +55,8 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for (i = 0; i < hiddenParentNodesLength; i++) {
-            hiddenStyles = hiddenParentNodes[i].style;
+        for (let i = 0; i < hiddenParentNodesLength; i++) {
+            let hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
             hiddenStyles.display = 'block';
@@ -72,8 +69,8 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for (i = 0; i < hiddenParentNodesLength; i++) {
-            hiddenStyles = hiddenParentNodes[i].style;
+        for (let i = 0; i < hiddenParentNodesLength; i++) {
+            let hiddenStyles = hiddenParentNodes[i].style;
             toggleOpenProperty(hiddenParentNodes[i]);
             hiddenStyles.display = displayProperty[i];
             hiddenStyles.height = '';
