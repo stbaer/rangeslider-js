@@ -1,15 +1,17 @@
 'use strict';
 
+require('./styles/base.less');
+
 /** @module RangeSlider */
-var clamp = require('clamp');
-var debounce = require('debounce');
-var evPos = require('ev-pos');
+const clamp = require('clamp');
+const debounce = require('debounce');
+const evPos = require('ev-pos');
 
-var utils = require('./utils');
-var CONST = require('./const');
+const utils = require('./utils');
+const CONST = require('./const');
 
-var pluginName = 'rangeslider-js';
-var pluginIdentifier = 0;
+const pluginName = 'rangeslider-js';
+let pluginIdentifier = 0;
 
 /**
  *
@@ -99,9 +101,7 @@ function RangeSlider(el, options) {
 
     window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
-    CONST.START_EVENTS.forEach(function(evName) {
-        this.range.addEventListener(evName, this._startEventListener);
-    }, this);
+    CONST.START_EVENTS.forEach((evName) => this.range.addEventListener(evName, this._startEventListener));
 
     el.addEventListener('change', this._changeEventListener);
 }
@@ -137,8 +137,8 @@ RangeSlider.prototype._startEventListener = function(ev, data) {
     var el = ev.target;
     var isEventOnSlider = false;
 
-    utils.forEachAncestorsAndSelf(el, function(el) {
-        return (isEventOnSlider = el.id === _this.identifier && !el.classList.contains(CONST.DISABLED_CLASS));
+    utils.forEachAncestorsAndSelf(el, (el) => {
+        return (isEventOnSlider = el.id === this.identifier && !el.classList.contains(CONST.DISABLED_CLASS));
     });
 
     if (isEventOnSlider) {
@@ -188,13 +188,11 @@ RangeSlider.prototype._listen = function(bool) {
 
     var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
-    CONST.MOVE_EVENTS.forEach(function(evName) {
-        document[addOrRemoveListener](evName, this._handleMove);
-    }, this);
-    CONST.END_EVENTS.forEach(function(evName) {
+    CONST.MOVE_EVENTS.forEach((evName) => document[addOrRemoveListener](evName, this._handleMove));
+    CONST.END_EVENTS.forEach((evName) => {
         document[addOrRemoveListener](evName, this._handleEnd);
         this.range[addOrRemoveListener](evName, this._handleEnd);
-    }, this);
+    });
 
 };
 

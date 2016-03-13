@@ -1,8 +1,6 @@
 # rangeslider-js
 
-[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
-
-Lightweight rangeslider with touch support based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider). Check out the [Examples][1].
+Lightweight rangeslider with touch support based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider). [Examples][1].
 
 [1]: http://stbaer.github.io/rangeslider-js/
 

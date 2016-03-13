@@ -1,4 +1,4 @@
-var rangesliderJs = require('../../src');
+var rangesliderJs = require('../../');
 
 document.body.innerHTML = '<input type="range" />';
 
