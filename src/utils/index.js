@@ -22,8 +22,8 @@ function getFirstNumberLike() {
 
 function getHiddenParentNodes(element) {
 
-    var parents = [],
-        node = element.parentNode;
+    const parents = [];
+    let node = element.parentNode;
 
     while (node && isHidden(node)) {
         parents.push(node);
@@ -44,6 +44,7 @@ function getDimension(element, key) {
     const hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
         displayProperty = [];
+    
     let dimension = element[key];
 
     // Used for native `<details>` elements

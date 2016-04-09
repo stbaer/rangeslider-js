@@ -1,25 +1,36 @@
-'use strict';
-
 require('./styles/base.less');
 
 /** @module RangeSlider */
 const clamp = require('clamp');
 const debounce = require('debounce');
 const evPos = require('ev-pos');
-
 const utils = require('./utils');
-const CONST = require('./const');
 
-const pluginName = 'rangeslider-js';
+const CONST = {
+    MAX_SET_BY_DEFAULT: 100,
+    HANDLE_RESIZE_DEBOUNCE: 100,
+    RANGE_CLASS: 'rangeslider',
+    FILL_CLASS: 'rangeslider__fill',
+    FILL_BG_CLASS: 'rangeslider__fill__bg',
+    HANDLE_CLASS: 'rangeslider__handle',
+    DISABLED_CLASS: 'rangeslider--disabled',
+    STEP_SET_BY_DEFAULT: 1,
+    START_EVENTS: ['mousedown', 'touchstart', 'pointerdown'],
+    MOVE_EVENTS: ['mousemove', 'touchmove', 'pointermove'],
+    END_EVENTS: ['mouseup', 'touchend', 'pointerup'],
+    PLUGIN_NAME: 'rangeslider-js'
+};
+
+// counter
 let pluginIdentifier = 0;
 
 /**
  *
- * @param className
+ * @param {string} className
  * @returns {Element}
  */
-var createChild = function(className) {
-    var child = document.createElement('div');
+const createChild = function (className) {
+    const child = document.createElement('div');
     child.classList.add(className);
     return child;
 };
@@ -29,7 +40,7 @@ var createChild = function(className) {
  * @param step
  * @returns {number}
  */
-var stepToFixed = function(step) {
+const stepToFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
 
@@ -57,7 +68,7 @@ function RangeSlider(el, options) {
     this.isInteracting = false;
     this.needTriggerEvents = false;
 
-    this.identifier = 'js-' + pluginName + '-' + (pluginIdentifier++);
+    this.identifier = 'js-' + CONST.PLUGIN_NAME + '-' + (pluginIdentifier++);
 
     this.min = utils.getFirstNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
     this.max = utils.getFirstNumberLike(options.max, parseFloat(el.getAttribute('max')), CONST.MAX_SET_BY_DEFAULT);
@@ -75,13 +86,8 @@ function RangeSlider(el, options) {
     this.fill = createChild(CONST.FILL_CLASS);
     this.handle = createChild(CONST.HANDLE_CLASS);
 
-    this.range.appendChild(this.handle);
-    this.range.appendChild(this.fillBg);
-    this.range.appendChild(this.fill);
-
-    el.setAttribute('min', '' + this.min);
-    el.setAttribute('max', '' + this.max);
-    el.setAttribute('step', '' + this.step);
+    ['fillBg', 'fill', 'handle'].forEach((str) => this.range.appendChild(this[str]));
+    ['min', 'max', 'step'].forEach((str) => el.setAttribute('min', '' + this[str]));
     this._setValue(this.value);
 
     utils.insertAfter(el, this.range);
@@ -93,9 +99,9 @@ function RangeSlider(el, options) {
     el.style.opacity = '0';
 
     ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
-    .forEach(function(fnName) {
-        this[fnName] = this[fnName].bind(this);
-    }, this);
+        .forEach(function (fnName) {
+            this[fnName] = this[fnName].bind(this);
+        }, this);
 
     this._init();
 
@@ -112,7 +118,7 @@ RangeSlider.prototype.constructor = RangeSlider;
  *
  * @private
  */
-RangeSlider.prototype._init = function() {
+RangeSlider.prototype._init = function () {
     if (this.options.onInit) {
         this.options.onInit();
     }
@@ -123,22 +129,22 @@ RangeSlider.prototype._init = function() {
  *
  * @private
  */
-RangeSlider.prototype._updatePercentFromValue = function() {
+RangeSlider.prototype._updatePercentFromValue = function () {
     this.percent = (this.value - this.min) / (this.max - this.min);
 };
 
 /**
  * This method check if this.identifier exists in ev.target's ancestors
- * @param ev
+ * @param {Event} ev
  * @param data
  */
-RangeSlider.prototype._startEventListener = function(ev, data) {
-    var _this = this;
-    var el = ev.target;
-    var isEventOnSlider = false;
+RangeSlider.prototype._startEventListener = function (ev, data) {
+
+    const el = ev.target;
+    let isEventOnSlider = false;
 
     utils.forEachAncestorsAndSelf(el, (el) => {
-        return (isEventOnSlider = el.id === this.identifier && !el.classList.contains(CONST.DISABLED_CLASS));
+        return isEventOnSlider = el.id === this.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
     });
 
     if (isEventOnSlider) {
@@ -148,23 +154,21 @@ RangeSlider.prototype._startEventListener = function(ev, data) {
 
 /**
  *
- * @param ev
+ * @param {Event} ev
  * @param data
  * @private
  */
-RangeSlider.prototype._changeEventListener = function(ev, data) {
-    if (data && data.origin === this.identifier) {
-        return;
+RangeSlider.prototype._changeEventListener = function (ev, data) {
+    if (!(data && data.origin === this.identifier)) {
+        this._setPosition(this._getPositionFromValue(ev.target.value));
     }
-    var value = ev.target.value;
-    this._setPosition(this._getPositionFromValue(value));
 };
 
 /**
  *
  * @private
  */
-RangeSlider.prototype._update = function() {
+RangeSlider.prototype._update = function () {
 
     this.handleWidth = utils.getDimension(this.handle, 'offsetWidth');
     this.rangeWidth = utils.getDimension(this.range, 'offsetWidth');
@@ -181,12 +185,12 @@ RangeSlider.prototype._update = function() {
 
 /**
  *
- * @param bool
+ * @param {boolean} bool
  * @private
  */
-RangeSlider.prototype._listen = function(bool) {
+RangeSlider.prototype._listen = function (bool) {
 
-    var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
+    const addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
     CONST.MOVE_EVENTS.forEach((evName) => document[addOrRemoveListener](evName, this._handleMove));
     CONST.END_EVENTS.forEach((evName) => {
@@ -201,7 +205,7 @@ RangeSlider.prototype._listen = function(bool) {
  * @param {Event} e
  * @private
  */
-RangeSlider.prototype._handleDown = function(e) {
+RangeSlider.prototype._handleDown = function (e) {
     e.preventDefault();
 
     this.isInteracting = true;
@@ -226,10 +230,10 @@ RangeSlider.prototype._handleDown = function(e) {
 
 /**
  *
- * @param e
+ * @param {Event} e
  * @private
  */
-RangeSlider.prototype._handleMove = function(e) {
+RangeSlider.prototype._handleMove = function (e) {
     this.isInteracting = true;
     e.preventDefault();
     var posX = evPos(e, this.range).x;
@@ -238,10 +242,10 @@ RangeSlider.prototype._handleMove = function(e) {
 
 /**
  *
- * @param e
+ * @param {Event} e
  * @private
  */
-RangeSlider.prototype._handleEnd = function(e) {
+RangeSlider.prototype._handleEnd = function (e) {
     e.preventDefault();
 
     this._listen(false);
@@ -261,8 +265,9 @@ RangeSlider.prototype._handleEnd = function(e) {
  * @param pos
  * @private
  */
-RangeSlider.prototype._setPosition = function(pos) {
-    var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
+RangeSlider.prototype._setPosition = function (pos) {
+
+    const value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
     // Update ui
@@ -290,15 +295,14 @@ RangeSlider.prototype._setPosition = function(pos) {
 
 /**
  *
- * @param value
- * @returns {number|*}
+ * @param {number} value
+ * @returns {number}
  * @private
  */
-RangeSlider.prototype._getPositionFromValue = function(value) {
-    var percentage, pos;
-    percentage = (value - this.min) / (this.max - this.min);
-    pos = percentage * this.maxHandleX;
-    return pos;
+RangeSlider.prototype._getPositionFromValue = function (value) {
+    const percentage = (value - this.min) / (this.max - this.min);
+
+    return percentage * this.maxHandleX;
 };
 
 /**
@@ -307,10 +311,10 @@ RangeSlider.prototype._getPositionFromValue = function(value) {
  * @returns {number}
  * @private
  */
-RangeSlider.prototype._getValueFromPosition = function(pos) {
-    var percentage, value;
-    percentage = ((pos) / (this.maxHandleX || 1));
-    value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
+RangeSlider.prototype._getValueFromPosition = function (pos) {
+    const percentage = ((pos) / (this.maxHandleX || 1)),
+        value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
+
     return Number((value).toFixed(this.toFixed));
 };
 
@@ -319,18 +323,15 @@ RangeSlider.prototype._getValueFromPosition = function(pos) {
  * @param {number} value
  * @private
  */
-RangeSlider.prototype._setValue = function(value) {
+RangeSlider.prototype._setValue = function (value) {
 
-    if (value === this.value && value === this.element.value) {
-        return;
+    if (!(value === this.value && value === this.element.value)) {
+        this.value = this.element.value = value;
+        utils.emit(this.element, 'input', {
+            origin: this.identifier
+        });
     }
-
-    this.value = this.element.value = value;
-    utils.emit(this.element, 'input', {
-        origin: this.identifier
-    });
 };
-
 
 /**
  * Update
@@ -339,7 +340,7 @@ RangeSlider.prototype._setValue = function(value) {
  * @param {Boolean} [triggerEvents]
  * @returns {RangeSlider}
  */
-RangeSlider.prototype.update = function(obj, triggerEvents) {
+RangeSlider.prototype.update = function (obj, triggerEvents) {
 
     obj = obj || {};
     this.needTriggerEvents = !!triggerEvents;
@@ -373,18 +374,18 @@ RangeSlider.prototype.update = function(obj, triggerEvents) {
 /**
  *
  */
-RangeSlider.prototype.destroy = function() {
+RangeSlider.prototype.destroy = function () {
 
     window.removeEventListener('resize', this._update, false);
 
-    CONST.START_EVENTS.forEach(function(evName) {
+    CONST.START_EVENTS.forEach(function (evName) {
         this.range.removeEventListener(evName, this._startEventListener);
     }, this);
 
     this.element.removeEventListener('change', this._changeEventListener);
 
     this.element.style.cssText = '';
-    delete this.element[pluginName];
+    delete this.element[CONST.PLUGIN_NAME];
 
     // Remove the generated markup
     this.range.parentNode.removeChild(this.range);
@@ -395,13 +396,13 @@ RangeSlider.prototype.destroy = function() {
  * @param {Element|NodeList} el
  * @param {object} options
  */
-RangeSlider.create = function(el, options) {
+RangeSlider.create = function (el, options) {
     function createInstance(el) {
-        el[pluginName] = el[pluginName] || new RangeSlider(el, options);
+        el[CONST.PLUGIN_NAME] = el[CONST.PLUGIN_NAME] || new RangeSlider(el, options);
     }
 
     if (el.length) {
-        Array.prototype.slice.call(el).forEach(function(el) {
+        Array.prototype.slice.call(el).forEach(function (el) {
             createInstance(el);
         });
     } else {
