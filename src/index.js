@@ -87,7 +87,8 @@ function RangeSlider(el, options) {
     this.handle = createChild(CONST.HANDLE_CLASS);
 
     ['fillBg', 'fill', 'handle'].forEach((str) => this.range.appendChild(this[str]));
-    ['min', 'max', 'step'].forEach((str) => el.setAttribute('min', '' + this[str]));
+    ['min', 'max', 'step'].forEach((str) => el.setAttribute(str, '' + this[str]));
+    
     this._setValue(this.value);
 
     utils.insertAfter(el, this.range);
