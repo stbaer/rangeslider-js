@@ -330,8 +330,9 @@ function RangeSlider(el, options) {
         return _this.range.appendChild(_this[str]);
     });
     ['min', 'max', 'step'].forEach(function (str) {
-        return el.setAttribute('min', '' + _this[str]);
+        return el.setAttribute(str, '' + _this[str]);
     });
+
     this._setValue(this.value);
 
     utils.insertAfter(el, this.range);
