@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <stbaer.pub@gmail.com>",
