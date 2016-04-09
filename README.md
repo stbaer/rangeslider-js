@@ -13,13 +13,9 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 
 ## Usage
 
-**CSS**
-
-Include *rangeslider-js.min.css*
-
 **HTML**
 
-```html
+```
 <!--  -->
 <div class="slider1">
     <input type="range">
@@ -38,7 +34,7 @@ Include *rangeslider-js.min.css*
 
 **JS**
 
-```js
+```
 var rangesliderJs = require('rangeslider-js')  // Or use the standalone version from the dist folder
 
 // initialize single slider
@@ -52,7 +48,7 @@ rangesliderJs.create(elements,{ /* .. */ });
 
 ### Options
 
-```js
+```
 {
     min: 0,
     max: 100,
@@ -65,11 +61,12 @@ rangesliderJs.create(elements,{ /* .. */ });
     onSlideEnd: function (value, percent, position) {}
 }
 ```
+
 ## Build
 
 Install dependencies and build (requires gulp):
 
-```js
+```
 npm i && npm run build
 ```
 

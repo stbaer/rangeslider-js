@@ -168,18 +168,18 @@ function now() {
  * @param  {*} val
  * @return {boolean}
  */
-var isNum = function(val) {
+var isNum = function (val) {
     return typeof val === 'number' && !isNaN(val);
 };
 
 /**
  * Get the relative position from a mouse/touch event to an element
  *
- * @param  {event}   ev                           The mouse or touch event
- * @param  {element} [toElement=ev.currentTarget] The element
+ * @param  {Event}   ev                           The mouse or touch event
+ * @param  {Element} [toElement=ev.currentTarget] The element
  * @return {object}                               {x, y}
  */
-var getRelativePosition = function(ev, toElement) {
+var getRelativePosition = function (ev, toElement) {
     toElement = toElement || toElement.currentTarget;
 
     var toElementBoundingRect = toElement.getBoundingClientRect(),
@@ -237,41 +237,35 @@ module.exports = require('cssify');
 },{"cssify":2}],10:[function(require,module,exports){
 'use strict';
 
-var CONST = {};
-
-CONST.MAX_SET_BY_DEFAULT = 100;
-CONST.HANDLE_RESIZE_DEBOUNCE = 100;
-CONST.RANGE_CLASS = 'rangeslider';
-CONST.FILL_CLASS = 'rangeslider__fill';
-CONST.FILL_BG_CLASS = 'rangeslider__fill__bg';
-CONST.HANDLE_CLASS = 'rangeslider__handle';
-CONST.DISABLED_CLASS = 'rangeslider--disabled';
-CONST.STEP_SET_BY_DEFAULT = 1;
-CONST.START_EVENTS = ['mousedown', 'touchstart', 'pointerdown'];
-CONST.MOVE_EVENTS = ['mousemove', 'touchmove', 'pointermove'];
-CONST.END_EVENTS = ['mouseup', 'touchend', 'pointerup'];
-
-module.exports = CONST;
-
-},{}],11:[function(require,module,exports){
-'use strict';
-
 require('./styles/base.less');
 
 /** @module RangeSlider */
 var clamp = require('clamp');
 var debounce = require('debounce');
 var evPos = require('ev-pos');
-
 var utils = require('./utils');
-var CONST = require('./const');
 
-var pluginName = 'rangeslider-js';
+var CONST = {
+    MAX_SET_BY_DEFAULT: 100,
+    HANDLE_RESIZE_DEBOUNCE: 100,
+    RANGE_CLASS: 'rangeslider',
+    FILL_CLASS: 'rangeslider__fill',
+    FILL_BG_CLASS: 'rangeslider__fill__bg',
+    HANDLE_CLASS: 'rangeslider__handle',
+    DISABLED_CLASS: 'rangeslider--disabled',
+    STEP_SET_BY_DEFAULT: 1,
+    START_EVENTS: ['mousedown', 'touchstart', 'pointerdown'],
+    MOVE_EVENTS: ['mousemove', 'touchmove', 'pointermove'],
+    END_EVENTS: ['mouseup', 'touchend', 'pointerup'],
+    PLUGIN_NAME: 'rangeslider-js'
+};
+
+// counter
 var pluginIdentifier = 0;
 
 /**
  *
- * @param className
+ * @param {string} className
  * @returns {Element}
  */
 var createChild = function createChild(className) {
@@ -303,7 +297,7 @@ var stepToFixed = function stepToFixed(step) {
  * @property {function} [options.onSlideEnd] - slide end callback
  */
 function RangeSlider(el, options) {
-    var _this2 = this;
+    var _this = this;
 
     options = options || {};
 
@@ -314,7 +308,7 @@ function RangeSlider(el, options) {
     this.isInteracting = false;
     this.needTriggerEvents = false;
 
-    this.identifier = 'js-' + pluginName + '-' + pluginIdentifier++;
+    this.identifier = 'js-' + CONST.PLUGIN_NAME + '-' + pluginIdentifier++;
 
     this.min = utils.getFirstNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
     this.max = utils.getFirstNumberLike(options.max, parseFloat(el.getAttribute('max')), CONST.MAX_SET_BY_DEFAULT);
@@ -332,13 +326,13 @@ function RangeSlider(el, options) {
     this.fill = createChild(CONST.FILL_CLASS);
     this.handle = createChild(CONST.HANDLE_CLASS);
 
-    this.range.appendChild(this.handle);
-    this.range.appendChild(this.fillBg);
-    this.range.appendChild(this.fill);
+    ['fillBg', 'fill', 'handle'].forEach(function (str) {
+        return _this.range.appendChild(_this[str]);
+    });
+    ['min', 'max', 'step'].forEach(function (str) {
+        return el.setAttribute(str, '' + _this[str]);
+    });
 
-    el.setAttribute('min', '' + this.min);
-    el.setAttribute('max', '' + this.max);
-    el.setAttribute('step', '' + this.step);
     this._setValue(this.value);
 
     utils.insertAfter(el, this.range);
@@ -358,7 +352,7 @@ function RangeSlider(el, options) {
     window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
     CONST.START_EVENTS.forEach(function (evName) {
-        return _this2.range.addEventListener(evName, _this2._startEventListener);
+        return _this.range.addEventListener(evName, _this._startEventListener);
     });
 
     el.addEventListener('change', this._changeEventListener);
@@ -387,18 +381,17 @@ RangeSlider.prototype._updatePercentFromValue = function () {
 
 /**
  * This method check if this.identifier exists in ev.target's ancestors
- * @param ev
+ * @param {Event} ev
  * @param data
  */
 RangeSlider.prototype._startEventListener = function (ev, data) {
-    var _this3 = this;
+    var _this2 = this;
 
-    var _this = this;
     var el = ev.target;
     var isEventOnSlider = false;
 
     utils.forEachAncestorsAndSelf(el, function (el) {
-        return isEventOnSlider = el.id === _this3.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
+        return isEventOnSlider = el.id === _this2.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
     });
 
     if (isEventOnSlider) {
@@ -408,16 +401,14 @@ RangeSlider.prototype._startEventListener = function (ev, data) {
 
 /**
  *
- * @param ev
+ * @param {Event} ev
  * @param data
  * @private
  */
 RangeSlider.prototype._changeEventListener = function (ev, data) {
-    if (data && data.origin === this.identifier) {
-        return;
+    if (!(data && data.origin === this.identifier)) {
+        this._setPosition(this._getPositionFromValue(ev.target.value));
     }
-    var value = ev.target.value;
-    this._setPosition(this._getPositionFromValue(value));
 };
 
 /**
@@ -441,20 +432,20 @@ RangeSlider.prototype._update = function () {
 
 /**
  *
- * @param bool
+ * @param {boolean} bool
  * @private
  */
 RangeSlider.prototype._listen = function (bool) {
-    var _this4 = this;
+    var _this3 = this;
 
     var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
     CONST.MOVE_EVENTS.forEach(function (evName) {
-        return document[addOrRemoveListener](evName, _this4._handleMove);
+        return document[addOrRemoveListener](evName, _this3._handleMove);
     });
     CONST.END_EVENTS.forEach(function (evName) {
-        document[addOrRemoveListener](evName, _this4._handleEnd);
-        _this4.range[addOrRemoveListener](evName, _this4._handleEnd);
+        document[addOrRemoveListener](evName, _this3._handleEnd);
+        _this3.range[addOrRemoveListener](evName, _this3._handleEnd);
     });
 };
 
@@ -487,7 +478,7 @@ RangeSlider.prototype._handleDown = function (e) {
 
 /**
  *
- * @param e
+ * @param {Event} e
  * @private
  */
 RangeSlider.prototype._handleMove = function (e) {
@@ -499,7 +490,7 @@ RangeSlider.prototype._handleMove = function (e) {
 
 /**
  *
- * @param e
+ * @param {Event} e
  * @private
  */
 RangeSlider.prototype._handleEnd = function (e) {
@@ -523,6 +514,7 @@ RangeSlider.prototype._handleEnd = function (e) {
  * @private
  */
 RangeSlider.prototype._setPosition = function (pos) {
+
     var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
@@ -551,15 +543,14 @@ RangeSlider.prototype._setPosition = function (pos) {
 
 /**
  *
- * @param value
- * @returns {number|*}
+ * @param {number} value
+ * @returns {number}
  * @private
  */
 RangeSlider.prototype._getPositionFromValue = function (value) {
-    var percentage, pos;
-    percentage = (value - this.min) / (this.max - this.min);
-    pos = percentage * this.maxHandleX;
-    return pos;
+    var percentage = (value - this.min) / (this.max - this.min);
+
+    return percentage * this.maxHandleX;
 };
 
 /**
@@ -569,9 +560,9 @@ RangeSlider.prototype._getPositionFromValue = function (value) {
  * @private
  */
 RangeSlider.prototype._getValueFromPosition = function (pos) {
-    var percentage, value;
-    percentage = pos / (this.maxHandleX || 1);
-    value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
+    var percentage = pos / (this.maxHandleX || 1),
+        value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
+
     return Number(value.toFixed(this.toFixed));
 };
 
@@ -582,14 +573,12 @@ RangeSlider.prototype._getValueFromPosition = function (pos) {
  */
 RangeSlider.prototype._setValue = function (value) {
 
-    if (value === this.value && value === this.element.value) {
-        return;
+    if (!(value === this.value && value === this.element.value)) {
+        this.value = this.element.value = value;
+        utils.emit(this.element, 'input', {
+            origin: this.identifier
+        });
     }
-
-    this.value = this.element.value = value;
-    utils.emit(this.element, 'input', {
-        origin: this.identifier
-    });
 };
 
 /**
@@ -644,7 +633,7 @@ RangeSlider.prototype.destroy = function () {
     this.element.removeEventListener('change', this._changeEventListener);
 
     this.element.style.cssText = '';
-    delete this.element[pluginName];
+    delete this.element[CONST.PLUGIN_NAME];
 
     // Remove the generated markup
     this.range.parentNode.removeChild(this.range);
@@ -657,7 +646,7 @@ RangeSlider.prototype.destroy = function () {
  */
 RangeSlider.create = function (el, options) {
     function createInstance(el) {
-        el[pluginName] = el[pluginName] || new RangeSlider(el, options);
+        el[CONST.PLUGIN_NAME] = el[CONST.PLUGIN_NAME] || new RangeSlider(el, options);
     }
 
     if (el.length) {
@@ -671,9 +660,9 @@ RangeSlider.create = function (el, options) {
 
 module.exports = RangeSlider;
 
-},{"./const":10,"./styles/base.less":12,"./utils":13,"clamp":1,"debounce":4,"ev-pos":6}],12:[function(require,module,exports){
+},{"./styles/base.less":11,"./utils":12,"clamp":1,"debounce":4,"ev-pos":6}],11:[function(require,module,exports){
 var css = ".rangeslider {\n  position: relative;\n  cursor: pointer;\n  height: 30px;\n  width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n  position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  top: calc(50% - 6px);\n  height: 12px;\n  z-index: 2;\n  background: #29e;\n  border-radius: 10px;\n  will-change: width;\n}\n.rangeslider__handle {\n  display: inline-block;\n  top: calc(50% - 15px);\n  background: #29e;\n  width: 30px;\n  height: 30px;\n  z-index: 3;\n  cursor: pointer;\n  border: solid 2px #ffffff;\n  border-radius: 50%;\n}\n.rangeslider__handle:active {\n  background: #107ecd;\n}\n.rangeslider__fill__bg {\n  background: #ccc;\n  width: 100%;\n}\n.rangeslider--disabled {\n  opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n  height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n  width: 21px;\n  height: 21px;\n  top: calc(50% - 10.5px);\n  background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n  top: calc(50% - 1px);\n  height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n  will-change: width, height, top;\n  -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  width: 14px;\n  height: 14px;\n  top: calc(50% - 7px);\n}\n";(require('lessify'))(css); module.exports = css;
-},{"lessify":9}],13:[function(require,module,exports){
+},{"lessify":9}],12:[function(require,module,exports){
 'use strict';
 
 var CE = require('custom-event');
@@ -700,8 +689,8 @@ function getFirstNumberLike() {
 
 function getHiddenParentNodes(element) {
 
-    var parents = [],
-        node = element.parentNode;
+    var parents = [];
+    var node = element.parentNode;
 
     while (node && isHidden(node)) {
         parents.push(node);
@@ -722,6 +711,7 @@ function getDimension(element, key) {
     var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
         displayProperty = [];
+
     var dimension = element[key];
 
     // Used for native `<details>` elements
@@ -792,5 +782,5 @@ module.exports = {
     forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-},{"custom-event":3,"is-finite":7}]},{},[11])(11)
+},{"custom-event":3,"is-finite":7}]},{},[10])(10)
 });

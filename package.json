@@ -1,9 +1,9 @@
 {
   "name": "rangeslider-js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
-  "author": "Steffen Bär <>",
+  "author": "Steffen Bär <stbaer.pub@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/stbaer/rangeslider-js",
   "repository": {
@@ -37,7 +37,7 @@
     "clamp": "^1.0.1",
     "custom-event": "^1.0.0",
     "debounce": "^1.0.0",
-    "ev-pos": "0.0.4",
+    "ev-pos": "1.0.0",
     "is-finite": "^1.0.1",
     "lessify": "^1.0.1",
     "babel-preset-es2015": "^6.0.14",
@@ -90,8 +90,8 @@
     "undef": true,
     "jquery": true,
     "unused": "vars",
-    "esnext": false,
     "esversion": 6,
+    "browserify": true,
     "globals": {
       "console": false
     }
