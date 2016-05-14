@@ -35,35 +35,22 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
+    "cssify": "^1.0.2",
     "custom-event": "^1.0.0",
     "debounce": "^1.0.0",
-    "ev-pos": "1.0.0",
-    "is-finite": "^1.0.1",
-    "lessify": "^1.0.1",
-    "babel-preset-es2015": "^6.0.14",
-    "babelify": "^7.2.0"
+    "ev-pos": "^1.0.1",
+    "is-finite": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "^13.0.0",
     "disc": "^1.3.2",
-    "jshint-summary": "^0.4.0",
-    "uglify-js": "^2.6.2",
-    "watchify": "^3.6.1"
+    "jshint": "latest",
+    "jshint-summary": "latest",
+    "uglify-js": "latest"
   },
   "browserify": {
     "transform": [
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015"
-          ],
-          "only": [
-            "src/"
-          ]
-        }
-      ],
-      "lessify"
+      "cssify"
     ]
   },
   "jshintConfig": {
@@ -90,7 +77,6 @@
     "undef": true,
     "jquery": true,
     "unused": "vars",
-    "esversion": 6,
     "browserify": true,
     "globals": {
       "console": false
