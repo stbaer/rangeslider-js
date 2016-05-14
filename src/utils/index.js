@@ -1,5 +1,5 @@
-const CE = require('custom-event');
-const isFiniteNumber = require('is-finite');
+var CE = require('custom-event');
+var isFiniteNumber = require('is-finite');
 
 function isHidden(el) {
     return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
@@ -13,7 +13,7 @@ function getFirstNumberLike() {
     if (!arguments.length) {
         return null;
     }
-    for (let i = 0, len = arguments.length; i < len; i++) {
+    for (var i = 0, len = arguments.length; i < len; i++) {
         if (isNumberLike(arguments[i])) {
             return arguments[i];
         }
@@ -22,8 +22,8 @@ function getFirstNumberLike() {
 
 function getHiddenParentNodes(element) {
 
-    const parents = [];
-    let node = element.parentNode;
+    var parents = [];
+    var node = element.parentNode;
 
     while (node && isHidden(node)) {
         parents.push(node);
@@ -41,11 +41,11 @@ function getHiddenParentNodes(element) {
  */
 function getDimension(element, key) {
 
-    const hiddenParentNodes = getHiddenParentNodes(element),
+    var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
-        displayProperty = [];
-    
-    let dimension = element[key];
+        dimension = element[key],
+        displayProperty = [],
+        i = 0, hiddenStyles;
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
@@ -56,8 +56,8 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for (let i = 0; i < hiddenParentNodesLength; i++) {
-            let hiddenStyles = hiddenParentNodes[i].style;
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
             hiddenStyles.display = 'block';
@@ -70,8 +70,8 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for (let i = 0; i < hiddenParentNodesLength; i++) {
-            let hiddenStyles = hiddenParentNodes[i].style;
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
             toggleOpenProperty(hiddenParentNodes[i]);
             hiddenStyles.display = displayProperty[i];
             hiddenStyles.height = '';

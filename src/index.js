@@ -1,12 +1,12 @@
-require('./styles/base.less');
+require('./styles/base.css');
 
 /** @module RangeSlider */
-const clamp = require('clamp');
-const debounce = require('debounce');
-const evPos = require('ev-pos');
-const utils = require('./utils');
+var clamp = require('clamp');
+var debounce = require('debounce');
+var evPos = require('ev-pos');
+var utils = require('./utils');
 
-const CONST = {
+var CONST = {
     MAX_SET_BY_DEFAULT: 100,
     HANDLE_RESIZE_DEBOUNCE: 100,
     RANGE_CLASS: 'rangeslider',
@@ -22,15 +22,15 @@ const CONST = {
 };
 
 // counter
-let pluginIdentifier = 0;
+var pluginIdentifier = 0;
 
 /**
  *
  * @param {string} className
  * @returns {Element}
  */
-const createChild = function (className) {
-    const child = document.createElement('div');
+var createChild = function (className) {
+    var child = document.createElement('div');
     child.classList.add(className);
     return child;
 };
@@ -40,7 +40,7 @@ const createChild = function (className) {
  * @param step
  * @returns {number}
  */
-const stepToFixed = function (step) {
+var stepToFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
 
@@ -86,9 +86,13 @@ function RangeSlider(el, options) {
     this.fill = createChild(CONST.FILL_CLASS);
     this.handle = createChild(CONST.HANDLE_CLASS);
 
-    ['fillBg', 'fill', 'handle'].forEach((str) => this.range.appendChild(this[str]));
-    ['min', 'max', 'step'].forEach((str) => el.setAttribute(str, '' + this[str]));
-    
+    ['fillBg', 'fill', 'handle'].forEach(function (str) {
+        this.range.appendChild(this[str]);
+    }, this);
+    ['min', 'max', 'step'].forEach(function (str) {
+        el.setAttribute(str, '' + this[str]);
+    }, this);
+
     this._setValue(this.value);
 
     utils.insertAfter(el, this.range);
@@ -108,7 +112,9 @@ function RangeSlider(el, options) {
 
     window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
-    CONST.START_EVENTS.forEach((evName) => this.range.addEventListener(evName, this._startEventListener));
+    CONST.START_EVENTS.forEach(function (evName) {
+        this.range.addEventListener(evName, this._startEventListener);
+    }, this);
 
     el.addEventListener('change', this._changeEventListener);
 }
@@ -141,11 +147,13 @@ RangeSlider.prototype._updatePercentFromValue = function () {
  */
 RangeSlider.prototype._startEventListener = function (ev, data) {
 
-    const el = ev.target;
-    let isEventOnSlider = false;
+    var el = ev.target;
+    var isEventOnSlider = false;
+    var identifier = this.identifier;
 
-    utils.forEachAncestorsAndSelf(el, (el) => {
-        return isEventOnSlider = el.id === this.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
+    utils.forEachAncestorsAndSelf(el, function (el) {
+        isEventOnSlider = el.id === identifier && !el.classList.contains(CONST.DISABLED_CLASS);
+        return isEventOnSlider;
     });
 
     if (isEventOnSlider) {
@@ -191,13 +199,15 @@ RangeSlider.prototype._update = function () {
  */
 RangeSlider.prototype._listen = function (bool) {
 
-    const addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
+    var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
-    CONST.MOVE_EVENTS.forEach((evName) => document[addOrRemoveListener](evName, this._handleMove));
-    CONST.END_EVENTS.forEach((evName) => {
+    CONST.MOVE_EVENTS.forEach(function (evName) {
+        document[addOrRemoveListener](evName, this._handleMove);
+    }, this);
+    CONST.END_EVENTS.forEach(function (evName) {
         document[addOrRemoveListener](evName, this._handleEnd);
         this.range[addOrRemoveListener](evName, this._handleEnd);
-    });
+    }, this);
 
 };
 
@@ -268,7 +278,7 @@ RangeSlider.prototype._handleEnd = function (e) {
  */
 RangeSlider.prototype._setPosition = function (pos) {
 
-    const value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
+    var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
     // Update ui
@@ -301,7 +311,7 @@ RangeSlider.prototype._setPosition = function (pos) {
  * @private
  */
 RangeSlider.prototype._getPositionFromValue = function (value) {
-    const percentage = (value - this.min) / (this.max - this.min);
+    var percentage = (value - this.min) / (this.max - this.min);
 
     return percentage * this.maxHandleX;
 };
@@ -313,7 +323,7 @@ RangeSlider.prototype._getPositionFromValue = function (value) {
  * @private
  */
 RangeSlider.prototype._getValueFromPosition = function (pos) {
-    const percentage = ((pos) / (this.maxHandleX || 1)),
+    var percentage = ((pos) / (this.maxHandleX || 1)),
         value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
 
     return Number((value).toFixed(this.toFixed));

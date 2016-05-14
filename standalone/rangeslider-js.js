@@ -8,43 +8,59 @@ function clamp(value, min, max) {
 }
 
 },{}],2:[function(require,module,exports){
-module.exports = function (css, customDocument) {
-  var doc = customDocument || document;
+'use strict'
+
+function injectStyleTag (document, fileName, cb) {
+  var style = document.getElementById(fileName)
+
+  if (style) {
+    cb(style)
+  } else {
+    var head = document.getElementsByTagName('head')[0]
+
+    style = document.createElement('style')
+    if (fileName != null) style.id = fileName
+    cb(style)
+    head.appendChild(style)
+  }
+
+  return style
+}
+
+module.exports = function (css, customDocument, fileName) {
+  var doc = customDocument || document
+  /* istanbul ignore if: not supported by Electron */
   if (doc.createStyleSheet) {
     var sheet = doc.createStyleSheet()
-    sheet.cssText = css;
-    return sheet.ownerNode;
+    sheet.cssText = css
+    return sheet.ownerNode
   } else {
-    var head = doc.getElementsByTagName('head')[0],
-        style = doc.createElement('style');
-
-    style.type = 'text/css';
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(doc.createTextNode(css));
-    }
-
-    head.appendChild(style);
-    return style;
+    return injectStyleTag(doc, fileName, function (style) {
+      /* istanbul ignore if: not supported by Electron */
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css
+      } else {
+        style.innerHTML = css
+      }
+    })
   }
-};
+}
 
-module.exports.byUrl = function(url) {
+module.exports.byUrl = function (url) {
+  /* istanbul ignore if: not supported by Electron */
   if (document.createStyleSheet) {
-    return document.createStyleSheet(url).ownerNode;
+    return document.createStyleSheet(url).ownerNode
   } else {
-    var head = document.getElementsByTagName('head')[0],
-        link = document.createElement('link');
+    var head = document.getElementsByTagName('head')[0]
+    var link = document.createElement('link')
 
-    link.rel = 'stylesheet';
-    link.href = url;
+    link.rel = 'stylesheet'
+    link.href = url
 
-    head.appendChild(link);
-    return link;
+    head.appendChild(link)
+    return link
   }
-};
+}
 
 },{}],3:[function(require,module,exports){
 (function (global){
@@ -232,12 +248,7 @@ module.exports = Number.isNaN || function (x) {
 };
 
 },{}],9:[function(require,module,exports){
-module.exports = require('cssify');
-
-},{"cssify":2}],10:[function(require,module,exports){
-'use strict';
-
-require('./styles/base.less');
+require('./styles/base.css');
 
 /** @module RangeSlider */
 var clamp = require('clamp');
@@ -268,7 +279,7 @@ var pluginIdentifier = 0;
  * @param {string} className
  * @returns {Element}
  */
-var createChild = function createChild(className) {
+var createChild = function (className) {
     var child = document.createElement('div');
     child.classList.add(className);
     return child;
@@ -279,7 +290,7 @@ var createChild = function createChild(className) {
  * @param step
  * @returns {number}
  */
-var stepToFixed = function stepToFixed(step) {
+var stepToFixed = function (step) {
     return (step + '').replace('.', '').length - 1;
 };
 
@@ -297,7 +308,6 @@ var stepToFixed = function stepToFixed(step) {
  * @property {function} [options.onSlideEnd] - slide end callback
  */
 function RangeSlider(el, options) {
-    var _this = this;
 
     options = options || {};
 
@@ -308,7 +318,7 @@ function RangeSlider(el, options) {
     this.isInteracting = false;
     this.needTriggerEvents = false;
 
-    this.identifier = 'js-' + CONST.PLUGIN_NAME + '-' + pluginIdentifier++;
+    this.identifier = 'js-' + CONST.PLUGIN_NAME + '-' + (pluginIdentifier++);
 
     this.min = utils.getFirstNumberLike(options.min, parseFloat(el.getAttribute('min')), 0);
     this.max = utils.getFirstNumberLike(options.max, parseFloat(el.getAttribute('max')), CONST.MAX_SET_BY_DEFAULT);
@@ -327,11 +337,11 @@ function RangeSlider(el, options) {
     this.handle = createChild(CONST.HANDLE_CLASS);
 
     ['fillBg', 'fill', 'handle'].forEach(function (str) {
-        return _this.range.appendChild(_this[str]);
-    });
+        this.range.appendChild(this[str]);
+    }, this);
     ['min', 'max', 'step'].forEach(function (str) {
-        return el.setAttribute(str, '' + _this[str]);
-    });
+        el.setAttribute(str, '' + this[str]);
+    }, this);
 
     this._setValue(this.value);
 
@@ -343,17 +353,18 @@ function RangeSlider(el, options) {
     el.style.overflow = 'hidden';
     el.style.opacity = '0';
 
-    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener'].forEach(function (fnName) {
-        this[fnName] = this[fnName].bind(this);
-    }, this);
+    ['_update', '_handleDown', '_handleMove', '_handleEnd', '_startEventListener', '_changeEventListener']
+        .forEach(function (fnName) {
+            this[fnName] = this[fnName].bind(this);
+        }, this);
 
     this._init();
 
     window.addEventListener('resize', debounce(this._update, CONST.HANDLE_RESIZE_DEBOUNCE));
 
     CONST.START_EVENTS.forEach(function (evName) {
-        return _this.range.addEventListener(evName, _this._startEventListener);
-    });
+        this.range.addEventListener(evName, this._startEventListener);
+    }, this);
 
     el.addEventListener('change', this._changeEventListener);
 }
@@ -385,13 +396,14 @@ RangeSlider.prototype._updatePercentFromValue = function () {
  * @param data
  */
 RangeSlider.prototype._startEventListener = function (ev, data) {
-    var _this2 = this;
 
     var el = ev.target;
     var isEventOnSlider = false;
+    var identifier = this.identifier;
 
     utils.forEachAncestorsAndSelf(el, function (el) {
-        return isEventOnSlider = el.id === _this2.identifier && !el.classList.contains(CONST.DISABLED_CLASS);
+        isEventOnSlider = el.id === identifier && !el.classList.contains(CONST.DISABLED_CLASS);
+        return isEventOnSlider;
     });
 
     if (isEventOnSlider) {
@@ -436,17 +448,17 @@ RangeSlider.prototype._update = function () {
  * @private
  */
 RangeSlider.prototype._listen = function (bool) {
-    var _this3 = this;
 
     var addOrRemoveListener = (bool ? 'add' : 'remove') + 'EventListener';
 
     CONST.MOVE_EVENTS.forEach(function (evName) {
-        return document[addOrRemoveListener](evName, _this3._handleMove);
-    });
+        document[addOrRemoveListener](evName, this._handleMove);
+    }, this);
     CONST.END_EVENTS.forEach(function (evName) {
-        document[addOrRemoveListener](evName, _this3._handleEnd);
-        _this3.range[addOrRemoveListener](evName, _this3._handleEnd);
-    });
+        document[addOrRemoveListener](evName, this._handleEnd);
+        this.range[addOrRemoveListener](evName, this._handleEnd);
+    }, this);
+
 };
 
 /**
@@ -474,6 +486,7 @@ RangeSlider.prototype._handleDown = function (e) {
         this.grabX = posX - handleX;
     }
     this._updatePercentFromValue();
+
 };
 
 /**
@@ -519,7 +532,7 @@ RangeSlider.prototype._setPosition = function (pos) {
         x = this._getPositionFromValue(value);
 
     // Update ui
-    this.fill.style.width = x + this.grabX + 'px';
+    this.fill.style.width = (x + this.grabX) + 'px';
     this.handle.style.webkitTransform = this.handle.style.transform = 'translate(' + x + 'px, 0px)';
     this._setValue(value);
 
@@ -560,10 +573,10 @@ RangeSlider.prototype._getPositionFromValue = function (value) {
  * @private
  */
 RangeSlider.prototype._getValueFromPosition = function (pos) {
-    var percentage = pos / (this.maxHandleX || 1),
+    var percentage = ((pos) / (this.maxHandleX || 1)),
         value = this.step * Math.round(percentage * (this.max - this.min) / this.step) + this.min;
 
-    return Number(value.toFixed(this.toFixed));
+    return Number((value).toFixed(this.toFixed));
 };
 
 /**
@@ -660,11 +673,13 @@ RangeSlider.create = function (el, options) {
 
 module.exports = RangeSlider;
 
-},{"./styles/base.less":11,"./utils":12,"clamp":1,"debounce":4,"ev-pos":6}],11:[function(require,module,exports){
-var css = ".rangeslider {\n  position: relative;\n  cursor: pointer;\n  height: 30px;\n  width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n  position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n  top: calc(50% - 6px);\n  height: 12px;\n  z-index: 2;\n  background: #29e;\n  border-radius: 10px;\n  will-change: width;\n}\n.rangeslider__handle {\n  display: inline-block;\n  top: calc(50% - 15px);\n  background: #29e;\n  width: 30px;\n  height: 30px;\n  z-index: 3;\n  cursor: pointer;\n  border: solid 2px #ffffff;\n  border-radius: 50%;\n}\n.rangeslider__handle:active {\n  background: #107ecd;\n}\n.rangeslider__fill__bg {\n  background: #ccc;\n  width: 100%;\n}\n.rangeslider--disabled {\n  opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n  height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n  width: 21px;\n  height: 21px;\n  top: calc(50% - 10.5px);\n  background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n  top: calc(50% - 1px);\n  height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n  will-change: width, height, top;\n  -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n  width: 14px;\n  height: 14px;\n  top: calc(50% - 7px);\n}\n";(require('lessify'))(css); module.exports = css;
-},{"lessify":9}],12:[function(require,module,exports){
-'use strict';
+},{"./styles/base.css":10,"./utils":11,"clamp":1,"debounce":4,"ev-pos":6}],10:[function(require,module,exports){
+var inject = require('./../../node_modules/cssify');
+var css = ".rangeslider {\n    position: relative;\n    cursor: pointer;\n    height: 30px;\n    width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n    position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    top: calc(50% - 6px);\n    height: 12px;\n    z-index: 2;\n    background: #29e;\n    border-radius: 10px;\n    will-change: width;\n}\n.rangeslider__handle {\n    display: inline-block;\n    top: calc(50% - 15px);\n    background: #29e;\n    width: 30px;\n    height: 30px;\n    z-index: 3;\n    cursor: pointer;\n    border: solid 2px #ffffff;\n    border-radius: 50%;\n}\n.rangeslider__handle:active {\n    background: #107ecd;\n}\n.rangeslider__fill__bg {\n    background: #ccc;\n    width: 100%;\n}\n.rangeslider--disabled {\n    opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n    height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n    width: 21px;\n    height: 21px;\n    top: calc(50% - 10px);\n    background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n    top: calc(50% - 1px);\n    height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n    will-change: width, height, top;\n    -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    width: 14px;\n    height: 14px;\n    top: calc(50% - 7px);\n}\n";
+inject(css, undefined, '_1fcddbb');
+module.exports = css;
 
+},{"./../../node_modules/cssify":2}],11:[function(require,module,exports){
 var CE = require('custom-event');
 var isFiniteNumber = require('is-finite');
 
@@ -673,7 +688,7 @@ function isHidden(el) {
 }
 
 function isNumberLike(obj) {
-    return isFiniteNumber(parseFloat(obj)) || isFiniteNumber(obj);
+    return isFiniteNumber(parseFloat(obj)) || (isFiniteNumber(obj));
 }
 
 function getFirstNumberLike() {
@@ -710,9 +725,9 @@ function getDimension(element, key) {
 
     var hiddenParentNodes = getHiddenParentNodes(element),
         hiddenParentNodesLength = hiddenParentNodes.length,
-        displayProperty = [];
-
-    var dimension = element[key];
+        dimension = element[key],
+        displayProperty = [],
+        i = 0, hiddenStyles;
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
@@ -723,8 +738,8 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for (var i = 0; i < hiddenParentNodesLength; i++) {
-            var hiddenStyles = hiddenParentNodes[i].style;
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
             hiddenStyles.display = 'block';
@@ -737,13 +752,13 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for (var _i = 0; _i < hiddenParentNodesLength; _i++) {
-            var _hiddenStyles = hiddenParentNodes[_i].style;
-            toggleOpenProperty(hiddenParentNodes[_i]);
-            _hiddenStyles.display = displayProperty[_i];
-            _hiddenStyles.height = '';
-            _hiddenStyles.overflow = '';
-            _hiddenStyles.visibility = '';
+        for ( i = 0; i < hiddenParentNodesLength; i++) {
+            hiddenStyles = hiddenParentNodes[i].style;
+            toggleOpenProperty(hiddenParentNodes[i]);
+            hiddenStyles.display = displayProperty[i];
+            hiddenStyles.height = '';
+            hiddenStyles.overflow = '';
+            hiddenStyles.visibility = '';
         }
     }
     return dimension;
@@ -772,7 +787,7 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: function emit(el, name, opt) {
+    emit: function(el, name, opt){
         el.dispatchEvent(new CE(name, opt));
     },
     isFiniteNumber: isFiniteNumber,
@@ -782,5 +797,5 @@ module.exports = {
     forEachAncestorsAndSelf: forEachAncestorsAndSelf
 };
 
-},{"custom-event":3,"is-finite":7}]},{},[10])(10)
+},{"custom-event":3,"is-finite":7}]},{},[9])(9)
 });

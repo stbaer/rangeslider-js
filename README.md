@@ -13,8 +13,6 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 
 ## Usage
 
-**HTML**
-
 ```
 <!--  -->
 <div class="slider1">
@@ -32,10 +30,8 @@ Lightweight rangeslider with touch support based on [rangeSlider](https://github
 </div>
 ```
 
-**JS**
-
 ```
-var rangesliderJs = require('rangeslider-js')  // Or use the standalone version from the dist folder
+var rangesliderJs = require('rangeslider-js')  // Or include the standalone version
 
 // initialize single slider
 var slider = document.querySelector('.some-el input');
@@ -64,21 +60,19 @@ rangesliderJs.create(elements,{ /* .. */ });
 
 ## Build
 
-Install dependencies and build (requires gulp):
+Install dependencies and build:
 
 ```
 npm i && npm run build
 ```
 
-That will output the built distributables to `./dist`.
+## Contribute or Report Issue
 
-[node]:       http://nodejs.org/
-[gulp]:       http://gulpjs.com/
+Pull requests should target the develop branch.
+
+For bugs and feature requests, [please create an issue][10].
 
 [10]: https://github.com/stbaer/rangeslider-js/issues
-[11]: http://jsfiddle.net
-[12]: http://jsbin.com/
-[20]: http://nodejs.org
 
 ## Licence
 
