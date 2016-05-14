@@ -42,11 +42,11 @@
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "disc": "^1.3.2",
+    "disc": "latest",
     "jshint": "latest",
     "jshint-summary": "latest",
-    "uglify-js": "latest"
+    "uglify-js": "latest",
+    "browserify": "latest"
   },
   "browserify": {
     "transform": [
