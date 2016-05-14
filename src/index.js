@@ -151,7 +151,7 @@ RangeSlider.prototype._startEventListener = function (ev, data) {
     var isEventOnSlider = false;
     var identifier = this.identifier;
 
-    utils.forEachAncestorsAndSelf(el, function () {
+    utils.forEachAncestorsAndSelf(el, function (el) {
         isEventOnSlider = el.id === identifier && !el.classList.contains(CONST.DISABLED_CLASS);
         return isEventOnSlider;
     });
