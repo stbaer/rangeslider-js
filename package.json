@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <stbaer.pub@gmail.com>",
@@ -42,11 +42,12 @@
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
+    "browserify": "latest",
     "disc": "latest",
     "jshint": "latest",
     "jshint-summary": "latest",
-    "uglify-js": "latest",
-    "browserify": "latest"
+    "mkdirp": "^0.5.1",
+    "uglify-js": "latest"
   },
   "browserify": {
     "transform": [
