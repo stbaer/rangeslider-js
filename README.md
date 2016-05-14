@@ -66,15 +66,13 @@ Install dependencies and build:
 npm i && npm run build
 ```
 
-That will output the built distributables to `./dist`.
+## Contribute or Report Issue
 
-[node]:       http://nodejs.org/
-[gulp]:       http://gulpjs.com/
+Pull requests should target the develop branch.
+
+For bugs and feature requests, [please create an issue][10].
 
 [10]: https://github.com/stbaer/rangeslider-js/issues
-[11]: http://jsfiddle.net
-[12]: http://jsbin.com/
-[20]: http://nodejs.org
 
 ## Licence
 
