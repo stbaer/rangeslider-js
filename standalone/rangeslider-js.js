@@ -87,7 +87,7 @@ function useNative () {
 module.exports = useNative() ? NativeCustomEvent :
 
 // IE >= 9
-'function' === typeof document.createEvent ? function CustomEvent (type, params) {
+'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent (type, params) {
   var e = document.createEvent('CustomEvent');
   if (params) {
     e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
@@ -115,6 +115,13 @@ function CustomEvent (type, params) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
+module.exports = Date.now || now
+
+function now() {
+    return new Date().getTime()
+}
+
+},{}],5:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -169,14 +176,7 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":5}],5:[function(require,module,exports){
-module.exports = Date.now || now
-
-function now() {
-    return new Date().getTime()
-}
-
-},{}],6:[function(require,module,exports){
+},{"date-now":4}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -673,10 +673,10 @@ RangeSlider.create = function (el, options) {
 
 module.exports = RangeSlider;
 
-},{"./styles/base.css":10,"./utils":11,"clamp":1,"debounce":4,"ev-pos":6}],10:[function(require,module,exports){
+},{"./styles/base.css":10,"./utils":11,"clamp":1,"debounce":5,"ev-pos":6}],10:[function(require,module,exports){
 var inject = require('./../../node_modules/cssify');
 var css = ".rangeslider {\n    position: relative;\n    cursor: pointer;\n    height: 30px;\n    width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n    position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    top: calc(50% - 6px);\n    height: 12px;\n    z-index: 2;\n    background: #29e;\n    border-radius: 10px;\n    will-change: width;\n}\n.rangeslider__handle {\n    display: inline-block;\n    top: calc(50% - 15px);\n    background: #29e;\n    width: 30px;\n    height: 30px;\n    z-index: 3;\n    cursor: pointer;\n    border: solid 2px #ffffff;\n    border-radius: 50%;\n}\n.rangeslider__handle:active {\n    background: #107ecd;\n}\n.rangeslider__fill__bg {\n    background: #ccc;\n    width: 100%;\n}\n.rangeslider--disabled {\n    opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n    height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n    width: 21px;\n    height: 21px;\n    top: calc(50% - 10px);\n    background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n    top: calc(50% - 1px);\n    height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n    will-change: width, height, top;\n    -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    width: 14px;\n    height: 14px;\n    top: calc(50% - 7px);\n}\n";
-inject(css, undefined, '_1fcddbb');
+inject(css, undefined, '_1ihjx64');
 module.exports = css;
 
 },{"./../../node_modules/cssify":2}],11:[function(require,module,exports){
