@@ -35,14 +35,14 @@
   },
   "dependencies": {
     "clamp": "^1.0.1",
-    "cssify": "^1.0.2",
-    "custom-event": "^1.0.0",
+    "cssify": "^1.0.3",
+    "custom-event": "^1.0.1",
     "debounce": "^1.0.0",
     "ev-pos": "^1.0.1",
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "latest",
+    "browserify": "13.1.1",
     "disc": "latest",
     "jshint": "latest",
     "jshint-summary": "latest",
