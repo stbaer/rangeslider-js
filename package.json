@@ -40,6 +40,7 @@
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
+    "beefy": "^2.1.8",
     "browserify": "^14.0.0",
     "cssify": "^1.0.3",
     "disc": "latest",
