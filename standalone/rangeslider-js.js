@@ -1,13 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.rangesliderJs = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = clamp
-
-function clamp(value, min, max) {
-  return min < max
-    ? (value < min ? min : value > max ? max : value)
-    : (value < max ? max : value > min ? min : value)
-}
-
-},{}],2:[function(require,module,exports){
 'use strict'
 
 function injectStyleTag (document, fileName, cb) {
@@ -62,7 +53,7 @@ module.exports.byUrl = function (url) {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 (function (global){
 
 var NativeCustomEvent = global.CustomEvent;
@@ -114,14 +105,14 @@ function CustomEvent (type, params) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 module.exports = Date.now || now
 
 function now() {
     return new Date().getTime()
 }
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -176,7 +167,7 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":4}],6:[function(require,module,exports){
+},{"date-now":3}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -233,7 +224,7 @@ var getRelativePosition = function (ev, toElement) {
  */
 module.exports = getRelativePosition;
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 var numberIsNan = require('number-is-nan');
 
@@ -241,17 +232,16 @@ module.exports = Number.isFinite || function (val) {
 	return !(typeof val !== 'number' || numberIsNan(val) || val === Infinity || val === -Infinity);
 };
 
-},{"number-is-nan":8}],8:[function(require,module,exports){
+},{"number-is-nan":7}],7:[function(require,module,exports){
 'use strict';
 module.exports = Number.isNaN || function (x) {
 	return x !== x;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 require('./styles/base.css');
 
 /** @module RangeSlider */
-var clamp = require('clamp');
 var debounce = require('debounce');
 var evPos = require('ev-pos');
 var utils = require('./utils');
@@ -528,7 +518,7 @@ RangeSlider.prototype._handleEnd = function (e) {
  */
 RangeSlider.prototype._setPosition = function (pos) {
 
-    var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
+    var value = this._getValueFromPosition(utils.clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
     // Update ui
@@ -673,18 +663,24 @@ RangeSlider.create = function (el, options) {
 
 module.exports = RangeSlider;
 
-},{"./styles/base.css":10,"./utils":11,"clamp":1,"debounce":5,"ev-pos":6}],10:[function(require,module,exports){
+},{"./styles/base.css":9,"./utils":10,"debounce":4,"ev-pos":5}],9:[function(require,module,exports){
 var inject = require('./../../node_modules/cssify');
 var css = ".rangeslider {\n    position: relative;\n    cursor: pointer;\n    height: 30px;\n    width: 100%;\n}\n.rangeslider,\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    display: block;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg,\n.rangeslider__handle {\n    position: absolute;\n}\n.rangeslider__fill,\n.rangeslider__fill__bg {\n    top: calc(50% - 6px);\n    height: 12px;\n    z-index: 2;\n    background: #29e;\n    border-radius: 10px;\n    will-change: width;\n}\n.rangeslider__handle {\n    display: inline-block;\n    top: calc(50% - 15px);\n    background: #29e;\n    width: 30px;\n    height: 30px;\n    z-index: 3;\n    cursor: pointer;\n    border: solid 2px #ffffff;\n    border-radius: 50%;\n}\n.rangeslider__handle:active {\n    background: #107ecd;\n}\n.rangeslider__fill__bg {\n    background: #ccc;\n    width: 100%;\n}\n.rangeslider--disabled {\n    opacity: 0.4;\n}\n.rangeslider--slim .rangeslider {\n    height: 25px;\n}\n.rangeslider--slim .rangeslider:active .rangeslider__handle {\n    width: 21px;\n    height: 21px;\n    top: calc(50% - 10px);\n    background: #29e;\n}\n.rangeslider--slim .rangeslider__fill,\n.rangeslider--slim .rangeslider__fill__bg {\n    top: calc(50% - 1px);\n    height: 2px;\n}\n.rangeslider--slim .rangeslider__handle {\n    will-change: width, height, top;\n    -webkit-transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    transition: width 0.1s ease-in-out, height 0.1s ease-in-out, top 0.1s ease-in-out;\n    width: 14px;\n    height: 14px;\n    top: calc(50% - 7px);\n}\n";
 inject(css, undefined, '_1ihjx64');
 module.exports = css;
 
-},{"./../../node_modules/cssify":2}],11:[function(require,module,exports){
+},{"./../../node_modules/cssify":1}],10:[function(require,module,exports){
 var CE = require('custom-event');
 var isFiniteNumber = require('is-finite');
 
+function clamp(val, min, max) {
+    return min < max ?
+        (val < min ? min : val > max ? max : val) :
+        (val < max ? max : val > min ? min : val);
+}
+
 function isHidden(el) {
-    return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
+    return (el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
 }
 
 function isNumberLike(obj) {
@@ -738,7 +734,7 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
@@ -752,7 +748,7 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             toggleOpenProperty(hiddenParentNodes[i]);
             hiddenStyles.display = displayProperty[i];
@@ -787,15 +783,16 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: function(el, name, opt){
+    emit: function (el, name, opt) {
         el.dispatchEvent(new CE(name, opt));
     },
     isFiniteNumber: isFiniteNumber,
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
-    forEachAncestorsAndSelf: forEachAncestorsAndSelf
+    forEachAncestorsAndSelf: forEachAncestorsAndSelf,
+    clamp: clamp
 };
 
-},{"custom-event":3,"is-finite":7}]},{},[9])(9)
+},{"custom-event":2,"is-finite":6}]},{},[8])(8)
 });
