@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "main": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <stbaer.pub@gmail.com>",
@@ -34,15 +34,15 @@
     "start": "npm run build && npm run test-visual"
   },
   "dependencies": {
-    "clamp": "^1.0.1",
-    "cssify": "^1.0.3",
     "custom-event": "^1.0.1",
     "debounce": "^1.0.0",
     "ev-pos": "^1.0.1",
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "13.1.1",
+    "beefy": "^2.1.8",
+    "browserify": "^14.0.0",
+    "cssify": "^1.0.3",
     "disc": "latest",
     "jshint": "latest",
     "jshint-summary": "latest",
