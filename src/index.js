@@ -1,10 +1,11 @@
 require('./styles/base.css');
 
 /** @module RangeSlider */
-var clamp = require('clamp');
 var debounce = require('debounce');
 var evPos = require('ev-pos');
 var utils = require('./utils');
+
+var clamp = utils.clamp;
 
 var CONST = {
     MAX_SET_BY_DEFAULT: 100,
@@ -278,7 +279,7 @@ RangeSlider.prototype._handleEnd = function (e) {
  */
 RangeSlider.prototype._setPosition = function (pos) {
 
-    var value = this._getValueFromPosition(clamp(pos, 0, this.maxHandleX)),
+    var value = this._getValueFromPosition(utils.clamp(pos, 0, this.maxHandleX)),
         x = this._getPositionFromValue(value);
 
     // Update ui

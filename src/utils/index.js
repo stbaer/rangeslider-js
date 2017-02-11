@@ -1,8 +1,14 @@
 var CE = require('custom-event');
 var isFiniteNumber = require('is-finite');
 
+function clamp (val, min, max) {
+    return min < max
+        ? (val < min ? min : val > max ? max : val)
+        : (val < max ? max : val > min ? min : val);
+}
+
 function isHidden(el) {
-    return !!(el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
+    return (el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
 }
 
 function isNumberLike(obj) {
@@ -112,5 +118,6 @@ module.exports = {
     getFirstNumberLike: getFirstNumberLike,
     getDimension: getDimension,
     insertAfter: insertAfter,
-    forEachAncestorsAndSelf: forEachAncestorsAndSelf
+    forEachAncestorsAndSelf: forEachAncestorsAndSelf,
+    clamp: clamp
 };

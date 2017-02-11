@@ -34,8 +34,6 @@
     "start": "npm run build && npm run test-visual"
   },
   "dependencies": {
-    "clamp": "^1.0.1",
-    "cssify": "^1.0.3",
     "custom-event": "^1.0.1",
     "debounce": "^1.0.0",
     "ev-pos": "^1.0.1",
@@ -43,6 +41,7 @@
   },
   "devDependencies": {
     "browserify": "^14.0.0",
+    "cssify": "^1.0.3",
     "disc": "latest",
     "jshint": "latest",
     "jshint-summary": "latest",
