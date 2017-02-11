@@ -1,10 +1,10 @@
 var CE = require('custom-event');
 var isFiniteNumber = require('is-finite');
 
-function clamp (val, min, max) {
-    return min < max
-        ? (val < min ? min : val > max ? max : val)
-        : (val < max ? max : val > min ? min : val);
+function clamp(val, min, max) {
+    return min < max ?
+        (val < min ? min : val > max ? max : val) :
+        (val < max ? max : val > min ? min : val);
 }
 
 function isHidden(el) {
@@ -62,7 +62,7 @@ function getDimension(element, key) {
 
     if (hiddenParentNodesLength) {
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             // Cache the display property to restore it later.
             displayProperty[i] = hiddenStyles.display;
@@ -76,7 +76,7 @@ function getDimension(element, key) {
 
         dimension = element[key];
 
-        for ( i = 0; i < hiddenParentNodesLength; i++) {
+        for (i = 0; i < hiddenParentNodesLength; i++) {
             hiddenStyles = hiddenParentNodes[i].style;
             toggleOpenProperty(hiddenParentNodes[i]);
             hiddenStyles.display = displayProperty[i];
@@ -111,7 +111,7 @@ function insertAfter(referenceNode, newNode) {
 }
 
 module.exports = {
-    emit: function(el, name, opt){
+    emit: function (el, name, opt) {
         el.dispatchEvent(new CE(name, opt));
     },
     isFiniteNumber: isFiniteNumber,

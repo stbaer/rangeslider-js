@@ -5,8 +5,6 @@ var debounce = require('debounce');
 var evPos = require('ev-pos');
 var utils = require('./utils');
 
-var clamp = utils.clamp;
-
 var CONST = {
     MAX_SET_BY_DEFAULT: 100,
     HANDLE_RESIZE_DEBOUNCE: 100,
