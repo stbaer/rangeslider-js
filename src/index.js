@@ -1,9 +1,7 @@
-require('./styles/base.css');
+import debounce from "debounce";
+import evPos from "ev-pos";
 
-/** @module RangeSlider */
-var debounce = require('debounce');
-var evPos = require('ev-pos');
-var utils = require('./utils');
+import utils from "./utils";
 
 var CONST = {
     MAX_SET_BY_DEFAULT: 100,
@@ -397,7 +395,6 @@ RangeSlider.prototype.destroy = function () {
     this.element.style.cssText = '';
     delete this.element[CONST.PLUGIN_NAME];
 
-    // Remove the generated markup
     this.range.parentNode.removeChild(this.range);
 };
 
@@ -420,4 +417,4 @@ RangeSlider.create = function (el, options) {
     }
 };
 
-module.exports = RangeSlider;
+export default RangeSlider;

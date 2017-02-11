@@ -1,5 +1,5 @@
-var CE = require('custom-event');
-var isFiniteNumber = require('is-finite');
+import isFiniteNumber from "is-finite";
+import CE from "custom-event";
 
 function clamp(val, min, max) {
     return min < max ?
@@ -8,18 +8,20 @@ function clamp(val, min, max) {
 }
 
 function isHidden(el) {
-    return (el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false);
+    return el.offsetWidth === 0 || el.offsetHeight === 0 || el.open === false;
 }
 
 function isNumberLike(obj) {
-    return isFiniteNumber(parseFloat(obj)) || (isFiniteNumber(obj));
+    return isFiniteNumber(parseFloat(obj)) || isFiniteNumber(obj);
 }
 
 function getFirstNumberLike() {
     if (!arguments.length) {
         return null;
     }
-    for (var i = 0, len = arguments.length; i < len; i++) {
+    var i = 0;
+    var len = arguments.length;
+    for (i, len; i < len; i++) {
         if (isNumberLike(arguments[i])) {
             return arguments[i];
         }
@@ -38,20 +40,14 @@ function getHiddenParentNodes(element) {
     return parents;
 }
 
-/**
- * Returns dimensions for an element even if it is not visible in the DOM.
- *
- * @param  {Element} element
- * @param  {string}  key     (e.g. offsetWidth …)
- * @return {Number}
- */
 function getDimension(element, key) {
 
-    var hiddenParentNodes = getHiddenParentNodes(element),
-        hiddenParentNodesLength = hiddenParentNodes.length,
-        dimension = element[key],
-        displayProperty = [],
-        i = 0, hiddenStyles;
+    var hiddenParentNodes = getHiddenParentNodes(element);
+    var hiddenParentNodesLength = hiddenParentNodes.length;
+    var dimension = element[key];
+    var displayProperty = [];
+    var i = 0;
+    var hiddenStyles;
 
     // Used for native `<details>` elements
     function toggleOpenProperty(element) {
@@ -110,8 +106,8 @@ function insertAfter(referenceNode, newNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-module.exports = {
-    emit: function (el, name, opt) {
+export default {
+    emit:  function(el, name, opt) {
         el.dispatchEvent(new CE(name, opt));
     },
     isFiniteNumber: isFiniteNumber,
