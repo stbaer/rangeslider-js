@@ -19,19 +19,17 @@ function getFirstNumberLike() {
     if (!arguments.length) {
         return null;
     }
-    var i = 0;
-    var len = arguments.length;
-    for (i, len; i < len; i++) {
+    for (var i = 0, len = arguments.length; i < len; i++) {
         if (isNumberLike(arguments[i])) {
             return arguments[i];
         }
     }
 }
 
-function getHiddenParentNodes(element) {
+function getHiddenParentNodes(el) {
 
     var parents = [];
-    var node = element.parentNode;
+    var node = el.parentNode;
 
     while (node && isHidden(node)) {
         parents.push(node);
@@ -86,13 +84,13 @@ function getDimension(element, key) {
 
 /**
  *
- * @param {Element} el
- * @param {function} callback
+ * @param {HtmlElement} el
+ * @param {function} cb
  * @returns {Element}
  */
-function forEachAncestorsAndSelf(el, callback) {
-    callback(el);
-    while (el.parentNode && !callback(el)) {
+function forEachAncestorsAndSelf(el, cb) {
+    cb(el);
+    while (el.parentNode && !cb(el)) {
         el = el.parentNode;
     }
     return el;

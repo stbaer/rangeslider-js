@@ -142,7 +142,7 @@ RangeSlider.prototype._updatePercentFromValue = function () {
  * @param {Event} ev
  * @param data
  */
-RangeSlider.prototype._startEventListener = function (ev, data) {
+RangeSlider.prototype._startEventListener = function (ev) {
 
     var el = ev.target;
     var isEventOnSlider = false;
@@ -154,7 +154,7 @@ RangeSlider.prototype._startEventListener = function (ev, data) {
     });
 
     if (isEventOnSlider) {
-        this._handleDown(ev, data);
+        this._handleDown(ev);
     }
 };
 
@@ -416,5 +416,8 @@ RangeSlider.create = function (el, options) {
         createInstance(el);
     }
 };
+
+// expose utils
+RangeSlider.utils = utils;
 
 export default RangeSlider;
