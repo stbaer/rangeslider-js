@@ -21,7 +21,7 @@
     width: 14px;
     height: 14px;
     position: absolute;
-    top: calc(50% - 7px);
+    top: 50%;
     background: #29e;
     display: inline-block;
     z-index: 3;

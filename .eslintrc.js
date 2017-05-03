@@ -6,7 +6,7 @@ module.exports = {
     env: {
         browser: true,
     },
-    extends: "eslint:recommended",
+    extends: "standard",
     globals: {
         "rangesliderJs": false
     },
