@@ -1,4 +1,9 @@
 {
-    "plugins": ["transform-es2015-modules-commonjs"],
-    "comments": false
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": "defaults"
+      }
+    }]
+  ]
 }

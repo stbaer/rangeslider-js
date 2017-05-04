@@ -1,9 +1,9 @@
 {
   "name": "rangeslider-js",
   "version": "2.1.2",
-  "main": "./src/index.js",
+  "main": "./dist/rangeslider.min.js",
   "description": "lightweight rangeslider for browserify and the browser",
-  "author": "Steffen Bär <stbaer.pub@gmail.com>",
+  "author": "Steffen Bär <stbaer.mail@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/stbaer/rangeslider-js",
   "repository": {
@@ -25,9 +25,10 @@
     "prelint": "echo \"running eslint...\" && exit 0",
     "lint": "eslint -c ./.eslintrc.js --ext .js src config",
     "lintfix": "npm run lint -- --fix",
-    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.js -d --colors --inline",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.js --env=development --progress --profile --colors --inline",
     "prebuild": "npm run lint && rm -rf ./dist",
-    "build": "NODE_ENV=production webpack --config webpack.config.js -p --colors",
+    "build": "NODE_ENV=production webpack --config webpack.config.js --env=production --progress --profile --colors",
+    "postbuild": "csso src/styles.css > dist/styles.min.css",
     "pretest": "echo \"running tests...\" && exit 0",
     "test": "NODE_ENV=testing ava -v"
   },
@@ -43,7 +44,7 @@
     "babel-core": "6.24.1",
     "babel-eslint": "7.2.3",
     "babel-loader": "7.0.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
+    "babel-preset-env": "1.4.0",
     "browser-env": "2.0.31",
     "css-loader": "0.28.1",
     "cssnano": "^3.10.0",
@@ -64,7 +65,7 @@
     "progress-bar-webpack-plugin": "^1.9.3",
     "style-loader": "0.17.0",
     "url-loader": "0.5.8",
-    "webpack": "2.4.1",
+    "webpack": "2.5.0",
     "webpack-bundle-analyzer": "2.4.0",
     "webpack-dev-server": "2.4.5",
     "webpack-merge": "4.1.0"

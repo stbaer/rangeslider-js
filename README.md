@@ -1,45 +1,27 @@
 # rangeslider-js
 
-Lightweight rangeslider with touch support based on [rangeSlider](https://github.com/Stryzhevskyi/rangeSlider). [Examples][1].
-
 [1]: http://stbaer.github.io/rangeslider-js/
 
 ## Install
 
-`npm i rangeslider-js`
-
-[![NPM](https://nodei.co/npm/rangeslider-js.png?downloads=true)](https://nodei.co/npm/rangeslider-js/)
-
+`npm i rangeslider-js --save`
 
 ## Usage
 
-```
-<!--  -->
-<div class="slider1">
-    <input type="range">
-</div>
+```html
+<input id="slider1" type="range">
 
-<!-- Options via attributes -->
-<div class="slider2">
-    <input type="range" min="0" max="5" value="1" step="1">
-</div>
-
-<!-- Slim style -->
-<div class="slider3 rangeslider--slim">
-    <input type="range">
-</div>
+<input type="range" min="0" max="5" value="1" step="1">
 ```
 
-```
-var rangesliderJs = require('rangeslider-js')  // Or include the standalone version
+```js
+import rangesliderJs from 'rangeslider-js'
 
-// initialize single slider
-var slider = document.querySelector('.some-el input');
-rangesliderJs.create(slider,{ /* options -see below */ });
+// single
+rangesliderJs.create(document.getElementById('slider1'), [options])
 
-// initialize multiple
-var elements = document.querySelectorAll('input[type="range"]');
-rangesliderJs.create(elements,{ /* .. */ });
+// or initialize multiple
+rangesliderJs.create(document.querySelectorAll('input[type="range"]'), [options])
 ```
 
 ### Options
@@ -51,24 +33,16 @@ rangesliderJs.create(elements,{ /* .. */ });
     value: 50,
     step: 1,
     // callbacks
-    onInit: function () {},
-    onSlideStart: function (value, percent, position) {},
-    onSlide: function (value, percent, position) {},
-    onSlideEnd: function (value, percent, position) {}
+    onInit: () => {},
+    onSlideStart: (value, percent, position) => {},
+    onSlide: (value, percent, position) => {},
+    onSlideEnd: (value, percent, position) => {}
 }
-```
-
-## Build
-
-Install dependencies and build:
-
-```
-npm i && npm run build
 ```
 
 ## Contribute or Report Issue
 
-Pull requests should target the develop branch.
+Pull requests should target the **develop** branch.
 
 For bugs and feature requests, [please create an issue][10].
 

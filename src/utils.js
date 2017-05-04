@@ -2,9 +2,7 @@ import isFiniteNumber from 'is-finite'
 import CE from 'custom-event'
 
 function clamp (val, min, max) {
-  return min < max
-        ? (val < min ? min : val > max ? max : val)
-        : (val < max ? max : val > min ? min : val)
+  return min < max ? (val < min ? min : val > max ? max : val) : (val < max ? max : val > min ? min : val)
 }
 
 function isHidden (el) {
@@ -19,7 +17,7 @@ function getFirstNumberLike () {
   if (!arguments.length) {
     return null
   }
-  for (var i = 0, len = arguments.length; i < len; i++) {
+  for (let i = 0, len = arguments.length; i < len; i++) {
     if (isNumberLike(arguments[i])) {
       return arguments[i]
     }
@@ -27,8 +25,8 @@ function getFirstNumberLike () {
 }
 
 function getHiddenParentNodes (el) {
-  var parents = []
-  var node = el.parentNode
+  const parents = []
+  let node = el.parentNode
 
   while (node && isHidden(node)) {
     parents.push(node)
@@ -38,14 +36,14 @@ function getHiddenParentNodes (el) {
 }
 
 function getDimension (element, key) {
-  var hiddenParentNodes = getHiddenParentNodes(element)
-  var hiddenParentNodesLength = hiddenParentNodes.length
-  var dimension = element[key]
-  var displayProperty = []
-  var i = 0
-  var hiddenStyles
+  const hiddenParentNodes = getHiddenParentNodes(element)
+  const hiddenParentNodesLength = hiddenParentNodes.length
+  let dimension = element[key]
+  const displayProperty = []
+  let i = 0
+  let hiddenStyles
 
-    // Used for native `<details>` elements
+  // Used for native `<details>` elements
   function toggleOpenProperty (element) {
     if (typeof element.open !== 'undefined') {
       element.open = !element.open
@@ -55,7 +53,7 @@ function getDimension (element, key) {
   if (hiddenParentNodesLength) {
     for (i = 0; i < hiddenParentNodesLength; i++) {
       hiddenStyles = hiddenParentNodes[i].style
-            // Cache the display property to restore it later.
+      // Cache the display property to restore it later.
       displayProperty[i] = hiddenStyles.display
       hiddenStyles.display = 'block'
       hiddenStyles.height = '0'

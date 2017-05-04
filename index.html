@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>rangeslider-js</title>
+    <link rel="stylesheet" href="dist/styles.min.css">
 </head>
 <body>
+
 <div>
     <div class="first">
         <input type="range" min="0" max="5" value="1" data-rangeslider>
@@ -17,5 +19,10 @@
     </div>
     <br><br>
 </div>
+
+<script src="dist/rangeslider-js.min.js"></script>
+<script>
+  rangesliderJs.create(document.querySelectorAll('input[type="range"]'))
+</script>
 </body>
 </html>

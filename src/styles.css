@@ -9,7 +9,7 @@
 .rangeslider__fill__bg {
     display: block;
     position: absolute;
-    top: calc(50% - 1px);
+    top: 50%;
     height: 2px;
     z-index: 2;
     background: #29e;
