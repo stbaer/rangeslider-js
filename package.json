@@ -30,7 +30,8 @@
     "build": "NODE_ENV=production webpack --config webpack.config.js --env=production --progress --profile --colors",
     "postbuild": "csso src/styles.css > dist/styles.min.css",
     "pretest": "echo \"running tests...\" && exit 0",
-    "test": "NODE_ENV=testing ava -v"
+    "test": "NODE_ENV=testing ava -v",
+    "serve:docs": "docute ./docs"
   },
   "dependencies": {
     "custom-event": "^1.0.1",

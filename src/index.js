@@ -314,32 +314,32 @@ class RangeSlider {
   /**
    * Update
    *
-   * @param {Object} [obj={}] like {min : Number, max : Number, value : Number, step : Number}
+   * @param {Object} [values={}] like {min : Number, max : Number, value : Number, step : Number}
    * @param {Boolean} [triggerEvents]
    * @returns {RangeSlider}
    */
-  update (obj, triggerEvents) {
-    obj = obj || {}
+  update (values, triggerEvents) {
+    values = values || {}
     this.needTriggerEvents = !!triggerEvents
 
-    if (utils.isFiniteNumber(obj.min)) {
-      this.element.setAttribute('min', `${obj.min}`)
-      this.min = obj.min
+    if (utils.isFiniteNumber(values.min)) {
+      this.element.setAttribute('min', `${values.min}`)
+      this.min = values.min
     }
 
-    if (utils.isFiniteNumber(obj.max)) {
-      this.element.setAttribute('max', `${obj.max}`)
-      this.max = obj.max
+    if (utils.isFiniteNumber(values.max)) {
+      this.element.setAttribute('max', `${values.max}`)
+      this.max = values.max
     }
 
-    if (utils.isFiniteNumber(obj.step)) {
-      this.element.setAttribute('step', `${obj.step}`)
-      this.step = obj.step
-      this.toFixed = stepToFixed(obj.step)
+    if (utils.isFiniteNumber(values.step)) {
+      this.element.setAttribute('step', `${values.step}`)
+      this.step = values.step
+      this.toFixed = stepToFixed(values.step)
     }
 
-    if (utils.isFiniteNumber(obj.value)) {
-      this._setValue(obj.value)
+    if (utils.isFiniteNumber(values.value)) {
+      this._setValue(values.value)
     }
 
     this._update()
@@ -367,7 +367,7 @@ class RangeSlider {
   }
 
   /**
-   * A lightweight plugin wrapper around the constructor, preventing multiple instantiations
+   * Plugin wrapper around the constructor, preventing multiple instantiations
    * @param {Element|NodeList|boolean} el
    * @param {object} options
    */
