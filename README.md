@@ -1,11 +1,12 @@
 # rangeslider-js
 
-[1]: http://stbaer.github.io/rangeslider-js/
+> Simple, fast and lightweight slider, touch friendly
 
-- v1 was based on <a href="https://github.com/andreruffert/rangeslider.js" target="_blank">rangeslider.js</a>, main differences:
+[Docs and Examples](http://stbaer.github.io/rangeslider-js/)
+
+- v1 was based on [rangeslider.js](https://github.com/andreruffert/rangeslider.js), main differences:
     - no jQuery
-    - raf to throttle window resize
-    - transform to set the handle position
+    - raf to throttle window resize, transform to set the handle position
     - fewer and only basic styles
     - no horizontal mode
 

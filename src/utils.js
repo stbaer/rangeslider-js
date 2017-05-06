@@ -23,6 +23,7 @@ function isHidden (el) {
 }
 
 /**
+ * See {@link https://github.com/sindresorhus/number-is-nan}
  * @param x
  * @returns {boolean}
  */
