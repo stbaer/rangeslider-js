@@ -1,0 +1,12 @@
+{
+    "env": {
+        "node": true
+    },
+    "rules": {
+        "no-console": "off",
+        "global-require": "off",
+        "no-restricted-syntax": "off",
+        "guard-for-in": "off",
+        "import/no-extraneous-dependencies": "off"
+    }
+}

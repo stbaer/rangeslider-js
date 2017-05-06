@@ -1,9 +1,9 @@
 {
   "name": "rangeslider-js",
-  "version": "2.1.2",
-  "main": "./src/index.js",
+  "version": "3.0.0-beta.1",
+  "main": "./dist/rangeslider.min.js",
   "description": "lightweight rangeslider for browserify and the browser",
-  "author": "Steffen Bär <stbaer.pub@gmail.com>",
+  "author": "Steffen Bär <stbaer.mail@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/stbaer/rangeslider-js",
   "repository": {
@@ -22,65 +22,66 @@
     "slider"
   ],
   "scripts": {
-    "jshint": "jshint --reporter=node_modules/jshint-summary src/**/*.js",
-    "uglify:standalone": "uglifyjs ./standalone/rangeslider-js.js --screw-ie8 -mc > ./standalone/rangeslider-js.min.js",
-    "uglify": "npm run uglify:standalone && npm run show-gzipped-minjs-size",
-    "clean": "rm -rf ./standalone",
-    "build": "npm run jshint && npm run clean && mkdirp standalone && browserify src/index.js --standalone rangesliderJs > standalone/rangeslider-js.js && npm run uglify",
-    "show-gzipped-minjs-size": "echo \"js minified and gzipped: \" && gzip -c standalone/rangeslider-js.min.js | wc -c",
-    "example": "beefy --index=examples/standalone/example.html",
-    "disc": "browserify --full-paths ./src/index.js > ./bundle.js && discify ./bundle.js > ./disc.html && rm ./bundle.js",
-    "test-visual": "beefy test/visual/test.js --index=test/visual/beefy.html",
-    "start": "npm run build && npm run test-visual"
+    "prelint": "echo \"running eslint...\" && exit 0",
+    "lint": "eslint -c ./.eslintrc.js --ext .js src config",
+    "lintfix": "npm run lint -- --fix",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.config.js --env=development --progress --profile --colors --inline",
+    "prebuild": "npm run lint && rm -rf ./dist",
+    "build": "NODE_ENV=production webpack --config webpack.config.js --env=production --progress --profile --colors",
+    "postbuild": "csso src/styles.css > dist/styles.min.css",
+    "pretest": "echo \"running tests...\" && exit 0",
+    "test": "NODE_ENV=testing ava -v",
+    "serve:docs": "docute ./docs"
   },
   "dependencies": {
     "custom-event": "^1.0.1",
-    "debounce": "^1.0.0",
     "ev-pos": "^1.0.1",
     "is-finite": "^1.0.1"
   },
   "devDependencies": {
-    "beefy": "^2.1.8",
-    "browserify": "^14.0.0",
-    "cssify": "^1.0.3",
-    "disc": "latest",
-    "jshint": "latest",
-    "jshint-summary": "latest",
+    "autoprefixer": "6.7.7",
+    "ava": "0.19.1",
+    "babel-core": "6.24.1",
+    "babel-eslint": "7.2.3",
+    "babel-loader": "7.0.0",
+    "babel-preset-env": "1.4.0",
+    "browser-env": "2.0.31",
+    "css-loader": "0.28.1",
+    "cssnano": "^3.10.0",
+    "eslint": "3.19.0",
+    "eslint-config-standard": "10.2.1",
+    "eslint-friendly-formatter": "^2.0.7",
+    "eslint-loader": "1.7.1",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-node": "4.2.2",
+    "eslint-plugin-promise": "3.5.0",
+    "eslint-plugin-standard": "3.0.1",
+    "file-loader": "0.11.1",
+    "friendly-errors-webpack-plugin": "1.6.1",
+    "html-webpack-plugin": "^2.28.0",
     "mkdirp": "^0.5.1",
-    "uglify-js": "latest"
+    "pre-commit": "1.2.2",
+    "pre-push": "0.1.1",
+    "progress-bar-webpack-plugin": "^1.9.3",
+    "style-loader": "0.17.0",
+    "url-loader": "0.5.8",
+    "webpack": "2.5.0",
+    "webpack-bundle-analyzer": "2.4.0",
+    "webpack-dev-server": "2.4.5",
+    "webpack-merge": "4.1.0"
   },
-  "browserify": {
-    "transform": [
-      "cssify"
+  "ava": {
+    "concurrency": 5,
+    "failFast": false,
+    "require": [
+      "./test/helpers/ava-setup.js",
+      "babel-register"
     ]
   },
-  "jshintConfig": {
-    "node": true,
-    "bitwise": true,
-    "camelcase": true,
-    "curly": true,
-    "eqeqeq": true,
-    "forin": true,
-    "freeze": true,
-    "immed": true,
-    "latedef": true,
-    "newcap": true,
-    "noarg": true,
-    "sub": true,
-    "eqnull": true,
-    "browser": true,
-    "laxcomma": true,
-    "trailing": true,
-    "smarttabs": true,
-    "nonew": true,
-    "quotmark": false,
-    "nonbsp": true,
-    "undef": true,
-    "jquery": true,
-    "unused": "vars",
-    "browserify": true,
-    "globals": {
-      "console": false
-    }
-  }
+  "pre-commit": [
+    "lint"
+  ],
+  "pre-push": [
+    "test"
+  ]
 }
