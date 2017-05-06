@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>rangeslider-js</title>
+    <style>
+        body >div >div {margin-bottom: 2rem}
+        *, *:before, *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html {
+            color: #404040;
+            font-family: Helvetica, arial, sans-serif;
+        }
+
+        body {
+            padding: 50px 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        output {
+            display: block;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div>
+        <h2>Negative attributes</h2>
+        <input type="range" min="-20" max="20" data-rangeslider>
+        <output></output>
+    </div>
+
+    <div>
+        <h2>Floating point boundaries</h2>
+
+        <div>
+            <input type="range" min="10" max="11" step="0.1" value="10.2" data-rangeslider>
+            <output></output>
+        </div>
+        <div>
+            <input type="range" min="0.1" max="3" step="0.1" value="0.5" data-rangeslider>
+            <output></output>
+        </div>
+        <div>
+            <input type="range" min="0.111" max="3.33" step="0.111" value="1.776" data-rangeslider>
+            <output></output>
+        </div>
+    </div>
+
+    <div>
+        <h2><code>value="0"</code></h2>
+        <input type="range" value="0" data-rangeslider>
+        <output></output>
+    </div>
+
+    <div id="js-example-disabled">
+        <h2><code>disabled</code></h2>
+        <input type="range" min="10" max="100" data-rangeslider disabled>
+        <output></output>
+        <button data-behaviour="toggle">Toggle disabled state</button>
+    </div>
+
+    <div>
+        <h2><code>max="0"</code> disables slider</h2>
+        <input type="range" min="0" max="0" data-rangeslider>
+        <output></output>
+    </div>
+
+    <div id="js-example-change-value">
+        <h2>Programmatic value changes</h2>
+        <input type="range" min="10" max="100" data-rangeslider>
+        <output></output>
+        <input type="number" value="10">
+        <button>Change value</button>
+    </div>
+
+    <div id="js-example-update-range">
+        <h2>Update range</h2>
+        <input type="range" min="10" max="100" step="10" data-rangeslider>
+        <output></output>
+        <button>Update range {min : 0, max : 20, step : 0.5, value : 1.5}</button>
+    </div>
+
+    <div id="js-example-destroy">
+        <h2>Destroy a plugin instance</h2>
+        <input type="range" min="10" max="1000" step="10" value="500" data-rangeslider>
+        <output></output>
+        <button data-behaviour="destroy">Destroy</button>
+        <button data-behaviour="initialize">Initialize</button>
+    </div>
+
+    <div id="js-example-hidden">
+        <h2>Hide / show</h2>
+
+        <div style="display:none">
+            <input type="range" min="10" max="100" data-rangeslider>
+            <output></output>
+        </div>
+        <button data-behaviour="toggle">Toggle visibility</button>
+    </div>
+</div>
+</body>
+</html>
