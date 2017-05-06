@@ -4,25 +4,47 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>rangeslider-js</title>
-    <link rel="stylesheet" href="dist/styles.min.css">
+    <link rel="stylesheet" href="styles.min.css">
 </head>
 <body>
 
 <div>
     <div class="first">
-        <input type="range" min="0" max="5" value="1" data-rangeslider>
-        <output></output>
+        <input type="range" data-rangeslider>
     </div>
     <div class="second">
         <input type="range" min="0" max="5" value="1" data-rangeslider>
-        <output></output>
+        <div class="output"></div>
+    </div>
+    <div class="third">
+        <input type="range" min="-10" max="400" step="2" value="40" data-rangeslider>
+        <div class="output"></div>
     </div>
     <br><br>
 </div>
 
-<script src="dist/rangeslider-js.min.js"></script>
+<script src="rangeslider-js.min.js"></script>
 <script>
-  rangesliderJs.create(document.querySelectorAll('input[type="range"]'))
+  var sliderEl1 = document.querySelector('.first [data-rangeslider]')
+  var sliderEl2 = document.querySelector('.second [data-rangeslider]')
+  var sliderEl3 = document.querySelector('.third [data-rangeslider]')
+
+  sliderEl2.addEventListener('input', (ev) => {
+    document.querySelector('.second .output').innerHTML = ev.target.value
+  })
+  sliderEl3.addEventListener('input', (ev) => {
+    document.querySelector('.third .output').innerHTML = ev.target.value
+  })
+
+  rangesliderJs.create(sliderEl1, {min: 0, max: 5, step: 0.5})
+  rangesliderJs.create(sliderEl2)
+  rangesliderJs.create(sliderEl3, {
+    onSlide: function () {
+      console.log(this)
+    }
+  })
+
+
 </script>
 <script type="text/javascript" src="rangeslider-js.js"></script><script type="text/javascript" src="rangeslider-js.min.js"></script></body>
 </html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <title>rangeslider-js</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@3/dist/docute.css">
+    <link rel="stylesheet" href="https://unpkg.com/docute/dist/theme-github.css" />
+</head>
+<body>
+<div id="app"></div>
+<script src="https://unpkg.com/docute@3/dist/docute.js"></script>
+<script>
+  docute.init({
+    repo: 'stbaer/rangeslider-js',
+    landing: true,
+    debug: true,
+//    plugins: [
+//      landing()
+//    ],
+    nav: [
+      {title: 'Home', path: '/'},
+      {title: 'Docs', path: '/docs', source: 'https://raw.githubusercontent.com/stbaer/rangeslider-js/feature/webpack/README.md'},
+      {title: 'Examples', path: '/examples'},
+      {title: 'API', path: '/api'}
+    ]
+  })
+</script>
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date()
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0]
+    a.async = 1
+    a.src = g
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
+
+  ga('create', 'UA-98508725-1', 'auto')
+
+  docute.router.afterEach(function (to) {
+    ga('set', 'page', to.fullPath);
+    ga('send', 'pageview');
+  });
+</script>
+</body>
+</html>
