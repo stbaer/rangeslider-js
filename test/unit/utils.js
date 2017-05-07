@@ -1,5 +1,3 @@
-/** @module rangesliderJs/utils */
-
 import test from 'ava'
 import utils from '../../src/utils'
 
