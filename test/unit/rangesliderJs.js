@@ -77,6 +77,21 @@ test('create with default options should work', async t => {
   document.body.removeChild(sliderEl)
 })
 
+test('create multiple should work', async t => {
+  const sliderEl1 = getSliderEl()
+  const sliderEl2 = getSliderEl()
+
+  rangesliderJs.create(document.querySelectorAll('[data-rangeslider]'))
+
+  t.is(sliderEl1['rangeslider-js'].max, CONST.MAX_DEFAULT)
+  t.is(sliderEl2['rangeslider-js'].max, CONST.MAX_DEFAULT)
+
+  sliderEl1['rangeslider-js'].destroy()
+  sliderEl2['rangeslider-js'].destroy()
+  document.body.removeChild(sliderEl1)
+  document.body.removeChild(sliderEl2)
+})
+
 test('update should work', async t => {
   const sliderEl = getSliderEl()
 
