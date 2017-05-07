@@ -30,7 +30,7 @@ const rangesliderJs = {
       el[CONST.PLUGIN_NAME] = el[CONST.PLUGIN_NAME] || new RangeSlider(el, options)
     }
 
-    if (Array.isArray(el)) {
+    if (el.length) {
       Array.prototype.slice.call(el).forEach(el => createInstance(el))
     } else {
       createInstance(el)

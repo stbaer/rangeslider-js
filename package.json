@@ -1,7 +1,7 @@
 {
   "name": "rangeslider-js",
   "version": "3.0.0-beta.2",
-  "main": "./dist/rangeslider.min.js",
+  "main": "./dist/rangeslider-js.min.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <stbaer.mail@gmail.com>",
   "license": "MIT",
