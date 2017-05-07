@@ -691,7 +691,7 @@ var RangeSlider = function () {
       value = _utils2.default.clamp(value, this.min, this.max);
       if (!(value === this.value && value === this.element.value)) {
         this.value = this.element.value = value;
-        this._emit('change');
+        this._emit('input');
       }
     }
   }, {

@@ -295,7 +295,7 @@ class RangeSlider {
     value = utils.clamp(value, this.min, this.max)
     if (!(value === this.value && value === this.element.value)) {
       this.value = this.element.value = value
-      this._emit('change')
+      this._emit('input')
     }
   }
 
