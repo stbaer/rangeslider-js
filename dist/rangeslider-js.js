@@ -132,6 +132,7 @@ function isHidden(el) {
 }
 
 /**
+ * See {@link https://github.com/sindresorhus/number-is-nan}
  * @param x
  * @returns {boolean}
  */
@@ -690,7 +691,7 @@ var RangeSlider = function () {
       value = _utils2.default.clamp(value, this.min, this.max);
       if (!(value === this.value && value === this.element.value)) {
         this.value = this.element.value = value;
-        this._emit('input');
+        this._emit('change');
       }
     }
   }, {
@@ -1018,7 +1019,7 @@ var rangesliderJs = {
       el[_const2.default.PLUGIN_NAME] = el[_const2.default.PLUGIN_NAME] || new _rangeslider2.default(el, options);
     }
 
-    if (Array.isArray(el)) {
+    if (el.length) {
       Array.prototype.slice.call(el).forEach(function (el) {
         return createInstance(el);
       });
