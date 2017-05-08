@@ -32,7 +32,8 @@
     "postbuild": "csso src/styles.css > dist/styles.min.css",
     "pretest": "echo \"running tests...\" && exit 0",
     "test": "NODE_ENV=testing ava -v",
-    "serve:docs": "docute ./docs"
+    "serve:docs": "docute ./docs",
+    "release": "gf-release"
   },
   "dependencies": {
     "custom-event": "^1.0.1",
@@ -103,5 +104,5 @@
     ],
     "commitBaseUrl": "https://github.com/stbaer/rangeslider-js/commits",
     "historyFile": "History.md"
-  },
+  }
 }
