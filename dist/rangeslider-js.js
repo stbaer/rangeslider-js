@@ -1,5 +1,14 @@
-var rangesliderJs =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["rangesliderJs"] = factory();
+	else
+		root["rangesliderJs"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -64,7 +73,7 @@ var rangesliderJs =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -327,10 +336,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _evPos = __webpack_require__(4);
 
 var _evPos2 = _interopRequireDefault(_evPos);
-
-var _isFinite = __webpack_require__(5);
-
-var _isFinite2 = _interopRequireDefault(_isFinite);
 
 var _utils = __webpack_require__(1);
 
@@ -716,23 +721,23 @@ var RangeSlider = function () {
       values = values || {};
       this.needTriggerEvents = !!triggerEvents;
 
-      if ((0, _isFinite2.default)(values.min)) {
+      if (_utils2.default.isFiniteNumber(values.min)) {
         this.element.setAttribute('min', '' + values.min);
         this.min = values.min;
       }
 
-      if ((0, _isFinite2.default)(values.max)) {
+      if (_utils2.default.isFiniteNumber(values.max)) {
         this.element.setAttribute('max', '' + values.max);
         this.max = values.max;
       }
 
-      if ((0, _isFinite2.default)(values.step)) {
+      if (_utils2.default.isFiniteNumber(values.step)) {
         this.element.setAttribute('step', '' + values.step);
         this.step = values.step;
         this.toFixed = stepToFixed(values.step);
       }
 
-      if ((0, _isFinite2.default)(values.value)) {
+      if (_utils2.default.isFiniteNumber(values.value)) {
         this._setValue(values.value);
       }
 
@@ -854,7 +859,7 @@ function CustomEvent(type, params) {
   }
   return e;
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 4 */
@@ -925,30 +930,6 @@ module.exports = getRelativePosition;
 "use strict";
 
 
-var numberIsNan = __webpack_require__(6);
-
-module.exports = Number.isFinite || function (val) {
-	return !(typeof val !== 'number' || numberIsNan(val) || val === Infinity || val === -Infinity);
-};
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = Number.isNaN || function (x) {
-	return x !== x;
-};
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var g;
@@ -973,7 +954,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1033,3 +1014,4 @@ module.exports = rangesliderJs;
 
 /***/ })
 /******/ ]);
+});

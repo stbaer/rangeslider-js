@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "./dist/rangeslider-js.min.js",
   "module": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
