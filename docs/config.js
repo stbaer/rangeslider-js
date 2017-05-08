@@ -14,6 +14,7 @@ docute.init({
     {title: 'Home', path: '/'},
     {title: 'Docs', path: '/docs', source: 'https://raw.githubusercontent.com/stbaer/rangeslider-js/master/README.md'},
     {title: 'Examples', path: '/examples'},
-    {title: 'API', path: '/api'}
+    {title: 'API', path: '/api'},
+    {title: 'History', path: '/history', source: 'https://raw.githubusercontent.com/stbaer/rangeslider-js/master/History.md'}
   ]
 })
