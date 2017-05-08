@@ -1,5 +1,12 @@
 
 
+###Release 3.0.2
+>*May 9, 2017*
+
+ * removed module from package.json for now [860338a](https://github.com/stbaer/rangeslider-js/commits/860338abb1fcfc8b04e93cea9016ace2ea5d0e71)
+
+
+
 ###Release 3.0.1
 >*May 9, 2017*
 
