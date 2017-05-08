@@ -1,5 +1,15 @@
 
 
+###Release 3.0.1
+>*May 9, 2017*
+
+ * added gf-release dev dep and history.md [18f9fba](https://github.com/stbaer/rangeslider-js/commits/18f9fba6079416a5fa46b7107883173dd708a2b8)
+ * added gf-release dev dep and history.md [9eff86a](https://github.com/stbaer/rangeslider-js/commits/9eff86a109bd6a54a4fcb08111bc8b7f8b501d26)
+ * added libraryTarget to webpack config; package updates; [1f98884](https://github.com/stbaer/rangeslider-js/commits/1f9888439070cbd03a83d511c7bfcddec49cb5ab)
+ * inch-ci and dependency status badges added to readme [e595532](https://github.com/stbaer/rangeslider-js/commits/e595532af77e920e2a33dc51246b5a5211e24f28)
+
+
+
 ###Release 3.0.0
 >*May 7, 2017*
 
@@ -252,5 +262,3 @@
  * added style build task; added examples; updated deps; more [bdd1eef](https://github.com/stbaer/rangeslider-js/commits/bdd1eef4f6f873b530d6f8ebe3ad092bf21bbb65)
  * renamed Plugin [dd90a09](https://github.com/stbaer/rangeslider-js/commits/dd90a09db196dbe21044402cacd0123fb7a5def2)
  * basic project structure/files and first working version [51ee943](https://github.com/stbaer/rangeslider-js/commits/51ee94310fd288be9b082f830c9b5ba8355e5bca)
-
-
