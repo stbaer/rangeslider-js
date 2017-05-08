@@ -80,7 +80,8 @@ if (isDev) {
     path: config.build.assetsRoot,
     filename: assetsPath('[name].js'),
     chunkFilename: assetsPath('[id].js'),
-    library: 'rangesliderJs'
+    library: 'rangesliderJs',
+    libraryTarget: 'umd'
   }
   conf.plugins.push(
     new HtmlWebpackPlugin({

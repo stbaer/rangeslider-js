@@ -1,6 +1,8 @@
 # rangeslider-js
 
 [![Build Status](https://travis-ci.org/stbaer/rangeslider-js.svg?branch=master)](https://travis-ci.org/stbaer/rangeslider-js)
+[![Inline docs](http://inch-ci.org/github/stbaer/rangeslider-js.svg?branch=master)](http://inch-ci.org/github/stbaer/rangeslider-js)
+[![Dependency Status](https://david-dm.org/stbaer/rangeslider-js.svg)](https://david-dm.org/stbaer/rangeslider-js)
 
 > Simple, fast and lightweight slider, touch friendly
 
