@@ -2,6 +2,7 @@
   "name": "rangeslider-js",
   "version": "3.0.0",
   "main": "./dist/rangeslider-js.min.js",
+  "module": "./src/index.js",
   "description": "lightweight rangeslider for browserify and the browser",
   "author": "Steffen Bär <stbaer.mail@gmail.com>",
   "license": "MIT",
@@ -35,11 +36,10 @@
   },
   "dependencies": {
     "custom-event": "^1.0.1",
-    "ev-pos": "^1.0.1",
-    "is-finite": "^1.0.1"
+    "ev-pos": "^1.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "6.7.7",
+    "autoprefixer": "7.0.1",
     "ava": "0.19.1",
     "babel-core": "6.24.1",
     "babel-eslint": "7.2.3",
@@ -65,8 +65,8 @@
     "progress-bar-webpack-plugin": "^1.9.3",
     "style-loader": "0.17.0",
     "url-loader": "0.5.8",
-    "webpack": "2.5.0",
-    "webpack-bundle-analyzer": "2.4.0",
+    "webpack": "2.5.1",
+    "webpack-bundle-analyzer": "2.6.0",
     "webpack-dev-server": "2.4.5",
     "webpack-merge": "4.1.0"
   },

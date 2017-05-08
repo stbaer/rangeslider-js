@@ -1,4 +1,4 @@
-import rangesliderJs from './'
+import rangesliderJs from '../'
 import './styles.css'
 
 function setOutput (element) {

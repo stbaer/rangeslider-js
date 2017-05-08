@@ -1,7 +1,6 @@
 /** @module rangesliderJs/Rangeslider */
 
 import evPos from 'ev-pos'
-import isFiniteNumber from 'is-finite'
 import utils from './utils'
 import CONST from './const'
 
@@ -316,23 +315,23 @@ class RangeSlider {
     values = values || {}
     this.needTriggerEvents = !!triggerEvents
 
-    if (isFiniteNumber(values.min)) {
+    if (utils.isFiniteNumber(values.min)) {
       this.element.setAttribute('min', `${values.min}`)
       this.min = values.min
     }
 
-    if (isFiniteNumber(values.max)) {
+    if (utils.isFiniteNumber(values.max)) {
       this.element.setAttribute('max', `${values.max}`)
       this.max = values.max
     }
 
-    if (isFiniteNumber(values.step)) {
+    if (utils.isFiniteNumber(values.step)) {
       this.element.setAttribute('step', `${values.step}`)
       this.step = values.step
       this.toFixed = stepToFixed(values.step)
     }
 
-    if (isFiniteNumber(values.value)) {
+    if (utils.isFiniteNumber(values.value)) {
       this._setValue(values.value)
     }
 
