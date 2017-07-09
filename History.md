@@ -1,5 +1,19 @@
 
 
+###Release 3.1.0
+>*July 9, 2017*
+
+ * updated docs, added analyze npm script; [529ef82](https://github.com/stbaer/rangeslider-js/commits/529ef82ce62d352aa432254cf5e87497f3014fdd)
+ * added package-lock [0b8a6e0](https://github.com/stbaer/rangeslider-js/commits/0b8a6e001d4a504392053f7d18ac68b9b1f78884)
+ * updated deps and dev files [d64a276](https://github.com/stbaer/rangeslider-js/commits/d64a276d64bd83411817b071b1db7d414c72e645)
+ * updated Licence year [60cd690](https://github.com/stbaer/rangeslider-js/commits/60cd6904bd25944ba762b149bed3dcc2bf34aabb)
+ * updated tests [2b0f922](https://github.com/stbaer/rangeslider-js/commits/2b0f92285d969c4b452adc0292aa0eb1c7a7a7f5)
+ * feat: update function accepts strings instead of numbers for convenience [e5595c4](https://github.com/stbaer/rangeslider-js/commits/e5595c4daccc7507587ce752baf11389f6c8af54)
+ * dependency updates [61c6c1c](https://github.com/stbaer/rangeslider-js/commits/61c6c1c65d83c761175695d9b348b898732facbf)
+ * docs [3183afe](https://github.com/stbaer/rangeslider-js/commits/3183afe4cf7eda29c915797c5c6190d4186a02fd)
+
+
+
 ###Release 3.0.2
 >*May 9, 2017*
 
