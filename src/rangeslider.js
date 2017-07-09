@@ -22,9 +22,7 @@ const createChild = function (className) {
  * @param step
  * @returns {number}
  */
-const stepToFixed = function (step) {
-  return (`${step}`).replace('.', '').length - 1
-}
+const stepToFixed = step => (`${step}`.replace('.', '').length - 1)
 
 /** RangeSlider */
 class RangeSlider {
@@ -313,7 +311,11 @@ class RangeSlider {
    */
   update (values, triggerEvents) {
     values = values || {}
-    this.needTriggerEvents = !!triggerEvents
+    Object.keys(values).forEach(val =>
+      (typeof values[val] === 'string') && (values[val] = parseFloat(values[val]))
+    )
+
+    this.needTriggerEvents = triggerEvents
 
     if (utils.isFiniteNumber(values.min)) {
       this.element.setAttribute('min', `${values.min}`)
