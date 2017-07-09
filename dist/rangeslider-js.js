@@ -43,9 +43,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -73,36 +70,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  MIN_DEFAULT: 0,
-  MAX_DEFAULT: 100,
-  RANGE_CLASS: 'rangeslider',
-  FILL_CLASS: 'rangeslider__fill',
-  FILL_BG_CLASS: 'rangeslider__fill__bg',
-  HANDLE_CLASS: 'rangeslider__handle',
-  DISABLED_CLASS: 'rangeslider--disabled',
-  STEP_DEFAULT: 1,
-  START_EVENTS: ['mousedown', 'touchstart', 'pointerdown'],
-  MOVE_EVENTS: ['mousemove', 'touchmove', 'pointermove'],
-  END_EVENTS: ['mouseup', 'touchend', 'pointerup'],
-  PLUGIN_NAME: 'rangeslider-js'
-};
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -325,7 +297,176 @@ exports.default = {
 };
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  MIN_DEFAULT: 0,
+  MAX_DEFAULT: 100,
+  RANGE_CLASS: 'rangeslider',
+  FILL_CLASS: 'rangeslider__fill',
+  FILL_BG_CLASS: 'rangeslider__fill__bg',
+  HANDLE_CLASS: 'rangeslider__handle',
+  DISABLED_CLASS: 'rangeslider--disabled',
+  STEP_DEFAULT: 1,
+  START_EVENTS: ['mousedown', 'touchstart', 'pointerdown'],
+  MOVE_EVENTS: ['mousemove', 'touchmove', 'pointermove'],
+  END_EVENTS: ['mouseup', 'touchend', 'pointerup'],
+  PLUGIN_NAME: 'rangeslider-js'
+};
+
+/***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _utils = __webpack_require__(0);
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _rangeslider = __webpack_require__(5);
+
+var _rangeslider2 = _interopRequireDefault(_rangeslider);
+
+var _const = __webpack_require__(1);
+
+var _const2 = _interopRequireDefault(_const);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @type {object}
+ */
+var rangesliderJs = {
+  /**
+   * @type {RangeSlider}
+   */
+  RangeSlider: _rangeslider2.default,
+  /**
+   * Expose utils
+   * @type {object}
+   */
+  utils: _utils2.default,
+  /**
+   * Plugin wrapper around the constructor, preventing multiple instantiations
+   *
+   * @param {Element|NodeList} el
+   * @param {object} options
+   */
+  create: function create(el, options) {
+    if (!el) return;
+
+    function createInstance(el) {
+      el[_const2.default.PLUGIN_NAME] = el[_const2.default.PLUGIN_NAME] || new _rangeslider2.default(el, options);
+    }
+
+    if (el.length) {
+      Array.prototype.slice.call(el).forEach(function (el) {
+        return createInstance(el);
+      });
+    } else {
+      createInstance(el);
+    }
+  }
+}; /** @module rangesliderJs */
+
+module.exports = rangesliderJs;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var NativeCustomEvent = global.CustomEvent;
+
+function useNative() {
+  try {
+    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
+    return 'cat' === p.type && 'bar' === p.detail.foo;
+  } catch (e) {}
+  return false;
+}
+
+/**
+ * Cross-browser `CustomEvent` constructor.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
+ *
+ * @public
+ */
+
+module.exports = useNative() ? NativeCustomEvent :
+
+// IE >= 9
+'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
+  var e = document.createEvent('CustomEvent');
+  if (params) {
+    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+  } else {
+    e.initCustomEvent(type, false, false, void 0);
+  }
+  return e;
+} :
+
+// IE <= 8
+function CustomEvent(type, params) {
+  var e = document.createEventObject();
+  e.type = type;
+  if (params) {
+    e.bubbles = Boolean(params.bubbles);
+    e.cancelable = Boolean(params.cancelable);
+    e.detail = params.detail;
+  } else {
+    e.bubbles = false;
+    e.cancelable = false;
+    e.detail = void 0;
+  }
+  return e;
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var g;
+
+// This works in non-strict mode
+g = function () {
+	return this;
+}();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -333,15 +474,15 @@ exports.default = {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /** @module rangesliderJs/Rangeslider */
 
-var _evPos = __webpack_require__(4);
+var _evPos = __webpack_require__(6);
 
 var _evPos2 = _interopRequireDefault(_evPos);
 
-var _utils = __webpack_require__(1);
+var _utils = __webpack_require__(0);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _const = __webpack_require__(0);
+var _const = __webpack_require__(1);
 
 var _const2 = _interopRequireDefault(_const);
 
@@ -719,7 +860,11 @@ var RangeSlider = function () {
     key: 'update',
     value: function update(values, triggerEvents) {
       values = values || {};
-      this.needTriggerEvents = !!triggerEvents;
+      Object.keys(values).forEach(function (val) {
+        return typeof values[val] === 'string' && (values[val] = parseFloat(values[val]));
+      });
+
+      this.needTriggerEvents = triggerEvents;
 
       if (_utils2.default.isFiniteNumber(values.min)) {
         this.element.setAttribute('min', '' + values.min);
@@ -807,62 +952,7 @@ var RangeSlider = function () {
 module.exports = RangeSlider;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var NativeCustomEvent = global.CustomEvent;
-
-function useNative() {
-  try {
-    var p = new NativeCustomEvent('cat', { detail: { foo: 'bar' } });
-    return 'cat' === p.type && 'bar' === p.detail.foo;
-  } catch (e) {}
-  return false;
-}
-
-/**
- * Cross-browser `CustomEvent` constructor.
- *
- * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent.CustomEvent
- *
- * @public
- */
-
-module.exports = useNative() ? NativeCustomEvent :
-
-// IE >= 9
-'undefined' !== typeof document && 'function' === typeof document.createEvent ? function CustomEvent(type, params) {
-  var e = document.createEvent('CustomEvent');
-  if (params) {
-    e.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
-  } else {
-    e.initCustomEvent(type, false, false, void 0);
-  }
-  return e;
-} :
-
-// IE <= 8
-function CustomEvent(type, params) {
-  var e = document.createEventObject();
-  e.type = type;
-  if (params) {
-    e.bubbles = Boolean(params.bubbles);
-    e.cancelable = Boolean(params.cancelable);
-    e.detail = params.detail;
-  } else {
-    e.bubbles = false;
-    e.cancelable = false;
-    e.detail = void 0;
-  }
-  return e;
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -922,95 +1012,6 @@ var getRelativePosition = function getRelativePosition(ev, toElement) {
  * @type {Function}
  */
 module.exports = getRelativePosition;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var g;
-
-// This works in non-strict mode
-g = function () {
-	return this;
-}();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1, eval)("this");
-} catch (e) {
-	// This works if the window reference is available
-	if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _utils = __webpack_require__(1);
-
-var _utils2 = _interopRequireDefault(_utils);
-
-var _rangeslider = __webpack_require__(2);
-
-var _rangeslider2 = _interopRequireDefault(_rangeslider);
-
-var _const = __webpack_require__(0);
-
-var _const2 = _interopRequireDefault(_const);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @type {object}
- */
-var rangesliderJs = {
-  /**
-   * @type {RangeSlider}
-   */
-  RangeSlider: _rangeslider2.default,
-  /**
-   * Expose utils
-   * @type {object}
-   */
-  utils: _utils2.default,
-  /**
-   * Plugin wrapper around the constructor, preventing multiple instantiations
-   *
-   * @param {Element|NodeList} el
-   * @param {object} options
-   */
-  create: function create(el, options) {
-    if (!el) return;
-
-    function createInstance(el) {
-      el[_const2.default.PLUGIN_NAME] = el[_const2.default.PLUGIN_NAME] || new _rangeslider2.default(el, options);
-    }
-
-    if (el.length) {
-      Array.prototype.slice.call(el).forEach(function (el) {
-        return createInstance(el);
-      });
-    } else {
-      createInstance(el);
-    }
-  }
-}; /** @module rangesliderJs */
-
-module.exports = rangesliderJs;
 
 /***/ })
 /******/ ]);
