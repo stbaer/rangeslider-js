@@ -92,7 +92,7 @@ test('create multiple should work', async t => {
   document.body.removeChild(sliderEl2)
 })
 
-test('update should work', async t => {
+test('update should work with numbers', async t => {
   const sliderEl = getSliderEl()
 
   rangesliderJs.create(sliderEl)
@@ -109,16 +109,39 @@ test('update should work', async t => {
   t.is(sliderEl['rangeslider-js'].value, -99)
   t.is(sliderEl['rangeslider-js'].step, 0.01)
 
-  sliderEl['rangeslider-js'].update({
-    value: -200
-  })
-
+  // bounds
+  sliderEl['rangeslider-js'].update({value: -200})
   t.is(sliderEl['rangeslider-js'].value, -100)
 
+  sliderEl['rangeslider-js'].update({value: 77})
+  t.is(sliderEl['rangeslider-js'].value, -50)
+
+  sliderEl['rangeslider-js'].destroy()
+  document.body.removeChild(sliderEl)
+})
+
+test('update should work with strings', async t => {
+  const sliderEl = getSliderEl()
+
+  rangesliderJs.create(sliderEl)
+
   sliderEl['rangeslider-js'].update({
-    value: 77
+    min: '-100',
+    max: '-50',
+    value: '-99',
+    step: '0.01'
   })
 
+  t.is(sliderEl['rangeslider-js'].min, -100)
+  t.is(sliderEl['rangeslider-js'].max, -50)
+  t.is(sliderEl['rangeslider-js'].value, -99)
+  t.is(sliderEl['rangeslider-js'].step, 0.01)
+
+  // bounds
+  sliderEl['rangeslider-js'].update({value: '-200'})
+  t.is(sliderEl['rangeslider-js'].value, -100)
+
+  sliderEl['rangeslider-js'].update({value: '77'})
   t.is(sliderEl['rangeslider-js'].value, -50)
 
   sliderEl['rangeslider-js'].destroy()
