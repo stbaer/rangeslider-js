@@ -38,12 +38,12 @@ sliderHandle.destroy()
 Update the slider values.
 
 - values:
-    - min (number)
-    - max (number)
-    - step (number)
-    - value (number)
+    - min (number|string)
+    - max (number|string)
+    - step (number|string)
+    - value (number|string)
 ```js
-sliderHandle.update({ max: 50, value: 45 })
+sliderHandle.update({ max: 50, value: '45' })
 ```
 
 ### destroy()
