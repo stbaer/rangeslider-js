@@ -89,7 +89,8 @@
   "releaseConfig": {
     "buildCommand": "npm run build && git add -A && git commit -am \"updated build (--)\"; ",
     "versionFiles": [
-      "package.json"
+      "package.json",
+      "package-lock.json"
     ],
     "commitMessagesExclude": [
       "Merge tag",
