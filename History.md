@@ -1,5 +1,13 @@
 
 
+###Release 3.1.1
+>*October 29, 2017*
+
+ * added package-lock to release config version files [4f4b323](https://github.com/stbaer/rangeslider-js/commits/4f4b323279a5e1f6ecd94a2722cd63e0bd3ed8e4)
+ * updated dependencies [cb740e1](https://github.com/stbaer/rangeslider-js/commits/cb740e1203d428db04f9093300eeacdfcd759199)
+
+
+
 ###Release 3.1.0
 >*July 9, 2017*
 

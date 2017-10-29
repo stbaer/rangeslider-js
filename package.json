@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "./dist/rangeslider-js.min.js",
   "description": "lightweight range slider",
   "author": "Steffen Bär <stbaer.mail@gmail.com>",
