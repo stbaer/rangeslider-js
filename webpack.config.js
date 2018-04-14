@@ -57,6 +57,7 @@ const conf = {
 }
 
 if (isDev) {
+  conf.mode = 'development'
   conf.devtool = '#source-map'
   conf.entry['rangeslider-js'] = `${projectRoot}/src/dev.js`
   conf.module.rules.push({
@@ -71,8 +72,8 @@ if (isDev) {
     })
   )
 } else {
+  conf.mode = 'production'
   conf.entry = {
-    'rangeslider-js': `${projectRoot}/src/index.js`,
     'rangeslider-js.min': `${projectRoot}/src/index.js`
   }
   conf.devtool = false
@@ -92,19 +93,6 @@ if (isDev) {
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      include: /\.min\.js$/,
-      minimize: true,
-      beautify: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true
-      },
-      compress: {
-        screw_ie8: true
-      },
-      comments: false
     })
   )
   if (config.build.bundleAnalyzerReport) {
