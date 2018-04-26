@@ -57,6 +57,7 @@ const conf = {
 }
 
 if (isDev) {
+  conf.mode = 'development'
   conf.devtool = '#source-map'
   conf.entry['rangeslider-js'] = `${projectRoot}/src/dev.js`
   conf.module.rules.push({
@@ -65,14 +66,14 @@ if (isDev) {
   })
   conf.plugins.push(
     new HtmlWebpackPlugin({
-      filename: 'dev.html',
+      filename: 'index.html',
       template: `dev.html`,
       inject: true
     })
   )
 } else {
+  conf.mode = 'production'
   conf.entry = {
-    'rangeslider-js': `${projectRoot}/src/index.js`,
     'rangeslider-js.min': `${projectRoot}/src/index.js`
   }
   conf.devtool = false
@@ -86,25 +87,12 @@ if (isDev) {
   conf.plugins.push(
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'index.html',
+      template: 'prod.html',
       inject: true
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      include: /\.min\.js$/,
-      minimize: true,
-      beautify: false,
-      mangle: {
-        screw_ie8: true,
-        keep_fnames: true
-      },
-      compress: {
-        screw_ie8: true
-      },
-      comments: false
     })
   )
   if (config.build.bundleAnalyzerReport) {

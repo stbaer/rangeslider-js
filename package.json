@@ -1,6 +1,6 @@
 {
   "name": "rangeslider-js",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "main": "./dist/rangeslider-js.min.js",
   "description": "lightweight range slider",
   "author": "Steffen Bär <stbaer.mail@gmail.com>",
@@ -39,39 +39,42 @@
     "ev-pos": "^1.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "7.1.6",
-    "ava": "0.23.0",
+    "autoprefixer": "8.3.0",
+    "ava": "0.25.0",
     "babel-core": "6.26.0",
-    "babel-eslint": "8.0.1",
-    "babel-loader": "7.1.2",
+    "babel-eslint": "8.2.3",
+    "babel-loader": "7.1.4",
     "babel-preset-env": "1.6.1",
-    "browser-env": "3.2.1",
-    "css-loader": "0.28.7",
+    "browser-env": "3.2.5",
+    "css-loader": "0.28.11",
     "cssnano": "^3.10.0",
-    "eslint": "4.10.0",
-    "eslint-config-standard": "10.2.1",
-    "eslint-friendly-formatter": "3.0.0",
-    "eslint-loader": "1.9.0",
-    "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-node": "5.2.1",
-    "eslint-plugin-promise": "3.6.0",
-    "eslint-plugin-standard": "3.0.1",
-    "file-loader": "1.1.5",
-    "friendly-errors-webpack-plugin": "1.6.1",
+    "eslint": "4.19.1",
+    "eslint-config-standard": "11.0.0",
+    "eslint-friendly-formatter": "4.0.1",
+    "eslint-loader": "2.0.0",
+    "eslint-plugin-import": "2.11.0",
+    "eslint-plugin-node": "6.0.1",
+    "eslint-plugin-promise": "3.7.0",
+    "eslint-plugin-standard": "3.1.0",
+    "file-loader": "1.1.11",
+    "friendly-errors-webpack-plugin": "1.7.0",
     "gf-release": "1.4.5",
-    "html-webpack-plugin": "2.30.1",
+    "html-webpack-plugin": "3.2.0",
     "mkdirp": "^0.5.1",
     "nodes-each": "1.0.3",
-    "pre-commit": "1.2.2",
-    "pre-push": "0.1.1",
-    "progress-bar-webpack-plugin": "1.10.0",
-    "style-loader": "0.19.0",
-    "url-loader": "0.6.2",
-    "webpack": "3.8.1",
-    "webpack-bundle-analyzer": "2.9.0",
-    "webpack-dev-server": "2.9.3",
-    "webpack-merge": "4.1.0"
+    "progress-bar-webpack-plugin": "1.11.0",
+    "style-loader": "0.21.0",
+    "url-loader": "1.0.1",
+    "webpack": "4.6.0",
+    "webpack-bundle-analyzer": "2.11.1",
+    "webpack-cli": "2.0.15",
+    "webpack-dev-server": "3.1.3",
+    "webpack-merge": "4.1.2"
   },
+  "files": [
+    "dist/",
+    "src/"
+  ],
   "ava": {
     "concurrency": 5,
     "failFast": false,
@@ -80,12 +83,6 @@
       "babel-register"
     ]
   },
-  "pre-commit": [
-    "lint"
-  ],
-  "pre-push": [
-    "test"
-  ],
   "releaseConfig": {
     "buildCommand": "npm run build && git add -A && git commit -am \"updated build (--)\"; ",
     "versionFiles": [
