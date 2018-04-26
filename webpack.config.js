@@ -66,7 +66,7 @@ if (isDev) {
   })
   conf.plugins.push(
     new HtmlWebpackPlugin({
-      filename: 'dev.html',
+      filename: 'index.html',
       template: `dev.html`,
       inject: true
     })
@@ -87,7 +87,7 @@ if (isDev) {
   conf.plugins.push(
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: 'index.html',
+      template: 'prod.html',
       inject: true
     }),
     new webpack.LoaderOptionsPlugin({
