@@ -1,5 +1,16 @@
 
 
+###Release 3.1.2
+>*April 26, 2018*
+
+ * build / dev conf [012db12](https://github.com/stbaer/rangeslider-js/commits/012db12338ef8ffb5235064475de06cb025bc041)
+ * updated dependencies [bbc090b](https://github.com/stbaer/rangeslider-js/commits/bbc090b0c56e4efe42751a87f20ce9258706d964)
+ * added files field to package.json; removed .eslintignore; [99bb1be](https://github.com/stbaer/rangeslider-js/commits/99bb1be14b71ba741d7226c65fcaa31e0dd4a647)
+ * removed pre-commit and pre-push hooks, removed dependency [a6c82ef](https://github.com/stbaer/rangeslider-js/commits/a6c82ef1351e9207aee0af627e08e3187ccbf907)
+ * webpack updated to 4 and updated other deps [780efd1](https://github.com/stbaer/rangeslider-js/commits/780efd1135dfaefb8520b73ec278b033f8316cb1)
+
+
+
 ###Release 3.1.1
 >*October 29, 2017*
 
