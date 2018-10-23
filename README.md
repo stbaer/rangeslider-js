@@ -12,7 +12,7 @@
     - no jQuery
     - raf to throttle window resize, transform to set the handle position
     - fewer and only basic styles
-    - no horizontal mode
+    - no vertical mode
 
 ## Install
 
