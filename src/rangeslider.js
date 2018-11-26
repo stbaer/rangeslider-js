@@ -390,4 +390,4 @@ class RangeSlider {
  * @param {number} position
  */
 
-module.exports = RangeSlider
+export default RangeSlider

@@ -38,4 +38,4 @@ const rangesliderJs = {
   }
 }
 
-module.exports = rangesliderJs
+export default rangesliderJs
