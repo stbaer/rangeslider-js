@@ -103,5 +103,9 @@
     ],
     "commitBaseUrl": "https://github.com/stbaer/rangeslider-js/commits",
     "historyFile": "History.md"
+  },
+  "engines": {
+    "node": ">=10",
+    "npm": ">=6"
   }
 }
