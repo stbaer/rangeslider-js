@@ -1,5 +1,12 @@
 
 
+###Release 3.2.1
+>*November 26, 2018*
+
+ * updated docs index.html [d8c53bd](https://github.com/stbaer/rangeslider-js/commits/d8c53bd3196f9787e77b314e7646bfcea1006cc1)
+
+
+
 ###Release 3.2.0
 >*November 26, 2018*
 
