@@ -31,7 +31,7 @@ function init () {
     inputRange.value = e.target.value
     console.log(e.target.value)
 
-    inputRange['rangeslider-js'].update({value: e.target.value})
+    inputRange['rangeslider-js'].update({ value: e.target.value })
     // inputRange.dispatchEvent(new Event('change'))
   }, false)
 
