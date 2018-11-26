@@ -1,5 +1,19 @@
 
 
+###Release 3.2.0
+>*November 26, 2018*
+
+ * cssnano -> csso [5bcc288](https://github.com/stbaer/rangeslider-js/commits/5bcc2889111d5beb000a0a530554ac0cfe22df92)
+ * updated sources for docs, fixes issue #5 [f293e99](https://github.com/stbaer/rangeslider-js/commits/f293e998c76cd501219579cbb5dac99d76ee6fae)
+ * Merge branch 'develop' of github.com:stbaer/rangeslider-js into develop [50fed44](https://github.com/stbaer/rangeslider-js/commits/50fed4405f4bc9d2cd62186b11922f7381669238)
+ * updated all dependencies and babel config [e798d3b](https://github.com/stbaer/rangeslider-js/commits/e798d3bcac9b7dea2ee01a9449d4d2a783228610)
+ * lint fixes [837a17a](https://github.com/stbaer/rangeslider-js/commits/837a17a475ccbca1cf2119fe91d752605ef411bf)
+ * updated dependencies [c124933](https://github.com/stbaer/rangeslider-js/commits/c124933ca16cbfff003e2628405441dd69a75a8b)
+ *  [f4b8808](https://github.com/stbaer/rangeslider-js/commits/f4b880834b2f1c51a085b26e34c339bef5b8e614)
+ *  [28b6ca4](https://github.com/stbaer/rangeslider-js/commits/28b6ca490a8c4f0d30f76281cd0765104ef06a97)
+
+
+
 ###Release 3.1.2
 >*April 26, 2018*
 
