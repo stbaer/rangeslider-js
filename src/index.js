@@ -7,7 +7,7 @@ import CONST from './const'
 /**
  * @type {object}
  */
-const rangesliderJs = {
+export default {
   /**
    * @type {RangeSlider}
    */
@@ -37,5 +37,3 @@ const rangesliderJs = {
     }
   }
 }
-
-export default rangesliderJs
