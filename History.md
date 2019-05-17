@@ -1,5 +1,13 @@
 
 
+###Release 3.2.2
+>*May 17, 2019*
+
+ * updates dependencies; fixes export; [4b918d0](https://github.com/stbaer/rangeslider-js/commits/4b918d0bfefb80f52a88d35c69d52dc5f5a29d7d)
+ * updated travis.yml, added engines to package.json; [98b26e1](https://github.com/stbaer/rangeslider-js/commits/98b26e157b04fa6f38934e69420af1737cd55e8a)
+
+
+
 ###Release 3.2.1
 >*November 26, 2018*
 

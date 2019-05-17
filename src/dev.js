@@ -1,9 +1,11 @@
-import rangesliderJs from '../src'
+import rangesliderJs from './index'
 import nodesEach from 'nodes-each'
 import './styles.css'
 
 const setOutput = element => (element.parentNode.getElementsByTagName('output')[0].innerHTML = element.value)
 const getTargetRange = btn => btn.parentNode.querySelector('input[type="range"]')
+
+console.log(rangesliderJs)
 
 function init () {
   const selector = '[data-rangeslider]'
