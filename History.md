@@ -1,5 +1,12 @@
 
 
+###Release 3.2.3
+>*May 18, 2019*
+
+ * added libraryExport: 'default' to webpack config [2d312cd](https://github.com/stbaer/rangeslider-js/commits/2d312cd7935d492938776e92e4cb0abeb619d94e)
+
+
+
 ###Release 3.2.2
 >*May 17, 2019*
 
