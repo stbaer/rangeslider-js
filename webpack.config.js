@@ -82,13 +82,14 @@ if (isDev) {
     filename: assetsPath('[name].js'),
     chunkFilename: assetsPath('[id].js'),
     library: 'rangesliderJs',
+    libraryExport: 'default',
     libraryTarget: 'umd'
   }
   conf.plugins.push(
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'prod.html',
-      inject: true
+      inject: false
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
