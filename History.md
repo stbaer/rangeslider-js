@@ -1,5 +1,13 @@
 
 
+###Release 3.2.4
+>*May 20, 2019*
+
+ * fixes ava tests (babel setup) [733e9cd](https://github.com/stbaer/rangeslider-js/commits/733e9cd73209d865b9d30bdc2b1d67b3633a2e0e)
+ * fixes travis.yml - node version should be a string [03b5304](https://github.com/stbaer/rangeslider-js/commits/03b53045cdf8cb22ac1e1ecd919d1fd24522b3f1)
+
+
+
 ###Release 3.2.3
 >*May 18, 2019*
 
