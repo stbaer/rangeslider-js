@@ -1,5 +1,12 @@
 
 
+###Release 3.2.5
+>*May 20, 2019*
+
+ * fixes examples in docs [9c54791](https://github.com/stbaer/rangeslider-js/commits/9c54791732a45eebfc3c5a3bd11c5506a0c9e482)
+
+
+
 ###Release 3.2.4
 >*May 20, 2019*
 
