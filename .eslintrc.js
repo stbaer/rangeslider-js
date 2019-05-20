@@ -11,7 +11,9 @@ module.exports = {
     'rangesliderJs': false,
     'PROD': false,
     'DEV': false,
-    'TEST': false
+    'TEST': false,
+    'docute': false,
+    'docuteIframe': false
   },
   rules: {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
