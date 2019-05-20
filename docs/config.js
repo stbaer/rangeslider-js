@@ -6,8 +6,8 @@ docute.init({
     docuteIframe({
       prepend: '' +
       '<style> >div{margin-bottom: 3rem} </style>' +
-      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rangeslider-js@3/dist/styles.min.css">' +
-      '<script src="https://cdn.jsdelivr.net/npm/rangeslider-js@3/dist/rangeslider-js.min.js"></script>'
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rangeslider-js@latest/dist/styles.min.css">' +
+      '<script src="https://cdn.jsdelivr.net/npm/rangeslider-js@latest/dist/rangeslider-js.min.js"></script>'
     })
   ],
   nav: [
