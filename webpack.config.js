@@ -83,7 +83,8 @@ if (isDev) {
     chunkFilename: assetsPath('[id].js'),
     library: 'rangesliderJs',
     libraryExport: 'default',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    globalObject: 'Function("return this")()'
   }
   conf.plugins.push(
     new HtmlWebpackPlugin({
