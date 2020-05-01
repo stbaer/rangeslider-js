@@ -1,6 +1,8 @@
 import CE from 'custom-event'
 
-window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame
+if (typeof window !== 'undefined') {
+  window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame
+}
 
 /**
  *
